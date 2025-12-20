@@ -1,0 +1,84 @@
+# Intuitive Music DAW Configuration
+
+# Server Configuration
+server:
+  host: "127.0.0.1"
+  port: 5000
+  debug: true
+  threaded: true
+
+# Audio Configuration
+audio:
+  sample_rate: 48000
+  buffer_size: 512
+  bit_depth: 24
+  channels: 2
+  default_format: "wav"
+  temp_audio_dir: "./temp_audio"
+  render_output_dir: "./render_output"
+
+# MIDI Configuration
+midi:
+  default_velocity: 80
+  ppq: 480  # Pulses per quarter note
+  default_tempo: 120
+
+# AI Configuration
+ai:
+  provider: "openai"  # or "anthropic", "local"
+  model: "gpt-4"
+  max_tokens: 2000
+  temperature: 0.7
+  # API keys should be set in .env file
+  features:
+    - composition_assistant
+    - chord_suggestion
+    - melody_generation
+    - arrangement_help
+    - mixing_suggestions
+    - mastering_advice
+
+# Database Configuration
+database:
+  url: "sqlite:///intuitive_music.db"
+  echo: false
+  pool_size: 5
+
+# Plugin Configuration
+plugins:
+  enabled: true
+  directories:
+    - "./plugins"
+    - "./user_plugins"
+  scan_on_startup: true
+
+# Project Configuration
+project:
+  default_directory: "./projects"
+  auto_save_interval: 300  # seconds
+  backup_enabled: true
+  backup_count: 5
+
+# Processing Configuration
+processing:
+  max_tracks: 128
+  max_effects_per_track: 16
+  parallel_processing: true
+  use_gpu: false
+
+# UI Configuration
+ui:
+  theme: "dark"
+  font_size: 14
+  show_waveforms: true
+  show_spectrograms: false
+  fps: 60
+
+# Advanced Features
+features:
+  ai_assisted_mixing: true
+  auto_mastering: true
+  stem_separation: true
+  audio_to_midi: true
+  style_transfer: true
+  smart_quantization: true

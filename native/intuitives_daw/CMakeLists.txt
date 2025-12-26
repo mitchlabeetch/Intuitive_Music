@@ -197,6 +197,7 @@ if(INTUITIVES_DAW_BUILD_GUI)
     
     set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/third_party/imgui)
     if(EXISTS ${IMGUI_DIR})
+        # Add ImGui sources
         target_sources(IntuitivesDAW PRIVATE
             ${IMGUI_DIR}/imgui.cpp
             ${IMGUI_DIR}/imgui_draw.cpp
@@ -204,14 +205,32 @@ if(INTUITIVES_DAW_BUILD_GUI)
             ${IMGUI_DIR}/imgui_widgets.cpp
             ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
             ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+            # Our GUI implementation
+            ${CMAKE_SOURCE_DIR}/src/gui/intuitives_gui.cpp
+            ${CMAKE_SOURCE_DIR}/src/gui/sequencer.cpp
+            ${CMAKE_SOURCE_DIR}/src/gui/synth_rack.cpp
+            ${CMAKE_SOURCE_DIR}/src/gui/settings.cpp
+            ${CMAKE_SOURCE_DIR}/src/gui/visualizer_3d.cpp
         )
-        target_include_directories(IntuitivesDAW PRIVATE ${IMGUI_DIR} ${IMGUI_DIR}/backends)
+        target_include_directories(IntuitivesDAW PRIVATE 
+            ${IMGUI_DIR} 
+            ${IMGUI_DIR}/backends
+            ${CMAKE_SOURCE_DIR}/include/gui
+        )
         target_compile_definitions(IntuitivesDAW PRIVATE INTUITIVES_DAW_GUI=1)
+        message(STATUS "Dear ImGui GUI enabled")
+    else()
+        message(WARNING "Dear ImGui not found at ${IMGUI_DIR}")
+        message(STATUS "To enable GUI, clone imgui to third_party/imgui:")
+        message(STATUS "  git clone https://github.com/ocornut/imgui.git third_party/imgui")
     endif()
     
     target_link_libraries(IntuitivesDAW PRIVATE OpenGL::GL)
     if(glfw3_FOUND)
         target_link_libraries(IntuitivesDAW PRIVATE glfw)
+    else()
+        message(WARNING "GLFW not found - GUI may not link correctly")
+        message(STATUS "Install GLFW: brew install glfw")
     endif()
 endif()
 

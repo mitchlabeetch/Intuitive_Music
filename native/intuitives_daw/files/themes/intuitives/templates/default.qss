@@ -18,55 +18,73 @@ QStackedWidget#main_window {
     background-color: {{ palette["black_light"]  }};
 }
 
+/* Neobrutalist Welcome Screen - Intuitives Style */
 QWidget#welcome_screen {
     background-color: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #2c2a2c,
-        stop: 1 #292629
+        stop: 0 #1a1a25,
+        stop: 0.5 #12121a,
+        stop: 1 #0a0a0f
     );
     background-image: url({{ ASSETS_DIR }}/icon.svg);
     background-position: top right;
     background-repeat: no-repeat;
 }
 
+/* Recent Projects List - Neobrutalist cards */
 QListWidget#welcome_screen_rp {
-    background-color: qlineargradient(
-        x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #242124,
-        stop: 1 #232122
-    );
+    background-color: #0a0a0f;
+    border: 3px solid #7c3aed;
+    border-radius: 0px;
     color: {{ text_color }};
-    font-size: 21px;
+    font-size: 18px;
 }
 
 QListWidget:item#welcome_screen_rp {
-    background-color: qlineargradient(
-        x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #545154,
-        stop: 0.5 #434149,
-        stop: 1 #525152
-    );
-    border: 2px solid #6a6a6a;
-    padding: 5px 10px;
+    background-color: #12121a;
+    border: 2px solid #3a3a4a;
+    border-left: 4px solid #7c3aed;
+    padding: 8px 12px;
+    margin: 4px 0px;
     color: {{ text_color }};
 }
 
-QListWidget:item:hover#welcome_screen_rp,
-QListWidget:item:selected#welcome_screen_rp {
-    background-color:{{ background_color_alt3 }};
-    color: {{ text_color_alt }};
+QListWidget:item:hover#welcome_screen_rp {
+    background-color: #1a1a2a;
+    border: 2px solid #7c3aed;
+    border-left: 4px solid #33FF66;
+    color: #ffffff;
 }
 
+QListWidget:item:selected#welcome_screen_rp {
+    background-color: #22223a;
+    border: 2px solid #33FF66;
+    border-left: 4px solid #FF3366;
+    color: #ffffff;
+}
+
+/* Big action buttons - Neobrutalist hard shadows */
 QPushButton#huge_button {
-    background-color: qlineargradient(
-        x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #5d595c,
-        stop: 0.5 #565159,
-        stop: 1 #5d595c
-    );
-    font-size: 36px;
-    height: 150px;
-    width: 150px;
+    background-color: #1a1a25;
+    border: 3px solid #7c3aed;
+    border-radius: 0px;
+    color: #f8fafc;
+    font-size: 32px;
+    font-weight: bold;
+    height: 140px;
+    width: 140px;
+}
+
+QPushButton#huge_button:hover {
+    background-color: #22223a;
+    border: 3px solid #33FF66;
+    color: #ffffff;
+}
+
+QPushButton#huge_button:pressed {
+    background-color: #7c3aed;
+    border: 3px solid #FF3366;
+    color: #ffffff;
 }
 
 QWidget#splash_widget {

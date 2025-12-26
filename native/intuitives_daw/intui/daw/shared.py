@@ -435,26 +435,45 @@ def global_open_project(a_project_file):
     constants.DAW_PROJECT.open_project(a_project_file, False)
 
     TRACK_COLORS = constants.DAW_PROJECT.get_track_colors()
-    TRACK_PANEL.open_tracks()
+    
+    # Guard: Check if UI components are initialized before accessing them
+    if MAIN_WINDOW is None:
+        LOG.warning(
+            "global_open_project: MAIN_WINDOW not initialized yet, "
+            "skipping UI initialization (will be done on main window load)"
+        )
+        constants.DAW_PROJECT.suppress_updates = False
+        return
+        
+    if TRACK_PANEL is not None:
+        TRACK_PANEL.open_tracks()
     constants.DAW_PROJECT.suppress_updates = False
     f_scale = constants.DAW_PROJECT.get_midi_scale()
-    if f_scale is not None:
+    if f_scale is not None and PIANO_ROLL_EDITOR_WIDGET is not None:
         PIANO_ROLL_EDITOR_WIDGET.scale_key_combobox.setCurrentIndex(f_scale[0])
         PIANO_ROLL_EDITOR_WIDGET.scale_combobox.setCurrentIndex(f_scale[1])
     MAIN_WINDOW.open_project()
-    ROUTING_GRAPH_WIDGET.draw_graph(
-        constants.DAW_PROJECT.get_routing_graph(),
-        TRACK_PANEL.get_track_names(),
-    )
+    if ROUTING_GRAPH_WIDGET is not None and TRACK_PANEL is not None:
+        ROUTING_GRAPH_WIDGET.draw_graph(
+            constants.DAW_PROJECT.get_routing_graph(),
+            TRACK_PANEL.get_track_names(),
+        )
     global_open_mixer()
-    MIDI_DEVICES_DIALOG.set_routings()
-    SEQ_WIDGET.open_sequence()
-    SEQ_WIDGET.snap_combobox.setCurrentIndex(1)
-    TRANSPORT.open_project()
-    PLUGIN_RACK.initialize(constants.DAW_PROJECT)
-    MIXER_WIDGET.set_project(constants.DAW_PROJECT)
-    PIANO_ROLL_EDITOR.default_vposition()
-    TRACK_PANEL.set_track_names()
+    if MIDI_DEVICES_DIALOG is not None:
+        MIDI_DEVICES_DIALOG.set_routings()
+    if SEQ_WIDGET is not None:
+        SEQ_WIDGET.open_sequence()
+        SEQ_WIDGET.snap_combobox.setCurrentIndex(1)
+    if TRANSPORT is not None:
+        TRANSPORT.open_project()
+    if PLUGIN_RACK is not None:
+        PLUGIN_RACK.initialize(constants.DAW_PROJECT)
+    if MIXER_WIDGET is not None:
+        MIXER_WIDGET.set_project(constants.DAW_PROJECT)
+    if PIANO_ROLL_EDITOR is not None:
+        PIANO_ROLL_EDITOR.default_vposition()
+    if TRACK_PANEL is not None:
+        TRACK_PANEL.set_track_names()
     reset_globals()
 
 def global_new_project(a_project_file):
@@ -468,16 +487,32 @@ def global_new_project(a_project_file):
     constants.DAW_PROJECT.new_project(a_project_file)
     TRACK_COLORS = constants.DAW_PROJECT.get_track_colors()
 
+    # Guard: Check if UI components are initialized before accessing them
+    # This can happen when creating a new project from the welcome screen
+    # before the main window is fully loaded
+    if MAIN_WINDOW is None:
+        LOG.warning(
+            "global_new_project: MAIN_WINDOW not initialized yet, "
+            "skipping UI initialization (will be done on main window load)"
+        )
+        return
+
     global_update_track_comboboxes()
     MAIN_WINDOW.new_project()
-    ROUTING_GRAPH_WIDGET.scene.clear()
+    if ROUTING_GRAPH_WIDGET is not None:
+        ROUTING_GRAPH_WIDGET.scene.clear()
     global_open_mixer()
-    SEQ_WIDGET.open_sequence()
-    SEQ_WIDGET.snap_combobox.setCurrentIndex(1)
-    PLUGIN_RACK.initialize(constants.DAW_PROJECT)
-    MIXER_WIDGET.set_project(constants.DAW_PROJECT)
-    PIANO_ROLL_EDITOR.default_vposition()
-    TRACK_PANEL.set_track_names()
+    if SEQ_WIDGET is not None:
+        SEQ_WIDGET.open_sequence()
+        SEQ_WIDGET.snap_combobox.setCurrentIndex(1)
+    if PLUGIN_RACK is not None:
+        PLUGIN_RACK.initialize(constants.DAW_PROJECT)
+    if MIXER_WIDGET is not None:
+        MIXER_WIDGET.set_project(constants.DAW_PROJECT)
+    if PIANO_ROLL_EDITOR is not None:
+        PIANO_ROLL_EDITOR.default_vposition()
+    if TRACK_PANEL is not None:
+        TRACK_PANEL.set_track_names()
     reset_globals()
 
 def reset_globals():

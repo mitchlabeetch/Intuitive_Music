@@ -281,3 +281,276 @@ class PixmapKnob(QDial):
         QApplication.restoreOverrideCursor()
         self.sliderReleased.emit()
 
+
+# ============================================================================
+# NEOBRUTALIST KNOB (Intuitives Style)
+# ============================================================================
+
+class NeobrutalistKnob(QDial):
+    """
+    Neobrutalist-styled knob for Intuitives DAW.
+    
+    Features:
+    - Hard shadows (no soft gradients)
+    - Bold, saturated colors
+    - Chromasynesthesia-aware coloring
+    - Thick arc indicators
+    - Sharp, geometric styling
+    
+    "Does this sound cool?" - The only rule.
+    """
+    
+    # Chromasynesthesia colors (for parameter-specific coloring)
+    CHROMA_COLORS = [
+        QColor("#FF3366"),  # C - Red
+        QColor("#FF9933"),  # C# - Orange
+        QColor("#FFEE33"),  # D - Yellow
+        QColor("#33FF66"),  # E - Green
+        QColor("#33EEFF"),  # F - Cyan
+        QColor("#3366FF"),  # G - Blue
+        QColor("#FF33EE"),  # A - Magenta
+    ]
+    
+    # Default Intuitives purple
+    DEFAULT_COLOR = QColor("#7c3aed")
+    BACKGROUND_COLOR = QColor("#12121a")
+    SHADOW_COLOR = QColor("#000000")
+    TEXT_COLOR = QColor("#f8fafc")
+    
+    def __init__(
+        self,
+        a_size,
+        a_min_val,
+        a_max_val,
+        color_index: int = -1,  # -1 = default purple, 0-6 = chroma colors
+        show_value: bool = True,
+        value_format: str = "{:.0f}",
+        label: str = "",
+        arc_width_pct: float = 15.0,
+        shadow_offset: int = 3,
+    ):
+        """
+        Create a Neobrutalist knob.
+        
+        Args:
+            a_size: Size of the knob in pixels
+            a_min_val: Minimum value
+            a_max_val: Maximum value
+            color_index: -1 for default purple, 0-6 for chroma colors
+            show_value: Display the current value in the center
+            value_format: Format string for the value display
+            label: Label text below the knob
+            arc_width_pct: Arc width as percentage of knob size
+            shadow_offset: Hard shadow offset in pixels
+        """
+        super().__init__()
+        
+        self._size = a_size
+        self.setRange(int(a_min_val), int(a_max_val))
+        self.setGeometry(0, 0, a_size, a_size)
+        self.setFixedSize(a_size, a_size)
+        
+        # Styling
+        self.color_index = color_index
+        self.show_value = show_value
+        self.value_format = value_format
+        self.label = label
+        self.arc_width_pct = arc_width_pct
+        self.shadow_offset = shadow_offset
+        
+        # Calculate colors
+        if color_index >= 0 and color_index < len(self.CHROMA_COLORS):
+            self.accent_color = self.CHROMA_COLORS[color_index]
+        else:
+            self.accent_color = self.DEFAULT_COLOR
+        
+        # Interaction state
+        self.val_step = float(a_max_val - a_min_val) * 0.005
+        self.val_step_small = self.val_step * 0.1
+        self._button = QtCore.Qt.MouseButton.NoButton
+        self._hover = False
+        
+        # Enable hover tracking
+        self.setMouseTracking(True)
+    
+    def wheelEvent(self, event):
+        event.ignore()
+    
+    def keyPressEvent(self, a_event):
+        QDial.keyPressEvent(self, a_event)
+        if a_event.key() == QtCore.Qt.Key.Key_Space:
+            glbl_shared.TRANSPORT.on_spacebar()
+    
+    def enterEvent(self, event):
+        self._hover = True
+        self.update()
+        super().enterEvent(event)
+    
+    def leaveEvent(self, event):
+        self._hover = False
+        self.update()
+        super().leaveEvent(event)
+    
+    def paintEvent(self, a_event):
+        p = QPainter(self)
+        p.setRenderHints(
+            QPainter.RenderHint.Antialiasing
+            |
+            QPainter.RenderHint.TextAntialiasing
+        )
+        
+        # Calculate dimensions
+        size = self._size
+        center = size // 2
+        arc_width = int(self.arc_width_pct * size * 0.01)
+        knob_radius = int((size - arc_width * 2 - self.shadow_offset * 2) // 2)
+        
+        # Calculate value fraction
+        f_frac = (
+            (float(self.value() - self.minimum()))
+            /
+            max(1, float(self.maximum() - self.minimum()))
+        )
+        f_rotate = f_frac * 270.0
+        
+        # ========================================
+        # HARD SHADOW (Neobrutalist signature)
+        # ========================================
+        shadow_center_x = center + self.shadow_offset
+        shadow_center_y = center + self.shadow_offset
+        
+        p.setPen(QtCore.Qt.PenStyle.NoPen)
+        p.setBrush(self.SHADOW_COLOR)
+        p.drawEllipse(
+            shadow_center_x - knob_radius,
+            shadow_center_y - knob_radius,
+            knob_radius * 2,
+            knob_radius * 2,
+        )
+        
+        # ========================================
+        # BACKGROUND CIRCLE
+        # ========================================
+        p.setBrush(self.BACKGROUND_COLOR)
+        p.drawEllipse(
+            center - knob_radius,
+            center - knob_radius,
+            knob_radius * 2,
+            knob_radius * 2,
+        )
+        
+        # ========================================
+        # ARC BACKGROUND (unfilled portion)
+        # ========================================
+        arc_rect = QtCore.QRectF(
+            arc_width // 2 + self.shadow_offset // 2,
+            arc_width // 2 + self.shadow_offset // 2,
+            size - arc_width - self.shadow_offset,
+            size - arc_width - self.shadow_offset,
+        )
+        
+        arc_bg_pen = QPen(QColor("#3a3a4a"), arc_width)
+        arc_bg_pen.setCapStyle(QtCore.Qt.PenCapStyle.FlatCap)
+        p.setPen(arc_bg_pen)
+        p.setBrush(QtCore.Qt.BrushStyle.NoBrush)
+        p.drawArc(arc_rect, -135 * 16, -270 * 16)
+        
+        # ========================================
+        # ARC FOREGROUND (filled portion)
+        # ========================================
+        # Hover effect: brighten color
+        arc_color = self.accent_color
+        if self._hover:
+            arc_color = arc_color.lighter(120)
+        
+        arc_pen = QPen(arc_color, arc_width)
+        arc_pen.setCapStyle(QtCore.Qt.PenCapStyle.FlatCap)
+        p.setPen(arc_pen)
+        p.drawArc(arc_rect, -135 * 16, int(-f_rotate * 16))
+        
+        # ========================================
+        # KNOB BORDER
+        # ========================================
+        border_pen = QPen(self.accent_color, 2)
+        p.setPen(border_pen)
+        p.setBrush(QtCore.Qt.BrushStyle.NoBrush)
+        p.drawEllipse(
+            center - knob_radius,
+            center - knob_radius,
+            knob_radius * 2,
+            knob_radius * 2,
+        )
+        
+        # ========================================
+        # INDICATOR LINE
+        # ========================================
+        p.save()
+        p.translate(center, center)
+        p.rotate(f_rotate - 135)
+        
+        indicator_pen = QPen(self.accent_color, 3)
+        indicator_pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
+        p.setPen(indicator_pen)
+        p.drawLine(0, -knob_radius + 8, 0, -knob_radius + knob_radius // 2)
+        
+        p.restore()
+        
+        # ========================================
+        # VALUE TEXT (center)
+        # ========================================
+        if self.show_value:
+            value_text = self.value_format.format(self.value())
+            
+            font = p.font()
+            font.setPixelSize(max(10, size // 5))
+            font.setBold(True)
+            p.setFont(font)
+            
+            p.setPen(self.TEXT_COLOR)
+            text_rect = QtCore.QRect(0, 0, size, size)
+            p.drawText(
+                text_rect,
+                QtCore.Qt.AlignmentFlag.AlignCenter,
+                value_text,
+            )
+    
+    def mousePressEvent(self, a_event):
+        self._button = a_event.button()
+        self.mouse_pos = QCursor.pos()
+        if self._button == QtCore.Qt.MouseButton.RightButton:
+            QDial.mousePressEvent(self, a_event)
+            return
+        f_pos = qt_event_pos(a_event)
+        self.orig_x = f_pos.x()
+        self.orig_y = f_pos.y()
+        self.orig_value = self.value()
+        self.fine_only = (
+            a_event.modifiers() == QtCore.Qt.KeyboardModifier.ControlModifier
+        )
+        QApplication.setOverrideCursor(QtCore.Qt.CursorShape.BlankCursor)
+    
+    def mouseMoveEvent(self, a_event):
+        if self._button != QtCore.Qt.MouseButton.LeftButton:
+            QDial.mouseMoveEvent(self, a_event)
+            return
+        f_pos = qt_event_pos(a_event)
+        f_x = f_pos.x()
+        f_diff_x = f_x - self.orig_x
+        if self.fine_only:
+            f_val = (f_diff_x * self.val_step_small) + self.orig_value
+        else:
+            f_y = f_pos.y()
+            f_diff_y = self.orig_y - f_y
+            f_val = ((f_diff_y * self.val_step) +
+                (f_diff_x * self.val_step_small)) + self.orig_value
+        f_val = clip_value(
+            f_val, self.minimum(), self.maximum())
+        f_val = int(f_val)
+        if f_val != self.value():
+            self.setValue(f_val)
+            self.valueChanged.emit(f_val)
+    
+    def mouseReleaseEvent(self, a_event):
+        self._button = QtCore.Qt.MouseButton.NoButton
+        QApplication.restoreOverrideCursor()
+        self.sliderReleased.emit()

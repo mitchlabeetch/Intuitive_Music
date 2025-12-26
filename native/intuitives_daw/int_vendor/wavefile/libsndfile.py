@@ -74,6 +74,25 @@ if not _lib:
     except Exception as ex:
         print(f'Could not load {dllPath}: {ex}')
 
+# Try Homebrew paths on macOS
+if not _lib and "darwin" in sys.platform:
+    homebrew_paths = [
+        '/usr/local/opt/libsndfile/lib/libsndfile.1.dylib',  # Intel Mac
+        '/opt/homebrew/opt/libsndfile/lib/libsndfile.1.dylib',  # Apple Silicon
+        '/usr/local/lib/libsndfile.1.dylib',
+        '/opt/homebrew/lib/libsndfile.1.dylib',
+    ]
+    for dllPath in homebrew_paths:
+        try:
+            if os.path.exists(dllPath):
+                print(f'Trying Homebrew path: {dllPath}')
+                _lib = ct.CDLL(dllPath)
+                if _lib:
+                    break
+        except Exception as ex:
+            print(f'Could not load {dllPath}: {ex}')
+
+
 if not _lib:
     raise Exception(
         f"could not import libsndfile dll, make sure the dll '{dllName}' "

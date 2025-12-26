@@ -592,7 +592,8 @@ class SgProject(AbstractProject):
             shutil.copy(path, cache_path)
 
         self.delete_sample_graph_by_name(path)
-        constants.IPC.reload_audio_pool_item(uid)
+        if constants.IPC is not None:
+            constants.IPC.reload_audio_pool_item(uid)
 
     def audio_file_cache_path(self, path):
         """ Return the full file path and it's parent directory for an audio
@@ -659,7 +660,11 @@ class SgProject(AbstractProject):
             raise Exception("Cannot create sample graph, the "
                 "following do not exist:\n{}\n{}\n".format(
                 a_path, f_sample_dir_path))
-        constants.IPC.add_to_audio_pool(f_path, f_uid)
+        # Guard: Only call IPC if it's available
+        if constants.IPC is not None:
+            constants.IPC.add_to_audio_pool(f_path, f_uid)
+        else:
+            LOG.debug(f"create_sample_graph: IPC not available, skipping {f_path}")
 
 
     def copy_plugin(self, a_old, a_new):

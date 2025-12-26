@@ -70,6 +70,18 @@ class IntuitivesIPC(AbstractIPC):
             @a_file: The path to an audio file
             @a_uid:  The audio pool uid of the file
         """
+        # Guard: If project not initialized or IPC is disabled, skip
+        if constants.PROJECT is None:
+            LOG.warning(
+                "add_to_audio_pool called but PROJECT is None, skipping"
+            )
+            return
+        if not constants.IPC_ENABLED:
+            LOG.debug(
+                f"add_to_audio_pool: IPC disabled, skipping load for {a_file}"
+            )
+            return
+            
         path = os.path.join(
             constants.PROJECT.samplegraph_folder,
             str(a_uid),
@@ -96,6 +108,9 @@ class IntuitivesIPC(AbstractIPC):
         )
 
     def rate_env(self, a_in_file, a_out_file, a_start, a_end):
+        if not constants.IPC_ENABLED:
+            LOG.debug("rate_env: IPC disabled, skipping")
+            return
         f_wait_file = get_wait_file_path(a_out_file)
         self.send_configure(
             "renv",
@@ -109,6 +124,9 @@ class IntuitivesIPC(AbstractIPC):
         wait_for_finished_file(f_wait_file)
 
     def pitch_env(self, a_in_file, a_out_file, a_start, a_end):
+        if not constants.IPC_ENABLED:
+            LOG.debug("pitch_env: IPC disabled, skipping")
+            return
         f_wait_file = get_wait_file_path(a_out_file)
         self.send_configure(
             "penv",

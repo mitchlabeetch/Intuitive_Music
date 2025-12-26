@@ -225,7 +225,7 @@ class DawProject(AbstractProject):
                 "new project".format(a_project_file))
             self.new_project(a_project_file)
 
-        if a_notify_osc:
+        if a_notify_osc and constants.DAW_IPC is not None:
             constants.DAW_IPC.open_song(self.project_folder)
 
     def new_project(self, a_project_file, a_notify_osc=True):
@@ -256,7 +256,7 @@ class DawProject(AbstractProject):
         self.create_file("", file_pytracks, str(f_tracks))
 
         self.commit("Created project")
-        if a_notify_osc:
+        if a_notify_osc and constants.DAW_IPC is not None:
             constants.DAW_IPC.open_song(self.project_folder)
 
     def active_audio_pool_uids(self):

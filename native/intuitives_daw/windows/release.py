@@ -20,8 +20,8 @@ with open("meta.json") as f:
 MAJOR_VERSION = meta['version']['major']
 MINOR_VERSION = meta['version']['minor']
 
-if os.path.isdir('dist/stargate'):
-    shutil.rmtree('dist/stargate')
+if os.path.isdir('dist/intuitives'):
+    shutil.rmtree('dist/intuitives')
 
 #print("Running Pyinstaller")
 #subprocess.check_call(["pyinstaller", "pyinstaller-windows-onedir.spec"])
@@ -36,42 +36,42 @@ subprocess.check_call([
 	'--include-module=sglib',
 	'--include-qt-plugins=platform,sensible',
 	'--enable-plugin=pyqt6',
-	'scripts\\stargate',
+	'scripts\\intuitives',
 ])
 
-shutil.copy('meta.json', 'stargate.dist')
-shutil.copy('COMMIT', 'stargate.dist')
-shutil.copytree('files', 'stargate.dist/files')
-os.makedirs('stargate.dist/engine')
+shutil.copy('meta.json', 'intuitives.dist')
+shutil.copy('COMMIT', 'intuitives.dist')
+shutil.copytree('files', 'intuitives.dist/files')
+os.makedirs('intuitives.dist/engine')
 for path in iglob('engine/*.dll'):
-    shutil.copy2(path, 'stargate.dist/engine')
+    shutil.copy2(path, 'intuitives.dist/engine')
 for path in iglob('engine/*.exe'):
-    shutil.copy2(path, 'stargate.dist/engine')
+    shutil.copy2(path, 'intuitives.dist/engine')
 os.makedirs('dist', exist_ok=True)
-if os.path.exists('dist/stargate'):
-    shutil.rmtree('dist/stargate')
-shutil.move('stargate.dist', 'dist/stargate')
+if os.path.exists('dist/intuitives'):
+    shutil.rmtree('dist/intuitives')
+shutil.move('intuitives.dist', 'dist/intuitives')
 
 TEMPLATE = r"""
-!define PRODUCT_NAME "stargate"
+!define PRODUCT_NAME "intuitives"
 !define PRODUCT_VERSION "{MAJOR_VERSION_NUM}.0"
-!define PRODUCT_PUBLISHER "stargatedaw"
+!define PRODUCT_PUBLISHER "intuitivesdaw"
 
 ;Require admin rights on NT6+ (When UAC is turned on)
 RequestExecutionLevel admin
 
 SetCompressor /SOLID lzma
 
-Name "Stargate DAW {MINOR_VERSION}"
-OutFile "dist\StargateDAW-{MINOR_VERSION}-win64-installer.exe"
-InstallDir "$PROGRAMFILES64\stargatedaw@github\Stargate"
+Name "Intuitives DAW {MINOR_VERSION}"
+OutFile "dist\IntuitivesDAW-{MINOR_VERSION}-win64-installer.exe"
+InstallDir "$PROGRAMFILES64\intuitivesdaw@github\Intuitives"
 
 ;--------------------------------
 ;Interface Settings
   !define MUI_ABORTWARNING
   !define MUI_LICENSEPAGE_CHECKBOX
   !define MUI_FINISHPAGE_RUN "$INSTDIR\program\{MAJOR_VERSION}.exe"
-  !define MUI_STARTMENUPAGE_DEFAULTFOLDER "Stargate DAW"
+  !define MUI_STARTMENUPAGE_DEFAULTFOLDER "Intuitives DAW"
 
 !include MUI2.nsh
 !include WinVer.nsh
@@ -133,31 +133,31 @@ Section "Base Install" SEC01
 
     ; Clean up the old legacy file structure
     ; TODO: Remove this in mid 2023
-    RMDir /r "$PROGRAMFILES64\stargateaudio@github\Stargate\program"
-    Delete "$PROGRAMFILES64\stargateaudio@github\Stargate\uninstall.exe"
+    RMDir /r "$PROGRAMFILES64\intuitivesaudio@github\Intuitives\program"
+    Delete "$PROGRAMFILES64\intuitivesaudio@github\Intuitives\uninstall.exe"
     ; Only if empty
-    RMDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
-    RMDir "$PROGRAMFILES64\stargateaudio@github"
+    RMDir "$PROGRAMFILES64\intuitivesaudio@github\Intuitives"
+    RMDir "$PROGRAMFILES64\intuitivesaudio@github"
 
     ; Delete the old program
     RMDir /r $INSTDIR\program
     ; Install the program
     CreateDirectory $INSTDIR\program
     SetOutPath $INSTDIR\program
-    File /r "dist\stargate\"
+    File /r "dist\intuitives\"
     File "files\share\pixmaps\{MAJOR_VERSION}.ico"
     ; Add to the "Add or remove programs" dialog
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\StargateDAW" \
-                "DisplayName" "Stargate DAW"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\StargateDAW" \
-                "DisplayIcon" "$\"$INSTDIR\program\files\share\pixmaps\stargate.ico$\""
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\StargateDAW" \
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\IntuitivesDAW" \
+                "DisplayName" "Intuitives DAW"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\IntuitivesDAW" \
+                "DisplayIcon" "$\"$INSTDIR\program\files\share\pixmaps\intuitives.ico$\""
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\IntuitivesDAW" \
                 "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
 SectionEnd
 
 Section "Start Menu Shortcut" SEC02
     createShortCut \
-      "$SMPROGRAMS\Stargate DAW.lnk" \
+      "$SMPROGRAMS\Intuitives DAW.lnk" \
       "$INSTDIR\program\{MAJOR_VERSION}.exe" \
       "" \
       "$INSTDIR\program\{MAJOR_VERSION}.ico"
@@ -166,11 +166,11 @@ SectionEnd
 Section /o "Portable Flash Drive Install" SEC03
     SetOutPath $INSTDIR
     ; Create the shortcut to the executable
-    File windows\LaunchStargate.cmd
+    File windows\LaunchIntuitives.cmd
     SetOutPath $INSTDIR\program
-    ; The exe looks for this empty file to choose the Stargate home folder
-    FileOpen $9 ..\_stargate_home w
-    FileWrite $9 "This file tells Stargate it is a portable install."
+    ; The exe looks for this empty file to choose the Intuitives home folder
+    FileOpen $9 ..\_intuitives_home w
+    FileWrite $9 "This file tells Intuitives it is a portable install."
     FileClose $9
 SectionEnd
 
@@ -184,8 +184,8 @@ Section "uninstall"
     ; We do not delete settings, projects or any other files the user may have
     ; stored next to the application, only the application itself
     RMDir /r $INSTDIR\program
-    Delete "$SMPROGRAMS\Stargate DAW.lnk"
-    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\StargateDAW"
+    Delete "$SMPROGRAMS\Intuitives DAW.lnk"
+    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\IntuitivesDAW"
 SectionEnd
 """
 

@@ -1,23 +1,23 @@
 #!/bin/sh -xe
 
-cd /stargate
+cd /intuitives
 VERSION=$(jq .version.minor src/meta.json)
 
 PYVER=3.11
 
 cd dist/
 rm -rf squashfs-root
-./stargate-x86_64.AppImage --appimage-extract
+./intuitives-x86_64.AppImage --appimage-extract
 cd ../src/
 make clean
 make
-DESTDIR=/stargate/dist/squashfs-root PREFIX=/usr make install_self_contained
+DESTDIR=/intuitives/dist/squashfs-root PREFIX=/usr make install_self_contained
 
 cp -r \
     sg_py_vendor \
-    /stargate/dist/squashfs-root/opt/python${PYVER}/lib/python${PYVER}/site-packages/
+    /intuitives/dist/squashfs-root/opt/python${PYVER}/lib/python${PYVER}/site-packages/
 
-export DESTDIR=/stargate/dist/squashfs-root
+export DESTDIR=/intuitives/dist/squashfs-root
 export PREFIX=/usr
 cd /root/libsndfile-1.1.0/
 make install
@@ -42,7 +42,7 @@ PACKAGES=$(apt-cache depends --recurse --no-recommends --no-suggests \
 	vorbis-tools \
 | grep "^\w" | grep -vE 'gcc|libc|libstdc|perl' | sort -u)
 
-cd /stargate/dist
+cd /intuitives/dist
 mkdir -p packages/
 cd packages/
 apt-get download ${PACKAGES}

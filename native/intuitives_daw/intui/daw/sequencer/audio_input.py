@@ -9,7 +9,7 @@ from intui.sgqt import *
 from intlib.lib import util
 from intlib.lib.strings import NO_AUDIO_INPUTS_INSTRUCTIONS
 from intlib.lib.translate import _
-from intlib.models.stargate.audio_inputs import AudioInputTrack, AudioInputTracks
+from intlib.models.core.audio_inputs import AudioInputTrack, AudioInputTracks
 from intui.daw import shared
 
 

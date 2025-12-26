@@ -19,8 +19,8 @@ def _lazy_import():
     """Lazy import to avoid circular dependencies"""
     global SgAudioItem, MIDINote, MIDIControl, MIDIPitchbend
     if SgAudioItem is None:
-        from intlib.models.stargate.audio_item import SgAudioItem as _SgAudioItem
-        from intlib.models.stargate.midi_events import (
+        from intlib.models.core.audio_item import SgAudioItem as _SgAudioItem
+        from intlib.models.core.midi_events import (
             MIDINote as _MIDINote,
             MIDIControl as _MIDIControl,
             MIDIPitchbend as _MIDIPitchbend,

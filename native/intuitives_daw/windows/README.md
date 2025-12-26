@@ -7,7 +7,7 @@ The following components must be setup and configured prior to building:
 - Python
 - MSYS2
 - NSIS
-- Stargate repo and dependencies
+- Intuitives repo and dependencies
 
 The build steps proceed as follows:
 - Pull the source code
@@ -21,7 +21,7 @@ The build steps proceed as follows:
 (or install Windows to your hard drive if you are `into that`).
 The VM should have at least 100GB of hard disk space
 
-- Create a user called stargate (the rest of the instructions assume this name
+- Create a user called intuitives (the rest of the instructions assume this name
   it is not an actual requirement to have this user name)
 - Install [MSYS2 64bit](https://www.msys2.org/wiki/MSYS2-installation/)
 - Install [Python3 64bit](https://www.python.org/downloads/windows/), be sure
@@ -51,24 +51,24 @@ pacman -Syu
 cd ~
 mkdir src && cd src
 pacman -S git make
-git clone --recursive https://github.com/stargateaudio/stargate.git
-cd stargate/src
+git clone --recursive https://github.com/intuitivesaudio/intuitives.git
+cd intuitives/src
 ./windows/msys2_deps.sh
 make mingw_deps
 ```
 
 ## Windows cmd.exe
 ```
-cd C:\msys64\home\starg\src\stargate\src
-python -m venv venv\stargate
-venv\stargate\scripts\activate.bat
+cd C:\msys64\home\starg\src\intuitives\src
+python -m venv venv\intuitives
+venv\intuitives\scripts\activate.bat
 pip install -r windows\requirements.txt
 ```
 
 # Creating a new release
 ## MSYS2 Terminal
 ```
-cd ~/src/stargate/src
+cd ~/src/intuitives/src
 git pull
 # Note that you may need to run this again
 # make mingw_deps
@@ -86,23 +86,23 @@ There are 2 different ways to execute this command.
 Either:
 - Open Visual Studio
 - When prompted to open a project or folder,
-  open folder `C:\msys64\home\starg\src\stargate\src\engine`
+  open folder `C:\msys64\home\starg\src\intuitives\src\engine`
 - View -> Terminal
 - Ensure that `Developer Command Prompt` is selected (not PowerShell)
 
 Or:
 - Open Developer Command Prompt for VS 20XX` from the Start Menu
-- `cd C:\msys64\home\starg\src\stargate\src\engine`
+- `cd C:\msys64\home\starg\src\intuitives\src\engine`
 
 Finally, execute the command:
-- `.\cv2pdb\cv2pdb.exe .\stargate-engine.exe`
+- `.\cv2pdb\cv2pdb.exe .\intuitives-engine.exe`
 
 ## Windows cmd.exe
 ```
-cd C:\msys64\home\starg\src\stargate\src
+cd C:\msys64\home\starg\src\intuitives\src
 venv\Scripts\activate.bat
 # Build the portable exe and installer exe
 python windows\release.py
 ```
 
-The build artifacts are now in `C:\msys64\home\starg\src\stargate\src\dist\`
+The build artifacts are now in `C:\msys64\home\starg\src\intuitives\src\dist\`

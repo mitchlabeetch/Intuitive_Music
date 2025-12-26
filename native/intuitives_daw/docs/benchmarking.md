@@ -1,11 +1,11 @@
 # Description
-This document describes how to use Stargate DAW as a benchmark for highly
+This document describes how to use Intuitives DAW as a benchmark for highly
 optimized, multithreaded audio DSP code written in C.  Specifically, this
 procedure is for Linux, it would be possible on Windows, but not trivially
 easy to do from the installed artifacts in the Windows installer.
 
 # Overview
-The Stargate UI is a PyQt5/6 application that controls the engine subprocess
+The Intuitives UI is a PyQt5/6 application that controls the engine subprocess
 that is written in C, by invoking the engine CLI and communicating over UDP
 sockets on localhost.
 
@@ -28,9 +28,9 @@ the normal, average use case is somewhere between, but much closer to the ideal
 use case.
 
 # Benchmark setup
-## Download or build Stargate DAW
+## Download or build Intuitives DAW
 See [the build instructions](./building.md) or the
-[releases page](https://github.com/stargateaudio/stargate/releases).
+[releases page](https://github.com/intuitivesaudio/intuitives/releases).
 
 ## Run the benchmark
 ### Acquiring projects to benchmark
@@ -38,8 +38,8 @@ See [the build instructions](./building.md) or the
 
 Or clone the demo projects for real world benchmarking
 ```
-git clone https://github.com/stargateaudio/stargate-v1-demo-projects.git
-# Projects are in stargate-v1-demo-projects/src/*/
+git clone https://github.com/intuitivesaudio/intuitives-v1-demo-projects.git
+# Projects are in intuitives-v1-demo-projects/src/*/
 ```
 
 ### Generate the engine command from the UI
@@ -48,28 +48,28 @@ know which beat number the render should start and stop at.  Using arbitrary
 numbers is also an option, but it is best to render the entire song and not
 include empty space at either end, as it may skew the results.
 
-* Opening the project in Stargate DAW
+* Opening the project in Intuitives DAW
 * Make sure that the region start/end are set to the portion of the song
   you want to render by right-clicking on the sequencer header and setting
   the region start/end
 * Go to `Menu (top left of the screen)->File->Render`
 * Click the `Copy cmd args` button, and close the dialog
-* Close Stargate DAW
+* Close Intuitives DAW
 * Open a terminal
-* Type in the `stargate-engine` binary you want to use, ie: ./stargate-engine,
-  /usr/bin/stargate-engine, etc...
+* Type in the `intuitives-engine` binary you want to use, ie: ./intuitives-engine,
+  /usr/bin/intuitives-engine, etc...
 * Paste the command arguments you copied from the render dialog
 
 You should have with something like this in your terminal window:
 ```
-./stargate-engine daw '/home/me/stargate/projects/myproject' test.wav 8 340 44100 512 3 0 0 0
+./intuitives-engine daw '/home/me/intuitives/projects/myproject' test.wav 8 340 44100 512 3 0 0 0
 ```
 
 ### Parameterizing a benchmarking shell command
 
 ```shell
 # Sample rate.  Normally this is 44100 or 48000, but users sometimes choose
-# 96000 or 192000 for higher quality, at a much higher CPU cost.  Stargate DAW
+# 96000 or 192000 for higher quality, at a much higher CPU cost.  Intuitives DAW
 # has been tested at rates over 1,000,000, although such rates adversely affect
 # the audio by drastically changing the mix characteristics
 SR=44100
@@ -81,29 +81,29 @@ SR=44100
 # calculated as (BUF_SIZE / SR) * 1000 == latency in milliseconds
 BUF_SIZE=512
 # The number of worker threads to spawn.  The limit is 16, setting to zero
-# causes Stargate DAW to automatically select a very conservative value
+# causes Intuitives DAW to automatically select a very conservative value
 # of 1-4 depending on the CPU that was detected
 THREADS=8
 # The project folder to render.  Specifically, this is the folder that contains
-# the `stargate.project` file.
-PROJECT=~/stargate/projects/myproject
+# the `intuitives.project` file.
+PROJECT=~/intuitives/projects/myproject
 # The file to output.  If you want to keep all of the artifacts from this run,
 # change the filename between runs
 OUTFILE=test.wav
 # This is the musical "beat" number within the project to begin rendering at.
 # 0 being the first beat of the song.  It is best to get this by opening
-# the project in Stargate DAW as described above, but you could also use
+# the project in Intuitives DAW as described above, but you could also use
 # arbitrary numbers.  This should be a low number, like 0 or 8
 START=8
 # This is the musical "beat" number within the project to stop rendering at
 # This should always be a (much) larger number than ${START}
 END=340
 
-./stargate-engine daw ${PROJECT?} ${OUTFILE?} ${START?} ${END?} ${SR?} ${BUF_SIZE?} ${THREADS?} 0 0 0
+./intuitives-engine daw ${PROJECT?} ${OUTFILE?} ${START?} ${END?} ${SR?} ${BUF_SIZE?} ${THREADS?} 0 0 0
 ```
 
 The `OUTFILE` parameter will exist as a file after the render.  Note that the
-file may be deterministic within the same version of Stargate DAW, but floating
+file may be deterministic within the same version of Intuitives DAW, but floating
 point rounding error may cause it to be non-deterministic.  You can listen to
 the file to check for correctness, but checksums may (or may not) work as
 intended.
@@ -130,9 +130,9 @@ this is how long it would play.
 Song length: 155.643356 seconds
 ```
 
-This is the rate that Stargate DAW can render.  For example 1:1 means that it
+This is the rate that Intuitives DAW can render.  For example 1:1 means that it
 can keep up with real time, no faster or slower.  For example, a 120 second
-song rendered in 120 seconds.  3: 1 means that Stargate DAW can output 3
+song rendered in 120 seconds.  3: 1 means that Intuitives DAW can output 3
 seconds of the song in 1 second (on average, for the entire song).  Less than
 1:1 means the system is too slow to play the project back in real time.
 ```
@@ -141,14 +141,14 @@ Ratio, render time to real time (higher is better):  5.527439 : 1
 
 # Examples
 This is a benchmark of my current system, a Ryzen 5950x with 16 cores, using
-a development build shortly after the Stargate DAW 21.10.8 release.
+a development build shortly after the Intuitives DAW 21.10.8 release.
 
 The project is an unrealistically heavy project designed to scale well that you
 can [download here](./benchmark-project.zip).  It consists of 31 instances of
 the FM1 synthesizer running the unison-heavy `Festivus` patch, playing a chord
 heavy MIDI item.  Nobody would realistically run such a heavy project, as such
-you should not try to open the project and play it back in Stargate DAW unless
-you have a CPU with many cores AND you have configured Stargate DAW to use at
+you should not try to open the project and play it back in Intuitives DAW unless
+you have a CPU with many cores AND you have configured Intuitives DAW to use at
 least 8 cores in the `Hardware Settings` dialog on the welcome screen.
 However, you can offline render it on any hadrware, even a Raspberry Pi 4 or an
 ancient laptop.
@@ -182,7 +182,7 @@ Ratio, render time to real time (higher is better):  0.864748 : 1
 ```
 
 Note that with 2 threads, we entered the point where the ratio fell below 1:1,
-therefore there is no way this project could be played in real time in Stargate
+therefore there is no way this project could be played in real time in Intuitives
 DAW on 2 CPU cores.  However, given that this project is completely,
 unrealistically CPU heavy (many times more so than a normal song), this is a
 testament to how CPU efficient the code is that such a heavy project can almost

@@ -3,7 +3,7 @@
     struct (un)marshalling feature to/from JSON.
 
     For examples, see:
-    https://github.com/stargateaudio/pymarshal/blob/master/README.md
+    https://github.com/intuitivesaudio/pymarshal/blob/master/README.md
 """
 
 from . import json

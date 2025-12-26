@@ -35,7 +35,7 @@ while [[ $# -gt 0 ]]; do
             BUILD_TYPE="Debug"
             shift
             ;;
-        --stargate)
+        --intuitives)
             USE_STARGATE="ON"
             shift
             ;;
@@ -53,7 +53,7 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "Options:"
             echo "  --debug      Build with debug symbols"
-            echo "  --stargate   Include Stargate engine"
+            echo "  --intuitives   Include Stargate engine"
             echo "  --gui        Build with Dear ImGui GUI"
             echo "  --clean      Clean before building"
             echo "  --help       Show this help"

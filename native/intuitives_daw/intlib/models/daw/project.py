@@ -8,12 +8,12 @@ from intlib import constants
 from intlib.math import clip_min, clip_value
 from intlib.models.daw.playlist import Playlist
 from intlib.models.daw.routing import MIDIRoutes, RoutingGraph
-from intlib.models.stargate.audio_inputs import AudioInputTracks
+from intlib.models.core.audio_inputs import AudioInputTracks
 from intlib import constants
 from intlib.models.project.abstract import AbstractProject
 from intlib.models.track_plugin import track_plugin, track_plugins
-from intlib.models.stargate.audio_item import SgAudioItem
-from intlib.models.stargate.midi_events import MIDINote, MIDIControl, MIDIPitchbend
+from intlib.models.core.audio_item import SgAudioItem
+from intlib.models.core.midi_events import MIDINote, MIDIControl, MIDIPitchbend
 # Aliases
 note = MIDINote
 cc = MIDIControl

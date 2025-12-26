@@ -99,7 +99,7 @@ cd native/intuitives_daw
 ./build.sh
 
 # Build with options
-./build.sh --debug --stargate --gui
+./build.sh --debug --intuitives --gui
 ```
 
 ---
@@ -223,7 +223,7 @@ make -j8
 ## 📜 License
 
 - **Native Engine:** MIT License
-- **Stargate Components:** GPLv3
+- **Intuitives Components:** GPLv3
 - **AI Model Wrappers:** MIT License
 
 ---
@@ -231,7 +231,7 @@ make -j8
 ## 🙏 Credits
 
 - **Intuitives DSP Engine:** 40 original audio features
-- **Stargate DAW:** Professional engine foundation
+- **Intuitives DAW:** Professional engine foundation
 - **Magenta:** Google's music AI
 - **AudioCraft:** Meta's text-to-music
 - **Spleeter:** Deezer's stem separation

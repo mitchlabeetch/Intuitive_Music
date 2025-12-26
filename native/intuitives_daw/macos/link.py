@@ -58,7 +58,7 @@ def relink(binary):
                 shutil.copyfile(dylib, basename)
                 relink(basename)
 
-BINARIES = ['stargate-engine', 'rubberband', 'sbsms']
+BINARIES = ['intuitives-engine', 'rubberband', 'sbsms']
 
 for binary in BINARIES:
     relink(binary)

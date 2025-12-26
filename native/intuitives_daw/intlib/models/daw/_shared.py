@@ -1,5 +1,5 @@
-from intlib.models.stargate.audio_item import SgAudioItem
-from intlib.models.stargate.midi_events import MIDINote, MIDIControl, MIDIPitchbend
+from intlib.models.core.audio_item import SgAudioItem
+from intlib.models.core.midi_events import MIDINote, MIDIControl, MIDIPitchbend
 # Aliases
 note = MIDINote
 cc = MIDIControl

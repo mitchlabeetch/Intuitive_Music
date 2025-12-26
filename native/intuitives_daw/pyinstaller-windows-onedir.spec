@@ -4,7 +4,7 @@ import os
 block_cipher = None
 
 
-a = Analysis(['scripts\\stargate'],
+a = Analysis(['scripts\\intuitives'],
              pathex=[os.path.abspath(SPECPATH)],
              binaries=[
                  ('engine/*.exe', 'engine'),
@@ -32,8 +32,8 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          icon='files\\share\\pixmaps\stargate.ico',
-          name='stargate',
+          icon='files\\share\\pixmaps\intuitives.ico',
+          name='intuitives',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -51,4 +51,4 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='stargate')
+               name='intuitives')

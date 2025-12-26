@@ -1,7 +1,7 @@
 # Usage
 Download the AppImage, then:
 #### GUI File Browser
-- right-click on the StargateDAW AppImage
+- right-click on the IntuitivesDAW AppImage
 - properties
 - permissions
 - allow executing file as program
@@ -9,7 +9,7 @@ Download the AppImage, then:
 or...
 #### Terminal
 ```
-chmod +x StargateDAW*.AppImage
+chmod +x IntuitivesDAW*.AppImage
 ```
 
 # AppImage
@@ -20,20 +20,20 @@ click from a file browser.  Some distro security features may cause issues,
 you can also run the AppImage from the command line with:
 ```
 # Only do this once per release
-./StargateDAW*.AppImage --appimage-extract
-mv squashfs-root/ stargatedaw/
+./IntuitivesDAW*.AppImage --appimage-extract
+mv squashfs-root/ intuitivesdaw/
 # Each time you want to run
-./stargatedaw/AppRun
+./intuitivesdaw/AppRun
 ```
 
 # Adding the AppImage to the start menu
-If you wish to add the Stargate DAW AppImage to the start menu, when running
+If you wish to add the Intuitives DAW AppImage to the start menu, when running
 the AppImage there is an action in the main menu (the "hamburger" icon in the
 upper left corner of the window after opening a project) to install (or
 uninstall) a start menu shortcut.
 
-This command will extract `stargate.png` next to the AppImage, and create
-a `~/.local/share/applications/stargate.desktop` file to add Stargate DAW
+This command will extract `intuitives.png` next to the AppImage, and create
+a `~/.local/share/applications/intuitives.desktop` file to add Intuitives DAW
 to your start menu.
 
 Note that this must be done everytime you download a new version, otherwise
@@ -51,10 +51,10 @@ NOTE:
   hard drive and running it.  If it now works, then it is security settings
   (which probably cannot be changed easily, if at all).
 
-If you would like to install Stargate DAW for Linux to a flash drive, or you
+If you would like to install Intuitives DAW for Linux to a flash drive, or you
 just want to store your projects and configurations next to the AppImage,
 simply place the AppImage in the desired folder, and create an empty text file
-called `_stargate_home` next to it.  Note that the Linux AppImage can be
+called `_intuitives_home` next to it.  Note that the Linux AppImage can be
 installed alongside a Windows portable install and a MacOS app bundle at the
 same time to create a (nearly) universal DAW flash drive.
 # General problems
@@ -78,13 +78,13 @@ following commands:
 sudo apt update && sudo apt install libfuse2 python3-pyqt5
 
 # Or alternately, extract the AppImage and run
-./StargateDaw-*.AppImage --appimage-extract
-mv squashfs-root StargateDAW
-./StargateDAW/AppRun
+./IntuitivesDaw-*.AppImage --appimage-extract
+mv squashfs-root IntuitivesDAW
+./IntuitivesDAW/AppRun
 ```
 
 However, double-clicking still will not open it.  You will need to right-click
-and choose `Run as program` to launch Stargate DAW.  Or install to the start
+and choose `Run as program` to launch Intuitives DAW.  Or install to the start
 menu using the `Adding the AppImage to the start menu` instructions below.
 
 ## Fedora/CentOS/RHEL/Rocky/Alma/etc... AppImage issues

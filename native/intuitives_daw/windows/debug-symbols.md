@@ -26,12 +26,12 @@ missing build dependencies or other tools required to build the package.
 ```
 makepkg-mingw
 pacman -U $PACKAGE_NAME.zst
-cd ~/src/stargate/src
+cd ~/src/intuitives/src
 make mingw_deps
 ```
 
 # From the Visual Studio Developer Command Prompt
 ```
-cd c:\msys64\home\starg\src\stargate\src\engine
+cd c:\msys64\home\starg\src\intuitives\src\engine
 .\cv2pdb\cv2pdb.exe .\$PACKAGE_NAME.dll
 ```

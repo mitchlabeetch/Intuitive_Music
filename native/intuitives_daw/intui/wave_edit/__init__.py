@@ -18,7 +18,7 @@ from intlib.math import clip_value
 from intlib.models.project.abstract import AbstractProject
 from intlib.models.theme import get_asset_path
 from intlib.models.track_plugin import track_plugin, track_plugins
-from intlib.models.stargate.audio_inputs import AudioInputTrack, AudioInputTracks
+from intlib.models.core.audio_inputs import AudioInputTrack, AudioInputTracks
 from intui import shared as glbl_shared
 from intui.util import show_generic_exception
 from intui.widgets.transport import AbstractTransportWidget

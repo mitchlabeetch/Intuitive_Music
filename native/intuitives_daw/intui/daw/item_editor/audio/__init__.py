@@ -21,7 +21,7 @@ from intlib.log import LOG
 from intlib.math import linear_interpolate
 from intui.sgqt import *
 from intlib.models import theme
-from intlib.models.stargate.audio_pool import PerFileFX
+from intlib.models.core.audio_pool import PerFileFX
 from intlib.models.theme import get_asset_path
 from intui.util import get_font
 

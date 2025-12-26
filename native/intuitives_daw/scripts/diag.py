@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-This file is part of the Stargate project, Copyright Stargate Team
+This file is part of the Intuitives project, Copyright Intuitives Team
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ TOOLS = {
 }
 
 parser = argparse.ArgumentParser(
-    description="Diagnostic tool for Stargate",
+    description="Diagnostic tool for Intuitives",
 )
 parser.add_argument(
     'tool',

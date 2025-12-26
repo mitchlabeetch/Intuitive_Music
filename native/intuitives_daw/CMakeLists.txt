@@ -60,7 +60,7 @@ set(INTUITIVES_DSP_SOURCES
 # ============================================================================
 
 if(INTUITIVES_DAW_USE_STARGATE)
-    set(STARGATE_DIR ${CMAKE_SOURCE_DIR}/stargate_engine)
+    set(STARGATE_DIR ${CMAKE_SOURCE_DIR}/intuitives_engine)
     include_directories(${STARGATE_DIR}/include)
     include_directories(${STARGATE_DIR}/libcds/include)
     
@@ -81,19 +81,19 @@ if(INTUITIVES_DAW_USE_STARGATE)
     )
     
     # Build Stargate engine as a static library
-    add_library(stargate_engine STATIC ${STARGATE_SOURCES})
-    target_include_directories(stargate_engine PUBLIC 
+    add_library(intuitives_engine STATIC ${STARGATE_SOURCES})
+    target_include_directories(intuitives_engine PUBLIC 
         ${STARGATE_DIR}/include
         ${STARGATE_DIR}/libcds/include
     )
-    target_compile_options(stargate_engine PRIVATE -O2 -ffast-math)
+    target_compile_options(intuitives_engine PRIVATE -O2 -ffast-math)
     
     # Link dependencies for Stargate
     if(PLATFORM_MACOS)
         find_library(COREAUDIO CoreAudio)
         find_library(AUDIOTOOLBOX AudioToolbox)
         find_library(COREFOUNDATION CoreFoundation)
-        target_link_libraries(stargate_engine PUBLIC
+        target_link_libraries(intuitives_engine PUBLIC
             ${COREAUDIO}
             ${AUDIOTOOLBOX}
             ${COREFOUNDATION}
@@ -101,8 +101,8 @@ if(INTUITIVES_DAW_USE_STARGATE)
     elseif(PLATFORM_LINUX)
         find_package(ALSA QUIET)
         if(ALSA_FOUND)
-            target_link_libraries(stargate_engine PUBLIC ${ALSA_LIBRARIES})
-            target_include_directories(stargate_engine PUBLIC ${ALSA_INCLUDE_DIRS})
+            target_link_libraries(intuitives_engine PUBLIC ${ALSA_LIBRARIES})
+            target_include_directories(intuitives_engine PUBLIC ${ALSA_INCLUDE_DIRS})
         endif()
     endif()
     
@@ -110,15 +110,15 @@ if(INTUITIVES_DAW_USE_STARGATE)
     find_library(PORTAUDIO_LIB portaudio HINTS /usr/local/lib /opt/homebrew/lib)
     find_path(PORTAUDIO_INCLUDE portaudio.h HINTS /usr/local/include /opt/homebrew/include)
     if(PORTAUDIO_LIB AND PORTAUDIO_INCLUDE)
-        target_include_directories(stargate_engine PUBLIC ${PORTAUDIO_INCLUDE})
-        target_link_libraries(stargate_engine PUBLIC ${PORTAUDIO_LIB})
+        target_include_directories(intuitives_engine PUBLIC ${PORTAUDIO_INCLUDE})
+        target_link_libraries(intuitives_engine PUBLIC ${PORTAUDIO_LIB})
         message(STATUS "Found PortAudio: ${PORTAUDIO_LIB}")
     endif()
     
     # Find PortMIDI
     find_library(PORTMIDI_LIB portmidi HINTS /usr/local/lib /opt/homebrew/lib)
     if(PORTMIDI_LIB)
-        target_link_libraries(stargate_engine PUBLIC ${PORTMIDI_LIB})
+        target_link_libraries(intuitives_engine PUBLIC ${PORTMIDI_LIB})
         message(STATUS "Found PortMIDI: ${PORTMIDI_LIB}")
     endif()
     
@@ -126,8 +126,8 @@ if(INTUITIVES_DAW_USE_STARGATE)
     find_library(SNDFILE_LIB sndfile HINTS /usr/local/lib /opt/homebrew/lib)
     find_path(SNDFILE_INCLUDE sndfile.h HINTS /usr/local/include /opt/homebrew/include)
     if(SNDFILE_LIB AND SNDFILE_INCLUDE)
-        target_include_directories(stargate_engine PUBLIC ${SNDFILE_INCLUDE})
-        target_link_libraries(stargate_engine PUBLIC ${SNDFILE_LIB})
+        target_include_directories(intuitives_engine PUBLIC ${SNDFILE_INCLUDE})
+        target_link_libraries(intuitives_engine PUBLIC ${SNDFILE_LIB})
         message(STATUS "Found libsndfile: ${SNDFILE_LIB}")
     endif()
     
@@ -135,13 +135,13 @@ if(INTUITIVES_DAW_USE_STARGATE)
     find_library(FFTW3_LIB fftw3 HINTS /usr/local/lib /opt/homebrew/lib)
     find_library(FFTW3F_LIB fftw3f HINTS /usr/local/lib /opt/homebrew/lib)
     if(FFTW3_LIB)
-        target_link_libraries(stargate_engine PUBLIC ${FFTW3_LIB})
+        target_link_libraries(intuitives_engine PUBLIC ${FFTW3_LIB})
     endif()
     if(FFTW3F_LIB)
-        target_link_libraries(stargate_engine PUBLIC ${FFTW3F_LIB})
+        target_link_libraries(intuitives_engine PUBLIC ${FFTW3F_LIB})
     endif()
     
-    target_link_libraries(stargate_engine PUBLIC m pthread)
+    target_link_libraries(intuitives_engine PUBLIC m pthread)
 endif()
 
 # ============================================================================
@@ -164,7 +164,7 @@ endif()
 
 # Link Stargate engine if enabled
 if(INTUITIVES_DAW_USE_STARGATE)
-    target_link_libraries(IntuitivesDAW PRIVATE stargate_engine)
+    target_link_libraries(IntuitivesDAW PRIVATE intuitives_engine)
     target_compile_definitions(IntuitivesDAW PRIVATE USE_STARGATE_ENGINE=1)
 endif()
 
@@ -225,15 +225,15 @@ set_target_properties(IntuitivesDAW PROPERTIES
 # ============================================================================
 
 if(INTUITIVES_DAW_USE_STARGATE)
-    add_executable(stargate-engine 
+    add_executable(intuitives-engine 
         ${STARGATE_DIR}/cli/main.c
     )
-    target_link_libraries(stargate-engine PRIVATE stargate_engine)
-    target_include_directories(stargate-engine PRIVATE 
+    target_link_libraries(intuitives-engine PRIVATE intuitives_engine)
+    target_include_directories(intuitives-engine PRIVATE 
         ${STARGATE_DIR}/include
         ${STARGATE_DIR}/libcds/include
     )
-    set_target_properties(stargate-engine PROPERTIES
+    set_target_properties(intuitives-engine PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
     )
 endif()
@@ -247,7 +247,7 @@ install(TARGETS IntuitivesDAW
 )
 
 if(INTUITIVES_DAW_USE_STARGATE)
-    install(TARGETS stargate-engine
+    install(TARGETS intuitives-engine
         RUNTIME DESTINATION bin
     )
 endif()

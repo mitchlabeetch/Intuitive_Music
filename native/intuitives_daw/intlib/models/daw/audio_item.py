@@ -1,6 +1,6 @@
 from intlib.math import clip_value, db_to_lin, np_resample
-from intlib.models.stargate.audio_item import SgAudioItem
-from intlib.models.stargate.midi_events import MIDINote, MIDIControl, MIDIPitchbend
+from intlib.models.core.audio_item import SgAudioItem
+from intlib.models.core.midi_events import MIDINote, MIDIControl, MIDIPitchbend
 from intlib.lib.util import *
 from intlib.lib.translate import _
 import numpy

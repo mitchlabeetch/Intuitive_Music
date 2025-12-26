@@ -11,9 +11,9 @@ implemented if it aligns with the core project principles.
 
 # Principles
 ## 1. A unique and carefully curated experience
-Stargate does not intend to be a DAW just like any other DAW.  As a one person
+Intuitives does not intend to be a DAW just like any other DAW.  As a one person
 development team (with some short-term assistance on cosmetic aspects from
-others along the way), Stargate must think differently, and provide a unique
+others along the way), Intuitives must think differently, and provide a unique
 experience.  I hope to attract more developers to the platform, but I have
 to assume that I will be doing this alone for the foreseeable future, given
 the specialized knowledge and high barrier to entry to contribute to DAWs
@@ -49,7 +49,7 @@ experience you could get anywhere else?
   public standards and abandoned (but still widely used) plugins.
 
 ## 2. Base hardware requirements: Raspberry Pi 4, 15 year old laptop
-Stargate is a DAW for everybody, regardless of socio-economic status.
+Intuitives is a DAW for everybody, regardless of socio-economic status.
 
 The development team regularly tests against these 2 targets to ensure that
 the application can run adequately on these platforms.  When most DAWs
@@ -70,7 +70,7 @@ heavy synthesizer patches with many unison voices.
   Using a lightweight rpi4 distro like NOOBs, a 2GB rpi4 would be adequate.
   There should be a gradient of usability all the way back to 20 year old
   hardware, but we do not have any such hardware to test.
-- Stargate is regularly tested against the following display resolutions:
+- Intuitives is regularly tested against the following display resolutions:
   1280x720 (720p), 1920x1080 (HD), 3840x2160 (4k), to ensure that users of new
   hardware and old hardware both have a great experience.
 
@@ -111,7 +111,7 @@ have some effect on the experience, but the difference should be minimal).
   the same file location.
 - A full suite of built-in plugins.  Any 3rd party plugin standard is going
   to be difficult to support across operating systems and CPU architectures,
-  if the developers even support all of the platforms that Stargate supports.
+  if the developers even support all of the platforms that Intuitives supports.
   Even if well supported on all platforms, it is cumbersome to have all users
   install the exact same plugins.
 
@@ -137,17 +137,17 @@ projects.
   will happen in the next major release.
 - Major releases are supported for as long as possible, until it is simply
   not feasible anymore.  Even after that, it should be possible to create
-  a VM of an older Linux distro running Stargate for the purpose of loading
+  a VM of an older Linux distro running Intuitives for the purpose of loading
   old projects.  The project will consider providing pre-built images for VMs
   later.
 - Major releases do not load projects from other major releases.  This avoids
   many bugs that come with trying to change the software over time while
-  maintaining file compatibility.  Multiple major versions of Stargate can
+  maintaining file compatibility.  Multiple major versions of Intuitives can
   be installed on the same computer.
 
 ## 6. Capable of running on all CPU architectures, past, present and future
-There should be close to zero effort on our part to make Stargate work on
-new CPU architectures.  We want you to be able to run Stargate on x86, or
+There should be close to zero effort on our part to make Intuitives work on
+new CPU architectures.  We want you to be able to run Intuitives on x86, or
 ARM, or RISC-V, or PowerPC, or the next big thing.  Keep in mind that we
 may be limited by support from 3rd party libraries we use, such as Qt.
 
@@ -165,12 +165,12 @@ We pledge to maintain high-quality, accurate, up-to-date documentation.
 Please hold us accountable if you are unable to understand how to achieve
 your desired goals using our workflow.  Conversely, be open to learning new
 ways to do things, do not expect us to throw away our existing work to turn
-Stargate into FL Studio because that is what you are used to.
+Intuitives into FL Studio because that is what you are used to.
 
 ### How we achieve this
 - User manual.  We document the design of the various UI views and their
   workflows in
-  [the Github docs folder](https://github.com/stargateaudio/stargate/docs)
+  [the Github docs folder](https://github.com/intuitivesaudio/intuitives/docs)
 - Youtube videos.  A picture is worth 1000 words, a video is about 30 pictures
   per second, so 30,000 words/second over a 10 minute Youtube video is
   18,000,000 words.  Clearly a lot easier than typing that many words in the

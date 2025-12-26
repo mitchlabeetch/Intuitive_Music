@@ -19,7 +19,7 @@ from intlib.math import clip_value
 from intui import shared, widgets
 from intui.daw import shared as daw_shared
 from intui.widgets.nested_combobox import NestedComboBox
-from intlib.models.stargate import *
+from intlib.models.core import *
 from intlib.models.track_plugin import track_plugin
 from intlib.models.theme import get_asset_path
 from intlib.lib import strings as sg_strings

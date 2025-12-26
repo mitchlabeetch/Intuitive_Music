@@ -19,4 +19,4 @@ fi
 
 
 {{ python-executable }} -s \
-	-u "${APPDIR}/opt/stargate/scripts/stargate" "$@"
+	-u "${APPDIR}/opt/intuitives/scripts/intuitives" "$@"

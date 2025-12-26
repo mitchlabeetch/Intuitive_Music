@@ -61,7 +61,7 @@ We learned from these but built our own implementation.
 
 | Project           | Source                                                                             | What We Learned                      |
 | :---------------- | :--------------------------------------------------------------------------------- | :----------------------------------- |
-| **Stargate DAW**  | [github.com/stargatedaw/stargate](https://github.com/stargatedaw/stargate)         | Full DAW architecture, plugin system |
+| **Intuitives DAW**  | [github.com/intuitivesdaw/intuitives](https://github.com/intuitivesdaw/intuitives)         | Full DAW architecture, plugin system |
 | **Gridsound/DAW** | [github.com/gridsound/daw](https://github.com/gridsound/daw)                       | Web-based DAW patterns               |
 | **LMMS**          | [github.com/LMMS/lmms](https://github.com/LMMS/lmms)                               | Cross-platform audio engine          |
 | **Meadowlark**    | [github.com/MeadowlarkDAW/Meadowlark](https://github.com/MeadowlarkDAW/Meadowlark) | Rust audio architecture              |

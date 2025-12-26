@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-This file is part of the Stargate project, Copyright Stargate Team
+This file is part of the Intuitives project, Copyright Intuitives Team
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ NYQUIST = SR / 2.
 
 BOILERPLATE = """\
 /*
-This file is part of the Stargate project, Copyright Stargate Team
+This file is part of the Intuitives project, Copyright Intuitives Team
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

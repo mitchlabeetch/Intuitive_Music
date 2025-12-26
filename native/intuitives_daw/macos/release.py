@@ -49,7 +49,7 @@ elif ARCH == 'arm64':
 else:
     assert False, f"Unknown arch. {ARCH}"
 
-BUNDLE = 'Stargate DAW.app'
+BUNDLE = 'Intuitives DAW.app'
 BUNDLE_PATH = os.path.join('dist', BUNDLE)
 if os.path.isdir(BUNDLE_PATH):
     shutil.rmtree(BUNDLE_PATH)
@@ -77,13 +77,13 @@ ARCH_NAMES = {
 }
 
 def build_dmg():
-    DMG = f'StargateDAW-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.dmg'
+    DMG = f'IntuitivesDAW-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.dmg'
     if os.path.exists(DMG):
         os.remove(DMG)
 
     subprocess.check_call([
         'create-dmg',
-        '--volname', 'Stargate DAW',
+        '--volname', 'Intuitives DAW',
         '--icon', BUNDLE, '50', '120',
         '--hide-extension', BUNDLE,
         '--app-drop-link', '300', '120',
@@ -93,11 +93,11 @@ def build_dmg():
     ])
 
 def build_pkg():
-    PKG = f'StargateDAW-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.pkg'
+    PKG = f'IntuitivesDAW-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.pkg'
     subprocess.check_call([
         'pkgbuild',
         '--root', BUNDLE,
-        '--identifier', 'com.github.stargatedaw.stargate',
+        '--identifier', 'com.github.intuitivesdaw.intuitives',
         '--scripts', '../macos/Scripts',
         '--install-location', f"/Applications/{BUNDLE}",
         'Distribution.pkg',

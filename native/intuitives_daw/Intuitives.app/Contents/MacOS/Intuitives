@@ -6,17 +6,26 @@
 # ============================================================
 
 SOURCE_DIR="/Users/utilisateur/Desktop/INTUITIVE_MUSIC/native/intuitives_daw"
+LOG_DIR="$HOME/intuitives/log"
+
+# Create log directory
+mkdir -p "$LOG_DIR"
 
 # Clean stale PID file
 rm -f ~/intuitives/ui.pid 2>/dev/null
 
-# Show notification
-osascript -e 'display notification "Starting Intuitives DAW GUI..." with title "Intuitives DAW"'
+# Set library paths
+export DYLD_LIBRARY_PATH="/usr/local/lib:$SOURCE_DIR/engine"
 
-# Open Terminal and run the GUI
+# Launch Python directly via a detached Terminal process 
+# that closes itself after launching the GUI
 osascript <<EOF
 tell application "Terminal"
-    activate
-    do script "cd '$SOURCE_DIR' && export DYLD_LIBRARY_PATH='/usr/local/lib' && python3 intuitives.py"
+    set newTab to do script "cd '$SOURCE_DIR' && export DYLD_LIBRARY_PATH='/usr/local/lib' && python3 intuitives.py; exit"
+    delay 1
+    -- Minimize the terminal window
+    tell front window
+        set miniaturized to true
+    end tell
 end tell
 EOF

@@ -388,7 +388,7 @@ See [LICENSE](LICENSE) for details.
 
 - ⭐ **Star on GitHub** - Show support
 - 👁️ **Watch Repository** - Get notified
-- 🐦 **[Twitter](https://twitter.com/IntuitivesDAW)** - Follow updates
+- 🐦 **[X/Twitter](https://twitter.com/IntuitivesDAW)** - Follow updates
 - 📺 **YouTube** - Tutorials coming soon
 
 ### Share Your Music

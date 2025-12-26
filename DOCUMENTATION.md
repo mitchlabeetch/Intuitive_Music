@@ -1288,7 +1288,7 @@ See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for dependencies.
 
 - ⭐ **Star on GitHub** - Show your support
 - 👁️ **Watch Repository** - Get notified of updates
-- 🐦 **Follow on Twitter** - @IntuitivesDe AW
+- 🐦 **Follow on X/Twitter** - @IntuitivesDAW
 - 📺 **YouTube Channel** - Tutorials and demos
 
 ### Share Your Music

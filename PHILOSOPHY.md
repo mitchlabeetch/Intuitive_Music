@@ -769,17 +769,23 @@ AI: "The previous chord was C major. F is its fourth scale degree,
 - Magenta: ~100MB, runs on CPU
 - Cloud API: Gigabytes of data, datacenter energy
 
-**Calculation:**
+**Calculation example:**
 ```
-1 cloud API call ≈ 0.01 kWh (datacenter + network)
+1 cloud API call ≈ 0.01 kWh (datacenter + network + overhead)
 1000 calls/day = 10 kWh/day = 3650 kWh/year
-= ~1.5 tons CO₂/year per user
+= ~1.5 tons CO₂/year per user (using global average grid)
 
 Local model: ~0.5 kWh/year per user
 = 0.0002 tons CO₂/year
 
-Saving: 99.99% reduction in carbon footprint
+Potential saving: 99.99% reduction in carbon footprint
 ```
+
+**Note:** These calculations use approximate values. Actual impact depends on:
+- Your local electricity source (renewable vs fossil fuel)
+- Cloud provider's renewable energy usage
+- Model size and inference frequency
+- Hardware efficiency
 
 **Our commitment:** Default to local, cloud is opt-in.
 

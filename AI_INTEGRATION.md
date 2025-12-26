@@ -64,19 +64,25 @@ AI in Intuitives is:
 
 ## Local vs Cloud
 
-### Comparison Table
+### Comparison Table (Approximate)
+
+**Note:** Values vary by provider, region, hardware, and usage patterns. Use as general guidance.
 
 | Aspect | Local Models | Cloud APIs |
 |--------|-------------|------------|
 | **Privacy** | ✅ Excellent (data never leaves) | ⚠️ Limited (data sent to servers) |
-| **Cost** | ✅ Free | ❌ Pay per use |
+| **Cost** | ✅ Free | ❌ Pay per use (~$0.01-0.05/request)* |
 | **Speed** | ✅ Fast (no network) | ⚠️ Variable (depends on connection) |
 | **Offline** | ✅ Works offline | ❌ Requires internet |
 | **Quality** | ⚠️ Good (improving rapidly) | ✅ Excellent |
 | **Setup** | ⚠️ Install required | ✅ Just API key |
-| **Sustainability** | ✅ Low carbon footprint | ❌ High energy use |
+| **Sustainability** | ✅ Low carbon footprint** | ❌ Higher energy use** |
 | **Storage** | ⚠️ ~500MB-2GB | ✅ None |
 | **CPU/GPU** | ⚠️ Uses local resources | ✅ Uses cloud resources |
+
+*Cost estimates based on typical pricing as of 2024. Check provider pricing for current rates.
+
+**Sustainability estimates based on typical infrastructure. Local processing generally uses 20-50x less energy than cloud for equivalent tasks, though exact figures depend on many factors including local hardware efficiency and cloud provider's renewable energy usage.
 
 ### Which to Choose?
 
@@ -822,17 +828,23 @@ ai:
 
 ### Carbon Footprint Comparison
 
-#### Energy Usage per 1000 AI Requests
+#### Energy Usage per 1000 AI Requests (Approximate)
 
-| Method | Energy (kWh) | CO₂ (kg) | Cost |
-|--------|--------------|----------|------|
+**Note:** These are rough estimates based on typical usage patterns. Actual values vary by hardware, model size, and provider.
+
+| Method | Energy (kWh) | CO₂ (kg)* | Cost |
+|--------|--------------|-----------|------|
 | **Local CPU** | 0.5 | 0.2 | $0 |
 | **Local GPU** | 0.2 | 0.08 | $0 |
 | **Cloud API** | 10.0 | 4.0 | $30 |
 
-**Local is 20-50x more energy efficient.**
+*CO₂ calculations based on global average grid carbon intensity (~400g CO₂/kWh). Actual impact varies by region and energy mix.
+
+**Local is typically 20-50x more energy efficient than cloud API calls.**
 
 #### Why Such a Difference?
+
+**Note:** These are general patterns. Specific energy usage varies based on hardware, infrastructure, and provider efficiency.
 
 **Cloud API:**
 - Datacenter power (large servers)

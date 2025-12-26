@@ -1,4 +1,4 @@
-from sglib.models.plugin.plugin import (
+from intlib.models.plugin.plugin import (
     Plugin,
     PluginCCMapping,
     PluginControl,

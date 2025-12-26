@@ -1,4 +1,4 @@
-from sglib.models.project import GlobalProject
+from intlib.models.project import GlobalProject
 
 
 def test_new():

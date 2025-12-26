@@ -1,4 +1,4 @@
-from sglib.models.plugin.rack import PluginRack
+from intlib.models.plugin.rack import PluginRack
 
 def test_init():
     PluginRack(

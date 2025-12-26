@@ -18,7 +18,7 @@ PARENT_DIR = os.path.dirname(SCRIPT_DIR)
 if PARENT_DIR not in sys.path:
     sys.path.insert(0, PARENT_DIR)
 
-from sglib.brand import (
+from intlib.brand import (
     APP_NAME,
     APP_TAGLINE,
     VERSION_STRING,
@@ -64,7 +64,7 @@ def main():
     check_dependencies()
     
     # Import after dependency check
-    from sgui._main import main as gui_main
+    from intui._main import main as gui_main
     
     print("Starting Intuitives DAW...")
     print()

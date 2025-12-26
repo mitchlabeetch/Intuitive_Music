@@ -1,4 +1,4 @@
-from sglib.models.daw.routing import RoutingGraph, TrackSend
+from intlib.models.daw.routing import RoutingGraph, TrackSend
 
 
 def test_to_from_str():

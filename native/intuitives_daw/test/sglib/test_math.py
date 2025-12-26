@@ -1,4 +1,4 @@
-from sglib.math import *
+from intlib.math import *
 import numpy
 
 

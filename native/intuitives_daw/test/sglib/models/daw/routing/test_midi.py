@@ -1,4 +1,4 @@
-from sglib.models.daw.routing import MIDIRoute, MIDIRoutes
+from intlib.models.daw.routing import MIDIRoute, MIDIRoutes
 
 
 def test_to_from_str_reorder():

@@ -1,4 +1,4 @@
-from sglib.models import theme
+from intlib.models import theme
 import pytest
 
 SCALER = theme.UIScaler(

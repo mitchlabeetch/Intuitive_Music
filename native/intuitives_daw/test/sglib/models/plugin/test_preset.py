@@ -1,4 +1,4 @@
-from sglib.models.plugin.preset import *
+from intlib.models.plugin.preset import *
 
 
 def test_preset_bank():

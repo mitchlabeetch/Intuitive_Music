@@ -1,4 +1,4 @@
-from sglib.hardware.rpi import *
+from intlib.hardware.rpi import *
 import tempfile
 
 def test_is_rpi():

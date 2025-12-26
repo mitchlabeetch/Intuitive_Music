@@ -15,15 +15,15 @@ import os
 # Add parent to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from sglib.brand import LOGO_ASCII, APP_NAME, VERSION_STRING
-from sglib.integrations import (
+from intlib.brand import LOGO_ASCII, APP_NAME, VERSION_STRING
+from intlib.integrations import (
     AudioAnalyzer,
     AIGenerator,
     PatternBuilder,
     VisualAnalyzer,
     LIBROSA_AVAILABLE,
 )
-from sglib.ai_models import (
+from intlib.ai_models import (
     MelodyRNN,
     TextToMusic,
     get_available_models,
@@ -273,7 +273,7 @@ def demo_quick_functions():
     print("\n⚡ QUICK FUNCTIONS")
     print("-" * 40)
     
-    from sglib.integrations import quick_generate, quick_pattern
+    from intlib.integrations import quick_generate, quick_pattern
     
     # Quick melody
     melody = quick_generate(style='random', bars=2)

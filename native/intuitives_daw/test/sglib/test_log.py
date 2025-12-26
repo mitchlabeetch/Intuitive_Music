@@ -1,4 +1,4 @@
-from sglib.log import LOG, setup_logging
+from intlib.log import LOG, setup_logging
 
 
 def test_setup_logging():

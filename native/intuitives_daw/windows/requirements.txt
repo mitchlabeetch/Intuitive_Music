@@ -1,0 +1,12 @@
+Nuitka
+PyQt6-Qt6==6.5.2
+PyQt6==6.5.2
+PyYAML
+jinja2
+mido
+mutagen
+numpy
+psutil
+pyinstaller
+pymarshal
+wavefile

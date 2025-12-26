@@ -1,0 +1,10 @@
+Name,Type,Origin,Access
+React,Frontend,Library,https://react.dev/
+Rust (WASM),Audio Engine (DSP),Language,https://www.rust-lang.org/
+Web Audio API,Audio,Browser Native,Internal
+Tone.js,Audio Library,Library,https://tonejs.github.io/
+Magenta.js,AI Music,Library,https://magenta.tensorflow.org/js
+TensorFlow.js,Gesture Recognition,Library,https://www.tensorflow.org/js
+Three.js / R3F,Visuals,Library,https://threejs.org/
+WebMIDI,Hardware Support,Browser Native,Internal
+Electron,Desktop Wrapper,Framework,https://www.electronjs.org/

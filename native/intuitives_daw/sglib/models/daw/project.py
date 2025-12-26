@@ -8,11 +8,16 @@ from sglib import constants
 from sglib.math import clip_min, clip_value
 from sglib.models.daw.playlist import Playlist
 from sglib.models.daw.routing import MIDIRoutes, RoutingGraph
-from sglib.models.intuitives import AudioInputTracks
+from sglib.models.stargate.audio_inputs import AudioInputTracks
 from sglib import constants
 from sglib.models.project.abstract import AbstractProject
 from sglib.models.track_plugin import track_plugin, track_plugins
-from sglib.models.intuitives import *
+from sglib.models.stargate.audio_item import SgAudioItem
+from sglib.models.stargate.midi_events import MIDINote, MIDIControl, MIDIPitchbend
+# Aliases
+note = MIDINote
+cc = MIDIControl
+pitchbend = MIDIPitchbend
 from sglib.lib import history
 from sglib.lib import util
 from sglib.lib.util import *

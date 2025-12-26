@@ -43,3 +43,30 @@ from sglib.lib import util
 from sglib.lib.translate import _
 from sgui.sgqt import *
 
+# Intuitives Signature UI Widgets
+from .animation import (
+    AnimatedValue,
+    AnimatedWidget,
+    GlowButton,
+    HoverRevealWidget,
+    PulseIndicator,
+    TypingLabel,
+    SmoothScrollArea,
+)
+from .generators import (
+    GeneratorPanel,
+    ChromasynesthesiaWidget,
+)
+from .happy_accidents import (
+    HappyAccidentWidget,
+    SuggestionToast,
+    QuickExperimentBar,
+    Suggestion,
+    SuggestionCategory,
+)
+from .visual_music import (
+    ChromasynesthesiaVisualizer,
+    OrbitalVisualizer,
+    SpectrumBars,
+    VisualizerSelector,
+)

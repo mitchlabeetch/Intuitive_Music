@@ -19,7 +19,7 @@ from sglib.math import clip_value
 from sgui import shared, widgets
 from sgui.daw import shared as daw_shared
 from sgui.widgets.nested_combobox import NestedComboBox
-from sglib.models.intuitives import *
+from sglib.models.stargate import *
 from sglib.models.track_plugin import track_plugin
 from sglib.models.theme import get_asset_path
 from sglib.lib import strings as sg_strings

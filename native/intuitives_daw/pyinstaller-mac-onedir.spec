@@ -7,14 +7,14 @@ ARCH = platform.machine()
 block_cipher = None
 
 BINARIES = [
- ('engine/stargate-engine', 'engine'),
+ ('engine/intuitives-engine', 'engine'),
  ('engine/*.dylib', '.'),
  ('engine/rubberband', 'engine'),
- ('engine/stargate-soundstretch', 'engine'),
+ ('engine/intuitives-soundstretch', 'engine'),
  ('engine/sbsms', 'engine'),
 ]
 
-a = Analysis(['scripts/stargate'],
+a = Analysis(['scripts/intuitives'],
              pathex=[
                  os.path.dirname(SPECPATH),
              ],
@@ -53,7 +53,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='stargate',
+          name='intuitives',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -71,8 +71,8 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='stargate')
+               name='intuitives')
 app = BUNDLE(coll,
-             name='Stargate DAW.app',
-             icon='macos/stargate.icns',
-             bundle_identifier='io.github.stargateaudio')
+             name='Intuitives DAW.app',
+             icon='macos/intuitives.icns',
+             bundle_identifier='io.github.intuitivesdaw')

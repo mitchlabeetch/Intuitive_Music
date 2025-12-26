@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-
+Intuitives DAW - Setup Script
+Rule-free Experimental DAW
 """
 
 import json
@@ -14,10 +15,10 @@ from distutils.core import Extension
 from setuptools.command.test import test as TestCommand
 
 
-NAME = "stargate"
-URL = 'https://github.com/stargateaudio/stargate'
+NAME = "intuitives"
+URL = 'https://github.com/intuitivesdaw/intuitives'
 DESCRIPTION = (
-    "Holistic audio production solution"
+    "Intuitives DAW - Rule-free Experimental Digital Audio Workstation"
 )
 
 DIRNAME = os.path.dirname(__file__)
@@ -102,7 +103,7 @@ def create_c_ext():
     sources = _walk('engine/src', '.c') + _walk('vendor/libcds/src', '.c')
 
     return Extension(
-        name='stargateengine',
+        name='intuitivesengine',
         sources=sources,
         include_dirs=include_dirs,
         libraries=libraries,
@@ -164,8 +165,8 @@ class PyTest(TestCommand):
 setuptools.setup(
     name=NAME,
     version=VERSION,
-    author="stargateaudio",
-    author_email="stargateaudio@noreply.github.com",
+    author="Intuitives Team",
+    author_email="intuitives@noreply.github.com",
     license="GPLv3",
     description=DESCRIPTION,
     # Only build the C extension if C_EXT=1 was defined in the env. vars.
@@ -195,9 +196,9 @@ setuptools.setup(
         'pytest-runner',
     ],
     scripts=[
-        'scripts/stargate',
+        'scripts/intuitives',
     ],
     # PyPI
     download_url=_github_download_url(),
-    keywords=[],
+    keywords=['daw', 'music', 'audio', 'experimental', 'generative'],
 )

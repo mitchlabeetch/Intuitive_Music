@@ -668,6 +668,219 @@ QGraphicsView {
 }
 
 /* ============================================================================
+   HAPPY ACCIDENTS SYSTEM
+   ============================================================================ */
+
+#happy_accident_widget {
+    background: transparent;
+    border-radius: 12px;
+}
+
+#suggestion_icon {
+    font-size: 24px;
+}
+
+#suggestion_title {
+    font-size: 15px;
+    font-weight: 700;
+    color: @text_primary;
+}
+
+#suggestion_desc {
+    font-size: 12px;
+    color: @text_secondary;
+    line-height: 1.4;
+}
+
+#category_badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+#subtle_button {
+    background: transparent;
+    border: 1px solid @border_subtle;
+    color: @text_muted;
+    border-radius: 8px;
+    padding: 6px 12px;
+}
+
+#subtle_button:hover {
+    border-color: @text_secondary;
+    color: @text_secondary;
+}
+
+#icon_button {
+    background: @bg_elevated;
+    border: 1px solid @border_subtle;
+    border-radius: 50%;
+    font-size: 14px;
+}
+
+#icon_button:hover {
+    background: @bg_hover;
+    border-color: @accent_primary;
+}
+
+/* ============================================================================
+   QUICK EXPERIMENT BAR
+   ============================================================================ */
+
+#quick_experiment_bar {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgba(26, 26, 37, 0.95),
+        stop:1 rgba(18, 18, 26, 0.98));
+    border-top: 1px solid @border_subtle;
+}
+
+#experiment_btn {
+    background: @bg_elevated;
+    border: 1px solid @border_subtle;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+#experiment_btn:hover {
+    background: @bg_hover;
+    border-color: @accent_secondary;
+}
+
+#experiment_btn:pressed {
+    background: @accent_secondary;
+}
+
+/* ============================================================================
+   GLOW BUTTON (ANIMATED)
+   ============================================================================ */
+
+#glow_button {
+    background: transparent;
+    border: none;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 20px;
+}
+
+/* ============================================================================
+   VISUAL MUSIC WIDGETS
+   ============================================================================ */
+
+#chroma_visualizer, #orbital_viz, #spectrum_viz {
+    background: @bg_darker;
+    border: 1px solid @border_subtle;
+    border-radius: 12px;
+}
+
+#visualizer_selector QPushButton {
+    background: @bg_panel;
+    border: 1px solid @border_subtle;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+}
+
+#visualizer_selector QPushButton:checked {
+    background: @accent_primary;
+    border-color: @accent_primary;
+    color: white;
+}
+
+#visualizer_selector QPushButton:hover:!checked {
+    border-color: @accent_primary;
+}
+
+/* ============================================================================
+   WELCOME SCREEN ENHANCED
+   ============================================================================ */
+
+#welcome_screen {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+        stop:0 @bg_darker,
+        stop:0.5 @bg_dark,
+        stop:1 @bg_darker);
+}
+
+#welcome_screen_rp {
+    background: @bg_panel;
+    border: 1px solid @border_subtle;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+#welcome_screen_rp::item {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 2px 4px;
+}
+
+#welcome_screen_rp::item:selected {
+    background: @accent_primary;
+    color: white;
+}
+
+#welcome_screen_rp::item:hover:!selected {
+    background: @bg_hover;
+}
+
+#huge_button {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 @bg_elevated,
+        stop:1 @bg_panel);
+    border: 1px solid @border_subtle;
+    border-radius: 16px;
+    padding: 24px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    min-width: 120px;
+    min-height: 60px;
+}
+
+#huge_button:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 @bg_hover,
+        stop:1 @bg_elevated);
+    border-color: @accent_primary;
+}
+
+#huge_button:pressed {
+    background: @accent_primary;
+    border-color: @accent_primary;
+}
+
+/* ============================================================================
+   TYPING LABEL ANIMATION
+   ============================================================================ */
+
+#typing_label {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ============================================================================
+   PULSE INDICATOR
+   ============================================================================ */
+
+#pulse_indicator {
+    background: transparent;
+    border: none;
+}
+
+/* ============================================================================
+   ANIMATED CONTAINERS
+   ============================================================================ */
+
+#animated_panel {
+    background: @bg_panel;
+    border: 1px solid @border_subtle;
+    border-radius: 12px;
+}
+
+#hover_reveal {
+    background: transparent;
+}
+
+/* ============================================================================
    TRANSPARENT ELEMENTS
    ============================================================================ */
 
@@ -675,3 +888,26 @@ QGraphicsView {
     background: transparent;
     border: none;
 }
+
+/* ============================================================================
+   FOOTER / BRAND BAR
+   ============================================================================ */
+
+#brand_bar {
+    background: @bg_darker;
+    border-top: 1px solid @border_subtle;
+    padding: 8px 16px;
+}
+
+#brand_text {
+    color: @text_muted;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+#brand_tagline {
+    color: @accent_primary;
+    font-size: 10px;
+    font-style: italic;
+}
+

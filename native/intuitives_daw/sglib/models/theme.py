@@ -680,11 +680,34 @@ def setup_globals():
         )
     ICON_PATH = os.path.abspath(ICON_PATH)
 
+    # Try new .inttheme extension first, fall back to legacy .sgtheme
     DEFAULT_THEME_FILE = os.path.join(
         THEMES_DIR,
-        "default",
-        "default.sgtheme",
+        "intuitives",
+        "intuitives.inttheme",
     )
+
+    if not os.path.exists(DEFAULT_THEME_FILE):
+        # Try local development path with new extension
+        DEFAULT_THEME_FILE = os.path.abspath(
+            os.path.join(
+                os.path.dirname(__file__),
+                '..',
+                '..',
+                'files',
+                'themes',
+                'intuitives',
+                'intuitives.inttheme',
+            )
+        )
+
+    if not os.path.exists(DEFAULT_THEME_FILE):
+        # Legacy fallback to default.sgtheme
+        DEFAULT_THEME_FILE = os.path.join(
+            THEMES_DIR,
+            "default",
+            "default.sgtheme",
+        )
 
     if not os.path.exists(DEFAULT_THEME_FILE):
         DEFAULT_THEME_FILE = os.path.abspath(

@@ -1,8 +1,14 @@
 from sglib.math import clip_value, db_to_lin, np_resample
-from sglib.models.intuitives import *
+from sglib.models.stargate.audio_item import SgAudioItem
+from sglib.models.stargate.midi_events import MIDINote, MIDIControl, MIDIPitchbend
 from sglib.lib.util import *
 from sglib.lib.translate import _
 import numpy
+
+# Aliases for backwards compatibility
+note = MIDINote
+cc = MIDIControl
+pitchbend = MIDIPitchbend
 
 
 class DawAudioItem(SgAudioItem):

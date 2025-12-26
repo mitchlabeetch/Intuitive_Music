@@ -18,7 +18,7 @@ from sglib.math import clip_value
 from sglib.models.project.abstract import AbstractProject
 from sglib.models.theme import get_asset_path
 from sglib.models.track_plugin import track_plugin, track_plugins
-from sglib.models.intuitives import AudioInputTrack, AudioInputTracks
+from sglib.models.stargate.audio_inputs import AudioInputTrack, AudioInputTracks
 from sgui import shared as glbl_shared
 from sgui.util import show_generic_exception
 from sgui.widgets.transport import AbstractTransportWidget

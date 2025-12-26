@@ -69,8 +69,19 @@ def main():
     print("Starting Intuitives DAW...")
     print()
     
+    # Create args object
+    class Args:
+        def __init__(self):
+            self.project_file = None
+    
+    args = Args()
+    
+    # Check for project file argument
+    if len(sys.argv) > 1:
+        args.project_file = sys.argv[1]
+    
     # Run the GUI
-    gui_main()
+    gui_main(args)
 
 
 if __name__ == "__main__":

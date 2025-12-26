@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# ============================================================
+# INTUITIVES DAW v0.6 BETA
+# "Does this sound cool?" - The only rule.
+# ============================================================
+
+SOURCE_DIR="/Users/utilisateur/Desktop/INTUITIVE_MUSIC/native/intuitives_daw"
+
+# Clean stale PID file
+rm -f ~/intuitives/ui.pid 2>/dev/null
+
+# Show notification
+osascript -e 'display notification "Starting Intuitives DAW GUI..." with title "Intuitives DAW"'
+
+# Open Terminal and run the GUI
+osascript <<EOF
+tell application "Terminal"
+    activate
+    do script "cd '$SOURCE_DIR' && export DYLD_LIBRARY_PATH='/usr/local/lib' && python3 intuitives.py"
+end tell
+EOF

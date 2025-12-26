@@ -1,6 +1,11 @@
 from .atm_point import DawAtmPoint
 from sglib.math import cosine_interpolate, linear_interpolate
-from sglib.models.intuitives import *
+from sglib.models.stargate.audio_item import SgAudioItem
+from sglib.models.stargate.midi_events import MIDINote, MIDIControl, MIDIPitchbend
+# Aliases
+note = MIDINote
+cc = MIDIControl
+pitchbend = MIDIPitchbend
 from sglib.lib.util import *
 from sglib.lib.translate import _
 

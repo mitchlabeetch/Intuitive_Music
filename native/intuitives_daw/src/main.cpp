@@ -58,6 +58,10 @@ static volatile bool g_running = true;
 // AUDIO CALLBACK
 // ============================================================================
 
+// Static buffers to avoid alloca overhead
+static float s_left_buffer[8192];
+static float s_right_buffer[8192];
+
 void audio_callback(ma_device *device, void *output, const void *input,
                     ma_uint32 frame_count) {
   (void)device;
@@ -65,21 +69,18 @@ void audio_callback(ma_device *device, void *output, const void *input,
 
   float *out = (float *)output;
 
-  if (!g_app) {
+  if (!g_app || frame_count > 8192) {
     memset(out, 0, frame_count * 2 * sizeof(float));
     return;
   }
 
-  // Process DAW audio
-  float *left = (float *)alloca(frame_count * sizeof(float));
-  float *right = (float *)alloca(frame_count * sizeof(float));
-
-  daw_process_audio(g_app, left, right, frame_count);
+  // Process DAW audio using static buffers
+  daw_process_audio(g_app, s_left_buffer, s_right_buffer, frame_count);
 
   // Interleave stereo output
   for (ma_uint32 i = 0; i < frame_count; i++) {
-    out[i * 2 + 0] = left[i];
-    out[i * 2 + 1] = right[i];
+    out[i * 2 + 0] = s_left_buffer[i];
+    out[i * 2 + 1] = s_right_buffer[i];
   }
 }
 
@@ -658,8 +659,10 @@ void daw_process_audio(DawApp *app, float *output_l, float *output_r,
   memset(output_l, 0, frames * sizeof(float));
   memset(output_r, 0, frames * sizeof(float));
 
-  if (!transport->playing)
+  // Early return if not playing - saves CPU
+  if (!transport->playing) {
     return;
+  }
 
   // Process each track
   for (uint32_t t = 0; t < app->project.num_tracks; t++) {
@@ -877,21 +880,28 @@ int main(int argc, char *argv[]) {
     // GUI/App mode - no terminal available
     printf("\n");
     printf("═══════════════════════════════════════════════════════════════\n");
-    printf(" Running in App Mode (no terminal)\n");
-    printf(" Audio engine active. Close app window to quit.\n");
+    printf(" Running in App Mode\n");
+    printf(" This is a headless audio engine. Use terminal for interactive "
+           "mode.\n");
+    printf(" To quit: kill the process or press Ctrl+C in terminal.\n");
     printf(
         "═══════════════════════════════════════════════════════════════\n\n");
 
-    // Start playback automatically in app mode
-    daw_play(g_app);
+#ifdef __APPLE__
+    // Show macOS notification that app started
+    system("osascript -e 'display notification \"Audio engine running. Use "
+           "terminal for interactive mode.\" with title \"Intuitives DAW v0.6 "
+           "Beta\"' 2>/dev/null &");
+#endif
 
-    // Generate a demo melody
-    printf("🎲 Generating demo melody...\n");
-    daw_generate_melody_markov(g_app, 0, 0.7f, 16);
+    // DON'T auto-play - saves CPU
+    // Just stay alive, audio engine is ready
+    printf("💤 Engine idle. Audio engine ready.\n");
+    printf("   Run from terminal for interactive mode.\n");
 
-    // Simple event loop (in production would be GUI event loop)
+    // Low-CPU idle loop
     while (g_running) {
-      usleep(100000); // 100ms sleep
+      usleep(500000); // 500ms sleep - very low CPU
     }
   }
 

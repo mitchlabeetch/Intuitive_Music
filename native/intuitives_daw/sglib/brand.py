@@ -195,7 +195,7 @@ MAX_PLUGINS_PER_TRACK = 8
 
 PROJECT_EXTENSION = ".intv"
 PRESET_EXTENSION = ".intp"
-THEME_EXTENSION = ".sgtheme"
+THEME_EXTENSION = ".inttheme"
 
 AUDIO_EXTENSIONS = [".wav", ".flac", ".aiff", ".mp3", ".ogg"]
 MIDI_EXTENSIONS = [".mid", ".midi"]

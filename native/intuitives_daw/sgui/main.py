@@ -918,7 +918,7 @@ class SgMainWindow(QWidget):
                 MAIN_WINDOW,
                 _("Open a theme file"),
                 util.THEMES_DIR,
-                "Intuitives Theme (*.sgtheme)",
+                "Intuitives Theme (*.inttheme *.sgtheme)",
                 options=QFileDialog.Option.DontUseNativeDialog,
             )
             if f_file and str(f_file):
@@ -1492,15 +1492,28 @@ def main(
 
     shared.set_window_title()
     SPLASH_SCREEN.status_update(_("Loading project..."))
-    for i in range(600):
-        if (
-            constants.READY
-            or
-            util.ENGINE_RETCODE is not None
-        ):
+    
+    # Wait for engine to be ready, with a reasonable timeout (10 seconds)
+    MAX_WAIT_ITERATIONS = 200  # 200 * 0.05s = 10 seconds
+    engine_ready = False
+    for i in range(MAX_WAIT_ITERATIONS):
+        if constants.READY:
+            engine_ready = True
+            break
+        if util.ENGINE_RETCODE is not None:
             break
         time.sleep(0.05)
         QApplication.processEvents()
+    
+    # Log the engine status for debugging
+    if not engine_ready and util.ENGINE_RETCODE is None:
+        LOG.warning(
+            "Audio engine did not respond within 10 seconds. "
+            "Proceeding without engine confirmation. "
+            "Audio features may be limited."
+        )
+        # Set READY to True to allow the UI to function
+        constants.READY = True
 
     if i < 15:
         SPLASH_SCREEN.status_update(_("Showing the main window"))

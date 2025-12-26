@@ -7,3 +7,4 @@ __all__ = [
 from .daw import DawIPC
 from .intuitives import IntuitivesIPC
 from .wave_edit import WaveEditIPC
+

@@ -279,6 +279,16 @@ if(APPLE)
     option(INTUITIVES_BUILD_BUNDLE "Build macOS .app bundle" ON)
     
     if(INTUITIVES_BUILD_BUNDLE)
+        # Check for icns icon
+        set(MACOSX_BUNDLE_ICON_FILE "")
+        if(EXISTS ${CMAKE_SOURCE_DIR}/assets/AppIcon.icns)
+            set(MACOSX_BUNDLE_ICON_FILE "AppIcon.icns")
+            set(APP_ICON_FILE ${CMAKE_SOURCE_DIR}/assets/AppIcon.icns)
+            set_source_files_properties(${APP_ICON_FILE} PROPERTIES
+                MACOSX_PACKAGE_LOCATION "Resources"
+            )
+        endif()
+        
         set_target_properties(IntuitivesDAW PROPERTIES
             MACOSX_BUNDLE TRUE
             MACOSX_BUNDLE_BUNDLE_NAME "Intuitives"
@@ -287,14 +297,19 @@ if(APPLE)
             MACOSX_BUNDLE_GUI_IDENTIFIER "dev.intuitives.daw"
             MACOSX_BUNDLE_COPYRIGHT "© 2024 Intuitives Team"
             MACOSX_BUNDLE_INFO_STRING "Rule-free Experimental DAW"
+            MACOSX_BUNDLE_ICON_FILE "${MACOSX_BUNDLE_ICON_FILE}"
             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
         )
         
-        # Copy assets
+        # Add icon as a source
+        if(APP_ICON_FILE)
+            target_sources(IntuitivesDAW PRIVATE ${APP_ICON_FILE})
+        endif()
+        
+        # Copy other assets
         set(RESOURCE_FILES
             ${CMAKE_SOURCE_DIR}/assets/icon.svg
             ${CMAKE_SOURCE_DIR}/assets/logo.svg
-            ${CMAKE_SOURCE_DIR}/assets/AppIcon.svg
         )
         
         foreach(RESOURCE ${RESOURCE_FILES})
@@ -307,6 +322,6 @@ if(APPLE)
         endforeach()
         
         message(STATUS "Building macOS app bundle: Intuitives.app")
+        message(STATUS "App Icon: ${MACOSX_BUNDLE_ICON_FILE}")
     endif()
 endif()
-

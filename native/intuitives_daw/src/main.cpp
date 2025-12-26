@@ -802,71 +802,98 @@ int main(int argc, char *argv[]) {
   // Setup signal handler
   signal(SIGINT, signal_handler);
 
-  printf("\n");
-  printf("═══════════════════════════════════════════════════════════════\n");
-  printf(" COMMANDS\n");
-  printf("═══════════════════════════════════════════════════════════════\n");
-  printf("  [space] Play/Pause    [s] Stop    [t] Add Track\n");
-  printf("  [m] Generate Markov   [g] Generate Genetic    [c] Cellular\n");
-  printf("  [x] Generate from text    [q] Quit\n");
-  printf("═══════════════════════════════════════════════════════════════\n\n");
-
-// Simple command loop (in production this would be Dear ImGui render loop)
+  // Check if we have a terminal (stdin is a TTY)
+  bool has_terminal = false;
 #ifndef _WIN32
-  struct termios old_termios, new_termios;
-  tcgetattr(STDIN_FILENO, &old_termios);
-  new_termios = old_termios;
-  new_termios.c_lflag &= ~(ICANON | ECHO);
-  tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
-  fcntl(STDIN_FILENO, F_SETFL, O_NONBLOCK);
+  has_terminal = isatty(STDIN_FILENO);
 #endif
 
-  while (g_running) {
-    char c;
-    if (read(STDIN_FILENO, &c, 1) == 1) {
-      switch (c) {
-      case ' ':
-        if (g_app->project.transport.playing) {
-          daw_pause(g_app);
-        } else {
-          daw_play(g_app);
+  if (has_terminal) {
+    // Terminal mode - show commands
+    printf("\n");
+    printf("═══════════════════════════════════════════════════════════════\n");
+    printf(" COMMANDS (Terminal Mode)\n");
+    printf("═══════════════════════════════════════════════════════════════\n");
+    printf("  [space] Play/Pause    [s] Stop    [t] Add Track\n");
+    printf("  [m] Generate Markov   [g] Generate Genetic    [c] Cellular\n");
+    printf("  [x] Generate from text    [q] Quit\n");
+    printf(
+        "═══════════════════════════════════════════════════════════════\n\n");
+
+#ifndef _WIN32
+    struct termios old_termios, new_termios;
+    tcgetattr(STDIN_FILENO, &old_termios);
+    new_termios = old_termios;
+    new_termios.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
+    fcntl(STDIN_FILENO, F_SETFL, O_NONBLOCK);
+#endif
+
+    while (g_running) {
+      char c;
+      if (read(STDIN_FILENO, &c, 1) == 1) {
+        switch (c) {
+        case ' ':
+          if (g_app->project.transport.playing) {
+            daw_pause(g_app);
+          } else {
+            daw_play(g_app);
+          }
+          break;
+        case 's':
+          daw_stop(g_app);
+          break;
+        case 't':
+          daw_add_track(g_app, "New Track");
+          break;
+        case 'm':
+          daw_generate_melody_markov(g_app, 0, 0.7f, 16);
+          break;
+        case 'g':
+          daw_generate_melody_genetic(g_app, 0, 50);
+          break;
+        case 'c':
+          daw_generate_rhythm_cellular(g_app, 0, 90, 0.3f);
+          break;
+        case 'x': {
+          printf("Generating from text: 'Intuitives DAW'\n");
+          char text[256] = "Intuitives DAW";
+          daw_generate_from_text(g_app, 0, text);
+          break;
         }
-        break;
-      case 's':
-        daw_stop(g_app);
-        break;
-      case 't':
-        daw_add_track(g_app, "New Track");
-        break;
-      case 'm':
-        daw_generate_melody_markov(g_app, 0, 0.7f, 16);
-        break;
-      case 'g':
-        daw_generate_melody_genetic(g_app, 0, 50);
-        break;
-      case 'c':
-        daw_generate_rhythm_cellular(g_app, 0, 90, 0.3f);
-        break;
-      case 'x': {
-        printf("Enter text: ");
-        char text[256] = "Intuitives DAW";
-        daw_generate_from_text(g_app, 0, text);
-        break;
+        case 'q':
+        case 27: // ESC
+          g_running = false;
+          break;
+        }
       }
-      case 'q':
-      case 27: // ESC
-        g_running = false;
-        break;
-      }
+      usleep(10000);
     }
 
-    // Small sleep
-    usleep(10000);
-  }
-
 #ifndef _WIN32
-  tcsetattr(STDIN_FILENO, TCSANOW, &old_termios);
+    tcsetattr(STDIN_FILENO, TCSANOW, &old_termios);
 #endif
+  } else {
+    // GUI/App mode - no terminal available
+    printf("\n");
+    printf("═══════════════════════════════════════════════════════════════\n");
+    printf(" Running in App Mode (no terminal)\n");
+    printf(" Audio engine active. Close app window to quit.\n");
+    printf(
+        "═══════════════════════════════════════════════════════════════\n\n");
+
+    // Start playback automatically in app mode
+    daw_play(g_app);
+
+    // Generate a demo melody
+    printf("🎲 Generating demo melody...\n");
+    daw_generate_melody_markov(g_app, 0, 0.7f, 16);
+
+    // Simple event loop (in production would be GUI event loop)
+    while (g_running) {
+      usleep(100000); // 100ms sleep
+    }
+  }
 
   printf("\n🧹 Cleaning up...\n");
   daw_destroy(g_app);

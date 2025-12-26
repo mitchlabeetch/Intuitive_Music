@@ -1,11 +1,20 @@
 cmake_minimum_required(VERSION 3.16)
-project(IntuitivesDAW VERSION 1.0.0 LANGUAGES C CXX)
+project(IntuitivesDAW VERSION 0.6.0 LANGUAGES C CXX)
+
+# INTUITIVES DAW v0.6 BETA
+# "Does this sound cool?" - The only rule.
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# macOS Intel architecture (x86_64)
+if(APPLE)
+    set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Build for Intel architecture")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum macOS version")
+endif()
 
 # Options
 option(INTUITIVES_DAW_BUILD_GUI "Build with Dear ImGui GUI" OFF)
@@ -248,12 +257,56 @@ endif()
 # ============================================================================
 
 message(STATUS "")
-message(STATUS "=== INTUITIVES DAW Configuration ===")
-message(STATUS "Version: ${PROJECT_VERSION}")
-message(STATUS "Platform: ${CMAKE_SYSTEM_NAME}")
-message(STATUS "C++ Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
-message(STATUS "GUI: ${INTUITIVES_DAW_BUILD_GUI}")
-message(STATUS "Stargate Engine: ${INTUITIVES_DAW_USE_STARGATE}")
-message(STATUS "DSP Engine: Intuitives (40 features)")
-message(STATUS "====================================")
+message(STATUS "╔════════════════════════════════════════════════╗")
+message(STATUS "║       INTUITIVES DAW v${PROJECT_VERSION}-BETA          ║")
+message(STATUS "║   'Does this sound cool?' - The only rule.     ║")
+message(STATUS "╠════════════════════════════════════════════════╣")
+message(STATUS "║ Platform: ${CMAKE_SYSTEM_NAME} (${CMAKE_OSX_ARCHITECTURES})")
+message(STATUS "║ Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "║ GUI: ${INTUITIVES_DAW_BUILD_GUI}")
+message(STATUS "║ Stargate Engine: ${INTUITIVES_DAW_USE_STARGATE}")
+message(STATUS "║ DSP Features: 40 Original")
+message(STATUS "║ Generators: Markov, Genetic, Cellular, L-System")
+message(STATUS "║ Input: Text, Color, Image, MIDI")
+message(STATUS "╚════════════════════════════════════════════════╝")
 message(STATUS "")
+
+# ============================================================================
+# macOS App Bundle (optional)
+# ============================================================================
+
+if(APPLE)
+    option(INTUITIVES_BUILD_BUNDLE "Build macOS .app bundle" ON)
+    
+    if(INTUITIVES_BUILD_BUNDLE)
+        set_target_properties(IntuitivesDAW PROPERTIES
+            MACOSX_BUNDLE TRUE
+            MACOSX_BUNDLE_BUNDLE_NAME "Intuitives"
+            MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"
+            MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}"
+            MACOSX_BUNDLE_GUI_IDENTIFIER "dev.intuitives.daw"
+            MACOSX_BUNDLE_COPYRIGHT "© 2024 Intuitives Team"
+            MACOSX_BUNDLE_INFO_STRING "Rule-free Experimental DAW"
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+        )
+        
+        # Copy assets
+        set(RESOURCE_FILES
+            ${CMAKE_SOURCE_DIR}/assets/icon.svg
+            ${CMAKE_SOURCE_DIR}/assets/logo.svg
+            ${CMAKE_SOURCE_DIR}/assets/AppIcon.svg
+        )
+        
+        foreach(RESOURCE ${RESOURCE_FILES})
+            if(EXISTS ${RESOURCE})
+                set_source_files_properties(${RESOURCE} PROPERTIES
+                    MACOSX_PACKAGE_LOCATION "Resources"
+                )
+                target_sources(IntuitivesDAW PRIVATE ${RESOURCE})
+            endif()
+        endforeach()
+        
+        message(STATUS "Building macOS app bundle: Intuitives.app")
+    endif()
+endif()
+

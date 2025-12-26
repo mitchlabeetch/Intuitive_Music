@@ -23,10 +23,10 @@ No piano roll constraints. No scale enforcement. No rules.
 """
 
 # Version (SemVer)
-VERSION_MAJOR = 1
-VERSION_MINOR = 0
+VERSION_MAJOR = 0
+VERSION_MINOR = 6
 VERSION_PATCH = 0
-VERSION_STRING = f"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
+VERSION_STRING = f"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-beta"
 VERSION_NAME = "Genesis"  # Version codename
 
 # Copyright

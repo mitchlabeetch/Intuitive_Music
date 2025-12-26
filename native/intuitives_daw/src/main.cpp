@@ -1,8 +1,17 @@
 /**
- * INTUITIVES DAW - Main Application
+ * INTUITIVES DAW v0.6 BETA
  *
- * Native C/C++ DAW with Dear ImGui interface.
- * Based on Stargate architecture but following Intuitives philosophy.
+ * Native C/C++ DAW with fully integrated generative tools.
+ * "Does this sound cool?" - The only rule.
+ *
+ * Features:
+ * - 40 Original DSP Features (oscillators, effects, generators)
+ * - Markov/Genetic/Cellular melody generation
+ * - Text-to-melody, Color-to-harmony
+ * - Chromasynesthesia visualization
+ * - Zero learning curve interface
+ *
+ * Built for macOS Intel (x86_64)
  */
 
 #define MINIAUDIO_IMPLEMENTATION

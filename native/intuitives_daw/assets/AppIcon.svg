@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="20" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    
+    <filter id="innerGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <radialGradient id="bgGradient" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#22223a"/>
+      <stop offset="100%" stop-color="#0a0a0f"/>
+    </radialGradient>
+    
+    <linearGradient id="shineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background with rounded corners (macOS icon style) -->
+  <rect width="1024" height="1024" rx="180" fill="url(#bgGradient)" filter="url(#shadow)"/>
+  
+  <!-- Subtle grid pattern -->
+  <g opacity="0.05">
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-width="1"/>
+    </pattern>
+    <rect width="1024" height="1024" rx="180" fill="url(#grid)"/>
+  </g>
+  
+  <!-- Outer glow ring -->
+  <circle cx="512" cy="512" r="350" fill="none" stroke="url(#mainGradient)" stroke-width="4" opacity="0.4"/>
+  <circle cx="512" cy="512" r="380" fill="none" stroke="url(#mainGradient)" stroke-width="2" opacity="0.2"/>
+  
+  <!-- Main infinity waveform symbol -->
+  <g transform="translate(512, 512)" filter="url(#innerGlow)">
+    <!-- Left loop -->
+    <path d="M -220 0 
+             C -220 -110 -110 -150 0 -75 
+             C 110 0 110 0 0 75 
+             C -110 150 -220 110 -220 0" 
+          fill="none" 
+          stroke="url(#mainGradient)" 
+          stroke-width="48" 
+          stroke-linecap="round"/>
+    
+    <!-- Right loop -->
+    <path d="M 220 0 
+             C 220 110 110 150 0 75 
+             C -110 0 -110 0 0 -75 
+             C 110 -150 220 -110 220 0" 
+          fill="none" 
+          stroke="url(#mainGradient)" 
+          stroke-width="48" 
+          stroke-linecap="round"/>
+    
+    <!-- Center waveform -->
+    <path d="M -55 -35 L -28 -85 L 0 40 L 28 -65 L 55 30" 
+          fill="none" 
+          stroke="#ffffff" 
+          stroke-width="16" 
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Chromasynesthesia dots arc -->
+  <g opacity="0.8">
+    <circle cx="250" cy="350" r="16" fill="#ff5c5c"/>
+    <circle cx="310" cy="270" r="12" fill="#ff8c4c"/>
+    <circle cx="390" cy="210" r="14" fill="#ffb84c"/>
+    <circle cx="480" cy="175" r="12" fill="#e8ff4c"/>
+    <circle cx="580" cy="175" r="14" fill="#4cff8c"/>
+    <circle cx="670" cy="210" r="12" fill="#4cffff"/>
+    <circle cx="730" cy="270" r="14" fill="#4c8cff"/>
+    <circle cx="780" cy="350" r="16" fill="#8c4cff"/>
+  </g>
+  
+  <!-- Shine overlay -->
+  <rect width="1024" height="512" rx="180" fill="url(#shineGradient)"/>
+  
+  <!-- Border -->
+  <rect x="4" y="4" width="1016" height="1016" rx="178" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.1"/>
+</svg>

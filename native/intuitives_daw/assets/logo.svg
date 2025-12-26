@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="200" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Text gradient -->
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    
+    <!-- Glow -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Icon -->
+  <g transform="translate(30, 30) scale(0.28)">
+    <!-- Infinity symbol -->
+    <g transform="translate(250, 250)" filter="url(#glow)">
+      <path d="M -120 0 
+               C -120 -60 -60 -80 0 -40 
+               C 60 0 60 0 0 40 
+               C -60 80 -120 60 -120 0" 
+            fill="none" 
+            stroke="url(#textGradient)" 
+            stroke-width="24" 
+            stroke-linecap="round"/>
+      <path d="M 120 0 
+               C 120 60 60 80 0 40 
+               C -60 0 -60 0 0 -40 
+               C 60 -80 120 -60 120 0" 
+            fill="none" 
+            stroke="url(#textGradient)" 
+            stroke-width="24" 
+            stroke-linecap="round"/>
+      <!-- Waveform -->
+      <path d="M -30 -20 L -15 -45 L 0 20 L 15 -35 L 30 15" 
+            fill="none" 
+            stroke="#ffffff" 
+            stroke-width="8" 
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            opacity="0.9"/>
+    </g>
+  </g>
+  
+  <!-- Brand name -->
+  <text x="200" y="115" 
+        font-family="Inter, SF Pro Display, -apple-system, sans-serif" 
+        font-size="72" 
+        font-weight="700" 
+        fill="url(#textGradient)"
+        filter="url(#glow)">
+    INTUITIVES
+  </text>
+  
+  <!-- Tagline -->
+  <text x="200" y="155" 
+        font-family="Inter, SF Pro Display, -apple-system, sans-serif" 
+        font-size="18" 
+        font-weight="400" 
+        fill="#94a3b8"
+        letter-spacing="4">
+    RULE-FREE EXPERIMENTAL DAW
+  </text>
+  
+  <!-- Version badge -->
+  <g transform="translate(690, 105)">
+    <rect x="0" y="-20" width="70" height="28" rx="14" fill="#7c3aed" opacity="0.2"/>
+    <text x="35" y="0" 
+          font-family="Inter, SF Pro Display, -apple-system, sans-serif" 
+          font-size="14" 
+          font-weight="600" 
+          fill="#8b5cf6"
+          text-anchor="middle">
+      v0.6β
+    </text>
+  </g>
+</svg>

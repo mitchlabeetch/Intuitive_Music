@@ -2,43 +2,29 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>English</string>
-    <key>CFBundleDisplayName</key>
-    <string>Intuitives</string>
-    <key>CFBundleExecutable</key>
-    <string>Intuitives</string>
-    <key>CFBundleIconFile</key>
-    <string>AppIcon</string>
-    <key>CFBundleIdentifier</key>
-    <string>dev.intuitives.daw</string>
-    <key>CFBundleInfoDictionaryVersion</key>
-    <string>6.0</string>
-    <key>CFBundleName</key>
-    <string>Intuitives</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleShortVersionString</key>
-    <string>0.6.0</string>
-    <key>CFBundleVersion</key>
-    <string>0.6.0-beta</string>
-    <key>CFBundleSignature</key>
-    <string>INTV</string>
-    <key>LSMinimumSystemVersion</key>
-    <string>10.15</string>
-    <key>NSHighResolutionCapable</key>
-    <true/>
-    <key>NSHumanReadableCopyright</key>
-    <string>© 2024 Intuitives Team. Rule-free Experimental Music Creation.</string>
-    <key>NSPrincipalClass</key>
-    <string>NSApplication</string>
-    <key>NSAppleEventsUsageDescription</key>
-    <string>Intuitives DAW needs to display notifications and interact with the system.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Intuitives DAW needs microphone access for audio input and recording.</string>
-    <key>LSUIElement</key>
-    <false/>
-    <key>LSApplicationCategoryType</key>
-    <string>public.app-category.music</string>
+	<key>CFBundleDisplayName</key>
+	<string>Intuitives</string>
+	<key>CFBundleExecutable</key>
+	<string>Intuitives</string>
+	<key>CFBundleIconFile</key>
+	<string>intuitives.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>dev.intuitives.daw</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Intuitives</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.6.0</string>
+	<key>CFBundleVersion</key>
+	<string>0.6.0-beta</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.music</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Intuitives DAW needs microphone access for audio recording.</string>
 </dict>
 </plist>

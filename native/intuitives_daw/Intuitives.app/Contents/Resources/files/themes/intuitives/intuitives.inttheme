@@ -1,0 +1,25 @@
+# Intuitives DAW Theme Configuration
+# "Does this sound cool?" - The only rule.
+
+template: default.qss
+palette: default.yaml
+variables:
+  path: default.yaml
+  overrides:
+    combobox: |-
+      qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #1a1a25, stop: 0.3 #12121a, stop: 0.6 #12121a, stop:1 #1a1a25
+      )
+    assets_subdir: ""
+system:
+  path: default.yaml
+  overrides:
+    daw:
+      seq_antialiasing: true
+      seq_item_background: "#12666666"
+      seq_item_background_use_track_color: true
+      seq_background: "#0a0a0f"
+      seq_header: "#12121a"
+      playback_cursor: "#7c3aed"
+    widgets: {}

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg:svg
+   version="1.1"
+   id="Capa_1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 44 44"
+   xml:space="preserve"
+   sodipodi:docname="metronome-on.svg"
+   width="44"
+   height="44"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:svg="http://www.w3.org/2000/svg"><svg:defs
+   id="defs518" /><sodipodi:namedview
+   id="namedview516"
+   pagecolor="#cdcdcd"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   showgrid="false"
+   inkscape:zoom="5.0828026"
+   inkscape:cx="-0.68859648"
+   inkscape:cy="5.6071428"
+   inkscape:window-width="1920"
+   inkscape:window-height="1011"
+   inkscape:window-x="0"
+   inkscape:window-y="0"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Capa_1" /><script>{
+            document.currentScript.dataset.injected = true;
+            const o = JSON.parse('{&quot;userAgent&quot;:&quot;Mozilla/5.0 (Windows NT 10.0; rv:100.0) Gecko/20100101 Firefox/100.0&quot;,&quot;appVersion&quot;:&quot;5.0 (Windows)&quot;,&quot;platform&quot;:&quot;Windows&quot;,&quot;vendor&quot;:&quot;&quot;,&quot;product&quot;:&quot;Gecko&quot;,&quot;oscpu&quot;:&quot;Windows 10&quot;,&quot;userAgentData&quot;:&quot;[delete]&quot;,&quot;productSub&quot;:&quot;20100101&quot;,&quot;buildID&quot;:&quot;20181001000000&quot;}');
+
+            for (const key of Object.keys(o)) {
+              if (o[key] === '[delete]') {
+                delete Object.getPrototypeOf(window.navigator)[key];
+              }
+              else {
+                navigator.__defineGetter__(key, () =&gt; {
+                  if (o[key] === 'empty') {
+                    return '';
+                  }
+                  return o[key];
+                });
+              }
+            }
+          }</script>
+
+<svg:g
+   id="g485">
+</svg:g>
+<svg:g
+   id="g487">
+</svg:g>
+<svg:g
+   id="g489">
+</svg:g>
+<svg:g
+   id="g491">
+</svg:g>
+<svg:g
+   id="g493">
+</svg:g>
+<svg:g
+   id="g495">
+</svg:g>
+<svg:g
+   id="g497">
+</svg:g>
+<svg:g
+   id="g499">
+</svg:g>
+<svg:g
+   id="g501">
+</svg:g>
+<svg:g
+   id="g503">
+</svg:g>
+<svg:g
+   id="g505">
+</svg:g>
+<svg:g
+   id="g507">
+</svg:g>
+<svg:g
+   id="g509">
+</svg:g>
+<svg:g
+   id="g511">
+</svg:g>
+<svg:g
+   id="g513">
+</svg:g>
+<svg:rect
+   width="44"
+   height="44"
+   rx="6"
+   fill="#F89E19"
+   id="rect1049"
+   x="0.035088502"
+   y="0.011218823"
+   style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#f89e19;fill-opacity:1;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" /><svg:path
+   d="M 13.309407,22.051082 9.6773338,28.17348 c -0.3434111,0.579289 -0.5151156,1.19265 -0.5151156,1.771939 0,1.647049 1.3867758,3.055505 3.6981198,3.055505 h 18.27927 c 2.324528,0 3.698174,-1.408456 3.698174,-3.055505 0,-0.579289 -0.171761,-1.19265 -0.515003,-1.783329 L 25.156575,12.691533 c -0.620725,-1.033687 -1.915077,-1.692457 -3.156574,-1.692457 -1.228309,0 -2.53585,0.65877 -3.143445,1.692457 l -3.169812,5.361275 1.54529,1.328976 3.447182,-5.88381 c 0.277368,-0.48842 0.766052,-0.806441 1.320785,-0.806441 0.554733,0 1.043363,0.318021 1.333913,0.806441 l 7.211342,12.358301 H 22.700005 L 11.420708,16.155929 c -0.435833,-0.374868 -1.030181,-0.38621 -1.4924391,0 -0.4622562,0.397549 -0.4358835,0.920039 0,1.306247 l 9.7735691,8.394099 h -6.247153 l 1.439631,-2.442144 z m 9.800001,2.374004 v -7.962478 c 0,-0.567948 -0.396214,-0.931428 -1.056605,-0.931428 -0.64715,0 -1.043365,0.36348 -1.043365,0.931428 v 6.156468 z m -10.235887,6.792508 c -0.977313,0 -1.545235,-0.636087 -1.545235,-1.340315 0,-0.23854 0.06599,-0.488422 0.19808,-0.738298 l 0.898139,-1.52211 19.150984,-0.02267 0.898087,1.54479 c 0.145278,0.238487 0.224563,0.488417 0.224563,0.726955 0,0.715572 -0.581158,1.351659 -1.558531,1.351659 z"
+   id="path1"
+   style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#f9f9f9;fill-opacity:1;stroke-width:0.0634705;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" /></svg:svg>

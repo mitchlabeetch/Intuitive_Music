@@ -1,32 +1,117 @@
-# Intuitive Music DAW 🎵
+# Intuitives DAW 🎵
 
-An experimental, AI-assisted, extremely extensive Digital Audio Workstation (DAW) designed for local deployment. This project combines professional audio production capabilities with cutting-edge AI assistance to revolutionize music creation.
+<p align="center">
+  <strong>Revolutionary Rule-Free Digital Audio Workstation</strong>
+</p>
 
-## Features
+<p align="center">
+  <em>"Does this sound cool?" - The only rule.</em>
+</p>
 
-### Core DAW Features
-- **Multi-track Audio & MIDI** - Unlimited tracks with professional audio and MIDI editing
-- **Real-time Audio Processing** - Low-latency audio engine with 48kHz/24-bit support
-- **Professional Effects** - EQ, Compression, Reverb, Delay, and more
-- **MIDI Processing** - Complete MIDI editing, quantization, and manipulation
-- **Project Management** - Comprehensive project save/load with metadata
-- **Audio Rendering** - Export projects to various audio formats
+<p align="center">
+  <img src="https://img.shields.io/badge/version-0.6.0--beta-purple" alt="Version">
+  <img src="https://img.shields.io/badge/license-MIT%2FGPLv3-green" alt="License">
+  <img src="https://img.shields.io/badge/open%20source-100%25-blue" alt="Open Source">
+  <img src="https://img.shields.io/badge/AI-optional%20%26%20local--first-orange" alt="AI Optional">
+</p>
 
-### AI-Powered Features
-- **Chord Progression Suggestions** - AI-generated chord progressions based on style and key
-- **Melody Generation** - Intelligent melody composition assistance
-- **Arrangement Analysis** - Get feedback on your arrangement and mix
-- **Mixing Advice** - AI-powered mixing recommendations
-- **Mastering Suggestions** - Professional mastering chain recommendations
-- **Interactive AI Chat** - Ask questions and get expert music production advice
+---
 
-### Advanced Capabilities
-- **Plugin System** - Extensible architecture for custom plugins
-- **Automation** - Full parameter automation support
-- **Session Recording** - Track your production sessions
-- **Database Integration** - SQLite database for project management
-- **Real-time Collaboration** - WebSocket-based communication
-- **Web-based UI** - Modern React-based interface
+## 🎯 What is Intuitives?
+
+**Intuitives DAW** is an open-source, experimental Digital Audio Workstation that revolutionizes music creation by removing barriers and embracing creativity. Unlike traditional DAWs that enforce music theory rules and technical constraints, Intuitives empowers **everyone** to create music through:
+
+- **🎲 Experiment-First Design** - Try ideas instantly without theory knowledge
+- **🚫 No Learning Curve** - Create music within minutes, not months
+- **🎨 Visual & Intuitive** - See your sound, shape it visually  
+- **🤖 AI Optional** - Use AI when you want it, not when forced
+- **🌱 Sustainability Focus** - Locally-run models preferred, no cloud dependency
+- **🔌 Plugin-Open** - Extend and customize everything
+- **📖 100% Open Source** - Free forever, community-driven
+
+## ✨ Key Features
+
+### 🎹 Professional DAW, Zero Learning Curve
+
+**Complete Production Suite:**
+- 🎵 **Unlimited Tracks** - Audio & MIDI, no artificial limits
+- 🎚️ **40+ Native Effects** - Oscillators, filters, reverb, delay, distortion, and more
+- 🎛️ **Real-time Processing** - 48kHz/24-bit low-latency audio engine
+- 🎼 **Full MIDI Support** - Complete editing, automation, MPE controllers
+- 💾 **Project Management** - Save, load, version control
+
+**But Approachable for Beginners:**
+- Generate music from text, images, or colors
+- Visual sound manipulation (no technical knowledge needed)
+- AI-assisted composition (fully optional)
+- Progressive revelation of advanced features
+
+### 🚀 Experiment-First Approach
+
+**Bypass Traditional Music Theory:**
+- ❌ No scale constraints or key signatures
+- ❌ No forced quantization or time signatures  
+- ❌ No "right" or "wrong" notes
+- ✅ Visual feedback (Chromasynesthesia: every note has a color)
+- ✅ Instant experimentation
+- ✅ Happy accidents encouraged
+
+**Generative Tools:**
+- Markov chain melody generation
+- Genetic algorithm sound evolution
+- Cellular automata rhythm patterns
+- L-system fractal compositions
+- Random walk explorations
+
+### 🤖 AI Integration (Optional & Local-First)
+
+**Privacy-Preserving AI:**
+- 🔒 **Local Models Default** - Magenta, MusicGen, Spleeter (runs on your computer)
+- 🌱 **Sustainable** - 99% lower carbon footprint than cloud AI
+- 💰 **Free** - No API costs or subscriptions
+- 🔌 **Offline** - Work anywhere, anytime
+
+**AI Features:**
+- Chord progression suggestions
+- Melody generation and harmonization
+- Audio analysis (BPM, key, pitch detection)
+- Stem separation (vocals, drums, bass, other)
+- Audio-to-MIDI conversion
+- Text-to-audio generation
+
+**Cloud APIs Optional:** OpenAI, Anthropic for advanced chat features
+
+### 🔌 Plugin-Open Architecture
+
+**Extend Everything:**
+- 🎚️ Create custom audio effects
+- 🎹 Build virtual instruments
+- 🎵 Design MIDI processors  
+- 🎨 Add visualizers
+- 🤖 Integrate AI models
+- 📁 Support new file formats
+
+**Simple Python API:**
+```python
+from intuitive_daw.audio.processor import AudioEffect
+
+class MyEffect(AudioEffect):
+    def __init__(self, param=0.5):
+        super().__init__("My Effect")
+        self.param = param
+    
+    def _process_impl(self, audio):
+        return audio * self.param
+```
+
+### 🌍 100% Open Source
+
+**Free Forever:**
+- MIT/GPLv3 licenses
+- No subscriptions or premium tiers
+- No vendor lock-in
+- Community-driven development
+- Transparent decision-making
 
 ## Architecture
 
@@ -50,226 +135,156 @@ intuitive_music/
 └── requirements.txt          # Python dependencies
 ```
 
-## Installation
+## 🚀 Quick Start (5 Minutes)
 
 ### Prerequisites
-- Python 3.9 or higher
-- Node.js 16+ and npm (for frontend)
-- Audio drivers (ASIO on Windows, CoreAudio on macOS, ALSA/JACK on Linux)
+- **Python 3.9+** - `python --version`
+- **pip** - Included with Python
+- **(Optional) Node.js 16+** - For web UI
 
-### Quick Start
+### Installation
 
-1. **Clone the repository**
+#### Option A: Python Package (Recommended)
+
 ```bash
+# 1. Clone repository
 git clone https://github.com/mitchlabeetch/Intuitive_Music.git
 cd Intuitive_Music
-```
 
-2. **Create virtual environment**
-```bash
+# 2. Create virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-3. **Install Python dependencies**
-```bash
-pip install -r requirements.txt
-```
-
-4. **Install the package**
-```bash
+# 3. Install
 pip install -e .
-```
 
-5. **Initialize the environment**
-```bash
+# 4. Initialize
 intuitive-daw init
+
+# 5. Start creating!
+intuitive-daw serve  # Start web UI
 ```
 
-6. **Configure environment**
-```bash
-cp .env.example .env
-# Edit .env and add your API keys
-```
-
-7. **Install frontend dependencies** (optional)
-```bash
-cd frontend
-npm install
-```
-
-## Usage
-
-### Starting the Server
+#### Option B: Native App (macOS/Linux/Windows)
 
 ```bash
-# Start the DAW server
-intuitive-daw serve
+# Navigate to native app
+cd native/intuitives_daw
 
-# Or with custom configuration
-intuitive-daw serve --host 0.0.0.0 --port 8000 --config config.yaml
+# Build
+./build.sh
+
+# Run
+./build/IntuitivesDAW.app/Contents/MacOS/IntuitivesDAW  # macOS
+# Or: ./build/IntuitivesDAW  # Linux/Windows
 ```
 
-The server will be available at `http://localhost:5000`
-
-### Command Line Interface
-
-```bash
-# Create a new project
-intuitive-daw create "My Project"
-
-# Show project information
-intuitive-daw info ./projects/my-project
-
-# Export project to audio
-intuitive-daw export ./projects/my-project output.wav --format wav
-
-# Run system tests
-intuitive-daw test
-```
-
-### Python API
+### Your First Music (2 Minutes)
 
 ```python
-from intuitive_daw import AudioEngine, Project, Track
+from intuitive_daw import Project
+from intuitive_daw.ai.local_models import LocalAI
 
-# Create a new project
-project = Project("My Song")
-project.set_tempo(120)
-project.set_time_signature(4, 4)
+# Create project
+project = Project("My First Song")
 
-# Add tracks
-from intuitive_daw.core.track import AudioTrack, MIDITrack
-audio_track = AudioTrack("Vocals")
-midi_track = MIDITrack("Piano")
+# Generate melody from text (no theory needed!)
+ai = LocalAI()
+melody = ai.text_to_melody("Hello World")
 
-project.add_track(audio_track)
-project.add_track(midi_track)
+# Add to project
+track = project.add_midi_track("Melody")
+track.add_clip(melody)
 
-# Initialize audio engine
-engine = AudioEngine()
-engine.initialize()
-
-# Add tracks to engine
-engine.add_track(audio_track)
-engine.add_track(midi_track)
-
-# Start playback
-engine.start_playback()
-
-# Save project
+# Save
 project.save()
 ```
 
-### AI Assistant
+**Congratulations!** You've created music without knowing a single music theory concept.
 
-```python
-from intuitive_daw.ai.assistant import AIAssistant
+### Optional: Local AI Models
 
-# Create AI assistant
-ai = AIAssistant()
+For enhanced AI features (still runs locally, no cloud):
 
-# Get chord suggestions
-response = ai.suggest_chords(key="C major", style="pop")
-print(response.content)
+```bash
+# Install local AI models (recommended)
+pip install magenta audiocraft basic-pitch spleeter
 
-# Generate melody
-response = ai.generate_melody(
-    key="C major",
-    chord_progression=["C", "Am", "F", "G"]
-)
-print(response.content)
-
-# Get mixing advice
-response = ai.mixing_advice(
-    track_name="Vocals",
-    track_type="vocals",
-    issues=["muddy", "harsh sibilance"]
-)
-print(response.content)
+# These download on first use (~2GB total)
 ```
 
-### MIDI Processing
+### Optional: Cloud AI APIs
 
-```python
-from intuitive_daw.midi.processor import MIDIProcessor, MIDIClip
-from intuitive_daw.midi.processor import MIDIUtilities
+Only if you want advanced chat features:
 
-# Create a MIDI clip
-clip = MIDIClip("Piano Melody")
+```bash
+# Copy environment template
+cp .env.example .env
 
-# Add notes
-clip.add_note(pitch=60, velocity=80, start=0.0, duration=0.5)  # C4
-clip.add_note(pitch=64, velocity=80, start=0.5, duration=0.5)  # E4
-clip.add_note(pitch=67, velocity=80, start=1.0, duration=0.5)  # G4
-
-# Create chord
-notes = MIDIProcessor.create_chord(
-    root=60,  # C4
-    chord_type="major",
-    velocity=80
-)
-
-# Create arpeggio
-arp_notes = MIDIProcessor.create_arpeggio(
-    notes=[60, 64, 67],  # C major triad
-    pattern="up",
-    note_duration=0.25
-)
+# Add API keys (optional)
+echo "OPENAI_API_KEY=sk-your-key" >> .env
 ```
 
-### Audio Effects
+**Note:** Cloud APIs are completely optional. All core features work without them.
 
-```python
-from intuitive_daw.audio.processor import (
-    EQEffect, CompressorEffect, ReverbEffect
-)
-import numpy as np
+## 📚 Documentation
 
-# Create effects
-eq = EQEffect(sample_rate=48000, low_gain=-3.0, high_gain=2.0)
-compressor = CompressorEffect(threshold_db=-20, ratio=4.0)
-reverb = ReverbEffect(room_size=0.6, wet_level=0.3)
+### Complete Guides
 
-# Process audio
-audio = np.random.randn(48000, 2)  # 1 second of audio
-audio = eq.process(audio)
-audio = compressor.process(audio)
-audio = reverb.process(audio)
-```
+- **[DOCUMENTATION.md](DOCUMENTATION.md)** - Comprehensive guide covering everything
+- **[PHILOSOPHY.md](PHILOSOPHY.md)** - Project vision, values, and approach
+- **[AI_INTEGRATION.md](AI_INTEGRATION.md)** - Local-first AI setup and usage
+- **[PLUGINS.md](PLUGINS.md)** - Plugin development guide
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute
 
-## Configuration
+### Quick Links
+
+- [Installation & Setup](DOCUMENTATION.md#installation--setup)
+- [Your First 5 Minutes](DOCUMENTATION.md#your-first-5-minutes)
+- [Core Concepts](DOCUMENTATION.md#core-concepts)
+- [Plugin Development](PLUGINS.md)
+- [Local AI Models](AI_INTEGRATION.md#getting-started-with-local-models)
+- [Why Intuitives is Different](PHILOSOPHY.md)
+
+### Usage Examples
+
+See [DOCUMENTATION.md](DOCUMENTATION.md) for detailed usage examples including:
+- Creating projects and tracks
+- Using the Python API
+- Working with AI features
+- MIDI processing
+- Audio effects
+- Command-line interface
+
+## ⚙️ Configuration
 
 Edit `config.yaml` to customize:
-- Audio settings (sample rate, buffer size, bit depth)
-- MIDI configuration
-- AI provider settings
-- Database configuration
-- Plugin directories
-- Processing parameters
 
-## API Endpoints
+```yaml
+# Audio settings
+audio:
+  sample_rate: 48000
+  buffer_size: 512
+  bit_depth: 24
 
-### REST API
-- `GET /health` - Health check
-- `POST /api/project` - Create new project
-- `GET /api/project/<path>` - Load project
-- `POST /api/project/save` - Save project
-- `GET /api/tracks` - Get all tracks
-- `POST /api/tracks` - Add new track
-- `POST /api/transport/play` - Start playback
-- `POST /api/transport/stop` - Stop playback
-- `POST /api/transport/record` - Start recording
-- `POST /api/ai/suggest-chords` - Get AI chord suggestions
-- `POST /api/ai/chat` - Chat with AI assistant
+# AI settings (all optional)
+ai:
+  enabled: true
+  provider: "local"  # Use local models by default
+  local_models:
+    melody: "magenta"
+    harmony: "musicgen"
 
-### WebSocket Events
-- `connect` - Client connection
-- `disconnect` - Client disconnection
-- `transport_update` - Transport state changes
-- `transport_state` - Broadcast transport state
+# Plugin directories
+plugins:
+  directories:
+    - "./plugins"
+    - "./user_plugins"
+```
 
-## Development
+See [config.yaml](config.yaml) for all options.
+
+## 🧪 Development
 
 ### Running Tests
 ```bash
@@ -288,41 +303,154 @@ cd frontend
 npm run build
 ```
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+**We welcome all contributions!** Whether you're:
 
-## License
+- 🎵 A musician sharing feedback
+- 💻 A developer fixing bugs or adding features
+- 🎨 A designer improving UI/UX
+- 📖 A writer creating tutorials
+- 🔌 A plugin developer extending functionality
 
-MIT License - See LICENSE file for details
+**Everyone is welcome here.**
 
-## Roadmap
+### Quick Start Contributing
 
-- [ ] VST/AU plugin support
-- [ ] Advanced audio editing tools
-- [ ] Spectral editing
-- [ ] Score editor
-- [ ] Cloud collaboration features
-- [ ] Mobile companion app
-- [ ] Advanced AI features (stem separation, style transfer)
-- [ ] Performance optimizations
-- [ ] Extensive plugin library
+```bash
+# 1. Fork on GitHub
+# 2. Clone your fork
+git clone https://github.com/YOUR_USERNAME/Intuitive_Music.git
 
-## Support
+# 3. Create branch
+git checkout -b feature/my-feature
 
-For issues, questions, or contributions, please open an issue on GitHub.
+# 4. Make changes and test
+pytest tests/
 
-## Acknowledgments
+# 5. Submit pull request
+```
 
-Built with:
-- Flask & Flask-SocketIO
-- React
-- NumPy & SciPy
-- librosa
-- soundfile
-- OpenAI API
-- SQLAlchemy
+**See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.**
+
+### Ways to Contribute
+
+- 🐛 **Report Bugs** - Found an issue? Let us know!
+- ✨ **Suggest Features** - Have an idea? Share it!
+- 💻 **Submit Code** - Fix bugs or add features
+- 📖 **Improve Docs** - Help others understand
+- 🔌 **Create Plugins** - Extend functionality
+- 🎵 **Share Music** - Show what you've created
+
+## 📜 License
+
+**Open Source Forever:**
+
+- **Native Engine** - MIT License (permissive)
+- **Stargate Components** - GPLv3 (copyleft)
+- **Python Tools** - MIT License (permissive)
+
+**What this means:**
+- ✅ Free to use, modify, and distribute
+- ✅ Use in commercial projects
+- ✅ No vendor lock-in
+- ✅ Community-owned
+
+See [LICENSE](LICENSE) for details.
+
+## 🗺️ Roadmap
+
+### Coming Soon
+- [ ] **VST/AU Plugin Support** - Use your favorite plugins
+- [ ] **Mobile App** - Create music on phone/tablet
+- [ ] **WebAssembly Version** - Run in browser
+- [ ] **Collaborative Editing** - Make music with friends
+- [ ] **Hardware Integration** - Better MIDI controller support
+- [ ] **More AI Models** - Expanded generative tools
+
+### Long-Term Vision
+- **AR/VR Support** - Sculpt sound in 3D space
+- **Universal Plugin Standard** - Cross-DAW compatibility
+- **Educational Tools** - Learn music by creating
+
+**See [GitHub Issues](https://github.com/mitchlabeetch/Intuitive_Music/issues) for detailed roadmap.**
+
+## 🙋 Support & Community
+
+### Get Help
+
+- 📖 **[Documentation](DOCUMENTATION.md)** - Comprehensive guides
+- 💬 **[Discord](https://discord.gg/intuitives)** - Live community chat
+- 🐛 **[GitHub Issues](https://github.com/mitchlabeetch/Intuitive_Music/issues)** - Bug reports & features
+- 💡 **[Discussions](https://github.com/mitchlabeetch/Intuitive_Music/discussions)** - Ideas & questions
+
+### Stay Updated
+
+- ⭐ **Star on GitHub** - Show support
+- 👁️ **Watch Repository** - Get notified
+- 🐦 **[X/Twitter](https://twitter.com/IntuitivesDAW)** - Follow updates
+- 📺 **YouTube** - Tutorials coming soon
+
+### Share Your Music
+
+Created something with Intuitives? Share it!
+
+- Tag **#IntuitivesDAW** on social media
+- Post in Discord **#showcase** channel
+- Submit to community gallery
+
+## 🙏 Acknowledgments
+
+### Core Technologies
+
+- **[Stargate DAW](https://github.com/stargatedaw/stargate)** - Professional audio engine foundation
+- **[Magenta](https://magenta.tensorflow.org/)** - Google's music AI
+- **[AudioCraft](https://github.com/facebookresearch/audiocraft)** - Meta's text-to-music
+- **[Librosa](https://librosa.org/)** - Audio analysis
+- **Flask** - Web framework
+- **React** - UI framework
+- **NumPy/SciPy** - Scientific computing
+
+### Inspiration
+
+- **SuperCollider** - Live coding music
+- **Sonic Pi** - Code-based creation
+- **VCV Rack** - Modular synthesis
+- **Hydra** - Visual live coding
+
+### Community
+
+Thank you to all contributors, testers, and users who make Intuitives possible!
 
 ---
 
-Made with ❤️ by the Intuitive Music Team
+## 💡 Philosophy
+
+> **"Does this sound cool?"**
+>
+> That's the only question that matters.
+>
+> No rules. No theory requirements. No judgment.
+>
+> Just create.
+
+**Music is for everyone.** Intuitives removes the barriers between your ideas and your creations.
+
+---
+
+<p align="center">
+  <strong>🎵 Make Music Your Way 🎵</strong><br>
+  <em>Experiment • Create • Share</em>
+</p>
+
+<p align="center">
+  Made with ❤️ by the Intuitives community
+</p>
+
+<p align="center">
+  <a href="DOCUMENTATION.md">Documentation</a> •
+  <a href="PHILOSOPHY.md">Philosophy</a> •
+  <a href="CONTRIBUTING.md">Contributing</a> •
+  <a href="https://discord.gg/intuitives">Discord</a> •
+  <a href="https://github.com/mitchlabeetch/Intuitive_Music">GitHub</a>
+</p>

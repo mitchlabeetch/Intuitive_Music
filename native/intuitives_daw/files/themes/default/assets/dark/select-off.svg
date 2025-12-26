@@ -1,63 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="44"
-   height="44"
-   viewBox="0 0 44 44"
-   fill="none"
-   version="1.1"
-   id="svg2"
-   sodipodi:docname="select-off.svg"
-   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview2"
-     pagecolor="#505050"
-     bordercolor="#ffffff"
-     borderopacity="1"
-     inkscape:showpageshadow="0"
-     inkscape:pageopacity="0"
-     inkscape:pagecheckerboard="1"
-     inkscape:deskcolor="#505050"
-     inkscape:zoom="18.840909"
-     inkscape:cx="22"
-     inkscape:cy="22"
-     inkscape:window-width="1920"
-     inkscape:window-height="1011"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" />
-  <rect
-     width="44"
-     height="44"
-     rx="6"
-     fill="#17181D"
-     id="rect1" />
-  <defs
-     id="defs2">
-    <linearGradient
-       id="paint0_linear"
-       x1="22.0001"
-       y1="9"
-       x2="22.0001"
-       y2="35"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(-23.745329,-3.6727412)">
-      <stop
-         stop-color="#6E6E7E"
-         id="stop1" />
-      <stop
-         offset="1"
-         stop-color="#666270"
-         id="stop2" />
-    </linearGradient>
-  </defs>
-  <path
-     d="m 24.292998,11.327259 h -1.719761 v 2.750037 c 0.666103,0.184064 1.146578,0.673285 1.146578,1.252241 v 2.668186 c 0,0.735516 -0.771617,1.334091 -1.719763,1.334091 -0.948249,0 -1.71976,-0.598576 -1.71976,-1.334091 v -2.668186 c 0,-0.578956 0.480369,-1.068177 1.146473,-1.252241 v -2.750037 h -1.719762 c -4.109116,0 -7.452332,2.593476 -7.452332,5.781095 v 8.004558 c 0,4.168526 4.371684,7.55983 9.745381,7.55983 5.373593,0 9.745277,-3.391305 9.745277,-7.559831 v -8.004558 c 0,-3.187619 -3.343216,-5.781095 -7.452331,-5.781094 z"
-     fill="url(#paint0_linear)"
-     id="path1-3"
-     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:url(#paint0_linear);fill-opacity:1;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" />
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Neobrutalist Shadow Layer (subtle for off state) -->
+  <rect x="2" y="2" width="40" height="40" rx="6" fill="#000000" opacity="0.5"/>
+  <!-- Main Background - Off State Gray -->
+  <rect width="40" height="40" rx="6" fill="#4A4A4F"/>
+  <!-- Border -->
+  <rect x="1.5" y="1.5" width="37" height="37" rx="4.5" stroke="#2F2F3A" stroke-width="2" fill="none"/>
+  <!-- Cursor/Selection Arrow Icon -->
+  <path d="M12 10L12 30L17 25L21 32L25 30L21 23L28 23L12 10Z" fill="#6A6A6F"/>
 </svg>

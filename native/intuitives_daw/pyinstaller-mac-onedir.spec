@@ -8,8 +8,20 @@ ARCH = platform.machine()
 
 block_cipher = None
 
-# Native engine binaries (if available)
-BINARIES = []
+# Essential system libraries for audio
+BINARIES = [
+    # libsndfile and its dependencies (found via otool -L)
+    ('/usr/local/opt/libsndfile/lib/libsndfile.1.dylib', '.'),
+    ('/usr/local/opt/flac/lib/libFLAC.14.dylib', '.'),
+    ('/usr/local/opt/libogg/lib/libogg.0.dylib', '.'),
+    ('/usr/local/opt/opus/lib/libopus.0.dylib', '.'),
+    ('/usr/local/opt/libvorbis/lib/libvorbis.0.dylib', '.'),
+    ('/usr/local/opt/libvorbis/lib/libvorbisenc.2.dylib', '.'),
+    ('/usr/local/opt/mpg123/lib/libmpg123.0.dylib', '.'),
+    ('/usr/local/opt/lame/lib/libmp3lame.0.dylib', '.'),
+]
+
+# Add engine binaries if available
 if os.path.exists('engine/intuitives-engine'):
     BINARIES.extend([
         ('engine/intuitives-engine', 'engine'),
@@ -38,12 +50,18 @@ a = Analysis(['intuitives.py'],
                  'intlib.models.core',
                  'intlib.models.daw',
                  'intlib.lib',
+                 'intlib.lib.util',
+                 'intlib.lib.translate',
                  'intui',
                  'intui.widgets',
                  'intui.daw',
+                 'intui.preflight',
+                 'intui._main',
                  'int_vendor',
                  'int_vendor.pymarshal',
                  'int_vendor.wavefile',
+                 'int_vendor.wavefile.wavefile',
+                 'int_vendor.wavefile.libsndfile',
                  # Third party
                  'logging',
                  'numpy',
@@ -56,6 +74,7 @@ a = Analysis(['intuitives.py'],
                  'mutagen',
                  'psutil',
                  'yaml',
+                 'ctypes',
              ],
              hookspath=[],
              hooksconfig={},

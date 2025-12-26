@@ -18,7 +18,7 @@ endif()
 
 # Options
 option(INTUITIVES_DAW_BUILD_GUI "Build with Dear ImGui GUI" OFF)
-option(INTUITIVES_DAW_USE_STARGATE "Use Stargate engine" ON)
+option(INTUITIVES_DAW_USE_ENGINE "Use Intuitives Core Engine" ON)
 
 # ============================================================================
 # PLATFORM DETECTION
@@ -56,39 +56,39 @@ set(INTUITIVES_DSP_SOURCES
 )
 
 # ============================================================================
-# STARGATE ENGINE (full DAW core)
+# INTUITIVES CORE ENGINE (full DAW core)
 # ============================================================================
 
-if(INTUITIVES_DAW_USE_STARGATE)
-    set(STARGATE_DIR ${CMAKE_SOURCE_DIR}/intuitives_engine)
-    include_directories(${STARGATE_DIR}/include)
-    include_directories(${STARGATE_DIR}/libcds/include)
+if(INTUITIVES_DAW_USE_ENGINE)
+    set(ENGINE_DIR ${CMAKE_SOURCE_DIR}/intuitives_engine)
+    include_directories(${ENGINE_DIR}/include)
+    include_directories(${ENGINE_DIR}/libcds/include)
     
-    # Find all Stargate source files
-    file(GLOB_RECURSE STARGATE_SRC_FILES 
-        "${STARGATE_DIR}/src/*.c"
+    # Find all engine source files
+    file(GLOB_RECURSE ENGINE_SRC_FILES 
+        "${ENGINE_DIR}/src/*.c"
     )
-    file(GLOB_RECURSE STARGATE_LIBCDS_FILES
-        "${STARGATE_DIR}/libcds/src/*.c"
+    file(GLOB_RECURSE ENGINE_LIBCDS_FILES
+        "${ENGINE_DIR}/libcds/src/*.c"
     )
     
     # Exclude CLI main file (we have our own)
-    list(FILTER STARGATE_SRC_FILES EXCLUDE REGEX "_main\\.c$")
+    list(FILTER ENGINE_SRC_FILES EXCLUDE REGEX "_main\\.c$")
     
-    set(STARGATE_SOURCES
-        ${STARGATE_SRC_FILES}
-        ${STARGATE_LIBCDS_FILES}
+    set(ENGINE_SOURCES
+        ${ENGINE_SRC_FILES}
+        ${ENGINE_LIBCDS_FILES}
     )
     
-    # Build Stargate engine as a static library
-    add_library(intuitives_engine STATIC ${STARGATE_SOURCES})
+    # Build Intuitives Core engine as a static library
+    add_library(intuitives_engine STATIC ${ENGINE_SOURCES})
     target_include_directories(intuitives_engine PUBLIC 
-        ${STARGATE_DIR}/include
-        ${STARGATE_DIR}/libcds/include
+        ${ENGINE_DIR}/include
+        ${ENGINE_DIR}/libcds/include
     )
     target_compile_options(intuitives_engine PRIVATE -O2 -ffast-math)
     
-    # Link dependencies for Stargate
+    # Link engine dependencies
     if(PLATFORM_MACOS)
         find_library(COREAUDIO CoreAudio)
         find_library(AUDIOTOOLBOX AudioToolbox)
@@ -106,7 +106,7 @@ if(INTUITIVES_DAW_USE_STARGATE)
         endif()
     endif()
     
-    # Find PortAudio (Stargate's audio backend)
+    # Find PortAudio (audio backend)
     find_library(PORTAUDIO_LIB portaudio HINTS /usr/local/lib /opt/homebrew/lib)
     find_path(PORTAUDIO_INCLUDE portaudio.h HINTS /usr/local/include /opt/homebrew/include)
     if(PORTAUDIO_LIB AND PORTAUDIO_INCLUDE)
@@ -162,10 +162,10 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(IntuitivesDAW PRIVATE -Wall -Wextra -O2 -ffast-math)
 endif()
 
-# Link Stargate engine if enabled
-if(INTUITIVES_DAW_USE_STARGATE)
+# Link Intuitives Core engine if enabled
+if(INTUITIVES_DAW_USE_ENGINE)
     target_link_libraries(IntuitivesDAW PRIVATE intuitives_engine)
-    target_compile_definitions(IntuitivesDAW PRIVATE USE_STARGATE_ENGINE=1)
+    target_compile_definitions(IntuitivesDAW PRIVATE USE_INTUITIVES_ENGINE=1)
 endif()
 
 # Platform-specific linking
@@ -221,17 +221,17 @@ set_target_properties(IntuitivesDAW PROPERTIES
 )
 
 # ============================================================================
-# STARGATE CLI (optional - standalone engine)
+# INTUITIVES CLI (optional - standalone engine)
 # ============================================================================
 
-if(INTUITIVES_DAW_USE_STARGATE)
+if(INTUITIVES_DAW_USE_ENGINE)
     add_executable(intuitives-engine 
-        ${STARGATE_DIR}/cli/main.c
+        ${ENGINE_DIR}/cli/main.c
     )
     target_link_libraries(intuitives-engine PRIVATE intuitives_engine)
     target_include_directories(intuitives-engine PRIVATE 
-        ${STARGATE_DIR}/include
-        ${STARGATE_DIR}/libcds/include
+        ${ENGINE_DIR}/include
+        ${ENGINE_DIR}/libcds/include
     )
     set_target_properties(intuitives-engine PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
@@ -246,7 +246,7 @@ install(TARGETS IntuitivesDAW
     RUNTIME DESTINATION bin
 )
 
-if(INTUITIVES_DAW_USE_STARGATE)
+if(INTUITIVES_DAW_USE_ENGINE)
     install(TARGETS intuitives-engine
         RUNTIME DESTINATION bin
     )
@@ -264,7 +264,7 @@ message(STATUS "╠════════════════════�
 message(STATUS "║ Platform: ${CMAKE_SYSTEM_NAME} (${CMAKE_OSX_ARCHITECTURES})")
 message(STATUS "║ Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "║ GUI: ${INTUITIVES_DAW_BUILD_GUI}")
-message(STATUS "║ Stargate Engine: ${INTUITIVES_DAW_USE_STARGATE}")
+message(STATUS "║ Core Engine: ${INTUITIVES_DAW_USE_ENGINE}")
 message(STATUS "║ DSP Features: 40 Original")
 message(STATUS "║ Generators: Markov, Genetic, Cellular, L-System")
 message(STATUS "║ Input: Text, Color, Image, MIDI")

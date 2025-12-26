@@ -22,6 +22,7 @@ from intlib.models.core.audio_inputs import AudioInputTrack, AudioInputTracks
 from intui import shared as glbl_shared
 from intui.util import show_generic_exception
 from intui.widgets.transport import AbstractTransportWidget
+from intui.neobrutalist_icons import get_fx_icon
 import os
 import math
 
@@ -449,23 +450,8 @@ class TransportWidget(AbstractTransportWidget):
         self.toolbar.setIconSize(QtCore.QSize(32, 32))
         self.group_box = self.toolbar
 
-        # FX
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('fx-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('fx-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.fx_checkbox = QAction(icon, '', self.toolbar)
+        # FX - neobrutalist with hover/pressed states
+        self.fx_checkbox = QAction(get_fx_icon(), '', self.toolbar)
         self.fx_checkbox.setToolTip(
             'Enable or disable the plugin rack'
         )

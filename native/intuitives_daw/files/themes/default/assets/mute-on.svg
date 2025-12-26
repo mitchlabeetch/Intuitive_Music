@@ -1,11 +1,11 @@
 <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="36" height="36" rx="6" fill="#8212F2"/>
-<path d="M27.0524 9.152V26H22.9484V15.896L19.1804 26H15.8684L12.0764 15.872V26H7.97238V9.152H12.8204L17.5484 20.816L22.2284 9.152H27.0524Z" fill="#cdcdcd"/>
-<defs>
-<linearGradient id="paint0_linear" x1="17.5" y1="0" x2="17.5" y2="36" gradientUnits="userSpaceOnUse">
-<stop stop-color="#6E6E7E"/>
-<stop offset="1" stop-color="#666270"/>
-</linearGradient>
-</defs>
+  <!-- MUTE Button - Clean M letter -->
+  <!-- Neobrutalist Shadow Layer -->
+  <rect x="4" y="4" width="32" height="32" rx="6" fill="#000000"/>
+  <!-- Main Background - Electric Indigo (Mute) -->
+  <rect width="32" height="32" rx="6" fill="#6366F1"/>
+  <!-- Border -->
+  <rect x="1.5" y="1.5" width="29" height="29" rx="4.5" stroke="#1A1A1F" stroke-width="3" fill="none"/>
+  <!-- M Letter - Clean text element -->
+  <text x="16" y="22" font-family="Space Grotesk, Inter, sans-serif" font-size="16" font-weight="700" fill="#FFFEF0" text-anchor="middle">M</text>
 </svg>
-

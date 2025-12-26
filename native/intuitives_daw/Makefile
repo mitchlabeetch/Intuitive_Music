@@ -32,7 +32,7 @@ appimage:
 		sh -c 'cd /intuitives/src && ./appimage/appimage-helper.sh'
 	appimagetool -n \
 		../dist/squashfs-root/ \
-		../dist/StargateDAW-$(MINOR)-linux-x86_64.AppImage
+		../dist/IntuitivesDAW-$(MINOR)-linux-x86_64.AppImage
 
 appimage-debug:
 	appimage/python-appimage/release.py
@@ -58,7 +58,7 @@ commit_hash:
 	git rev-parse --short HEAD > COMMIT || echo unknown > COMMIT
 
 distro: commit_hash
-	# Build Stargate DAW without vendored dependencies, you are expected
+	# Build Intuitives DAW without vendored dependencies, you are expected
 	# to provide and package: mido, pymarshal, SBSMS, python-wavefile
 	make -C engine
 
@@ -210,14 +210,14 @@ nuitka-appbundle:
 		--macos-target-arch=arm64 \
 		--macos-create-app-bundle \
 		--macos-app-icon=macos/intuitives.icns \
-		--macos-app-name='Stargate DAW' \
+		--macos-app-name='Intuitives DAW' \
 		--macos-signed-app-name=com.github.intuitivesdaw.intuitives \
 		--macos-app-mode=gui \
 		--macos-app-version=$(MINOR) \
 		scripts/intuitives
 	mkdir -p dist
 	rm -rf dist/intuitives.app/
-	mv intuitives.app 'dist/Stargate DAW.app'
+	mv intuitives.app 'dist/Intuitives DAW.app'
 
 py_vendor:
 	# Vendor Python dependencies not commonly available in distro repos

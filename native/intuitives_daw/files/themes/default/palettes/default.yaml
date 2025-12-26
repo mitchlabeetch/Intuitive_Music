@@ -1,11 +1,63 @@
-black: "#262126"
-black_light: "#2c2a2c"
-gray1: "#626262"
-gray2: "#5d5a5c"
-gray2a: "#585858"
-gray3: "#474847"
-gray4: "#393939"
-gray5: "#323130"
-gray_light: "#a3a3a6"
-purple: "#8212f2"
-white: "#cccccc"
+# Intuitives DAW - Default Palette (Neobrutalist Dark Mode)
+# "Does this sound cool?" - The only rule.
+
+# ==================================================
+# BASE COLORS
+# ==================================================
+black: "#1A1A1F"
+black_light: "#252530"
+white: "#FFFEF0"
+
+# ==================================================
+# GRAY SCALE
+# ==================================================
+gray1: "#6A6A6F"
+gray2: "#5A5A65"
+gray2a: "#4A4A4F"
+gray3: "#3A3A45"
+gray4: "#2F2F3A"
+gray5: "#252530"
+gray_light: "#B0B0B5"
+
+# ==================================================
+# PRIMARY COLORS (Chromasynesthesia + Actions)
+# ==================================================
+# Electric Indigo - Primary action color (buttons, tools, toggles)
+indigo: "#6366F1"
+purple: "#6366F1"
+
+# Chromasynesthesia note colors
+crimson: "#FF3366"
+tangerine: "#FF9933"
+sunburst: "#FFEE33"
+emerald: "#33FF66"
+cyan: "#33EEFF"
+sapphire: "#3366FF"
+magenta: "#A855F7"
+
+# ==================================================
+# TRANSPORT-SPECIFIC
+# ==================================================
+play: "#33FF66"
+stop: "#FF33EE"
+record: "#FF3366"
+loop: "#FF9933"
+
+# ==================================================
+# STATE COLORS
+# ==================================================
+active: "#FF33EE"
+inactive: "#4A4A4F"
+hover: "#5A5A65"
+focus: "#FFEE33"
+disabled: "#3A3A45"
+
+# ==================================================
+# UI SURFACES
+# ==================================================
+surface_bg: "#1A1A1F"
+surface_panel: "#252530"
+surface_card: "#2F2F3A"
+surface_elevated: "#3A3A45"
+border_main: "#E5E5E0"
+border_subtle: "#4A4A4F"

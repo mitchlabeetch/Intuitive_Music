@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>intuitives</id>
+    <metadata_license>GPL3</metadata_license>
+    <project_license>GPL3</project_license>
+    <name>Intuitives</name>
+    <summary>Intuitives DAW - Rule-Free Experimental Digital Audio Workstation</summary>
+    <description>
+		<p>Intuitives is a rule-free experimental digital audio workstation 
+            designed for intuitive music creation with AI-powered tools and 
+            chromasynesthesia visualization.
+        </p>
+    </description>
+    <launchable type="desktop-id">intuitives.desktop</launchable>
+	<url type="homepage">https://github.com/intuitive-music</url>
+    <provides>
+        <binary>python{{ python-version }}</binary>
+    </provides>
+</component>

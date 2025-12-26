@@ -52,6 +52,7 @@ from intlib.constants import (
     SENDS_PER_TRACK,
     TOTAL_PLUGINS_PER_TRACK,
 )
+from intui.neobrutalist_icons import create_simple_icon
 
 
 PLUGIN_INSTRUMENT_COUNT = 3  # For inserting the split line into the menu
@@ -802,20 +803,13 @@ class PluginRackTab:
         self.menu_layout.addWidget(QLabel(_("Octave")))
         self.menu_layout.addWidget(self.octave_spinbox)
 
+        # Plugins menu button - neobrutalist
         self.plugins_button = QToolButton()
         self.plugins_button.setFixedSize(21, 21)
         self.plugins_button.setIconSize(QtCore.QSize(21, 21))
         self.plugins_menu = QMenu(self.widget)
         self.plugins_button.setMenu(self.plugins_menu)
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('menu.svg'),
-            ),
-            QIcon.Mode.Normal,
-            #QIcon.State.On,
-        )
-        self.plugins_button.setIcon(icon)
+        self.plugins_button.setIcon(create_simple_icon('menu.svg'))
         self.plugins_button.setPopupMode(
             QToolButton.ToolButtonPopupMode.InstantPopup
         )

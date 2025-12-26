@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Intuitives
+Exec=intuitives
+Comment=Rule-Free Experimental Digital Audio Workstation (DAW)
+Icon=intuitives
+Categories=AudioVideo;Audio;Multimedia;Music;
+#Terminal=true

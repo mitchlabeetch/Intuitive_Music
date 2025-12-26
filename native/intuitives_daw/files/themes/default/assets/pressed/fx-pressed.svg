@@ -1,0 +1,6 @@
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- PRESSED State -->
+  <rect x="4" y="4" width="40" height="40" rx="6" fill="#4F46E5"/>
+  <rect x="5.5" y="5.5" width="37" height="37" rx="4.5" stroke="#1A1A1F" stroke-width="3" fill="none"/>
+  <text x="24" y="30" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#FFFEF0" text-anchor="middle">FX</text>
+</svg>

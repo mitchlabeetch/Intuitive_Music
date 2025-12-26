@@ -362,7 +362,7 @@
 		</data>
 		<key>Resources/base_library.zip</key>
 		<data>
-		HIpi9Ke/I9+bvHFkFBpbZfa3kvw=
+		xJJ9yojNJaUdWVMbkjd/lUPQg+4=
 		</data>
 		<key>Resources/files/fonts/RobotoCondensed-Bold.ttf</key>
 		<data>
@@ -1470,6 +1470,15 @@
 			<key>symlink</key>
 			<string>../Resources/files</string>
 		</dict>
+		<key>Frameworks/libFLAC.14.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			kpYMSVbjzr4YQl+9BP4DVM9KCPg=
+			</data>
+			<key>requirement</key>
+			<string>cdhash H"92960c4956e3cebe18425fbd04fe0354cf4a08f8"</string>
+		</dict>
 		<key>Frameworks/libgcc_s.1.1.dylib</key>
 		<dict>
 			<key>symlink</key>
@@ -1480,10 +1489,46 @@
 			<key>symlink</key>
 			<string>numpy/.dylibs/libgfortran.5.dylib</string>
 		</dict>
+		<key>Frameworks/libmp3lame.0.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			dTx774DwxsXyPtm67+xZrxt9vmw=
+			</data>
+			<key>requirement</key>
+			<string>cdhash H"753c7bef80f0c6c5f23ed9baefec59af1b7dbe6c"</string>
+		</dict>
+		<key>Frameworks/libmpg123.0.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			XRfMENH6uxaJeZmSPzqCIX/Z6qg=
+			</data>
+			<key>requirement</key>
+			<string>cdhash H"5d17cc10d1fabb16897999923f3a82217fd9eaa8"</string>
+		</dict>
+		<key>Frameworks/libogg.0.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			ckxPNn9gxvCwashsQxGMKnBB9q4=
+			</data>
+			<key>requirement</key>
+			<string>cdhash H"724c4f367f60c6f0b06ac86c43118c2a7041f6ae"</string>
+		</dict>
 		<key>Frameworks/libopenblas64_.0.dylib</key>
 		<dict>
 			<key>symlink</key>
 			<string>numpy/.dylibs/libopenblas64_.0.dylib</string>
+		</dict>
+		<key>Frameworks/libopus.0.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			o8RE8iZd5eYY0QigbdvR4YcgBp0=
+			</data>
+			<key>requirement</key>
+			<string>cdhash H"a3c444f2265de5e618d108a06ddbd1e18720069d"</string>
 		</dict>
 		<key>Frameworks/libportaudio.2.dylib</key>
 		<dict>
@@ -1498,6 +1543,33 @@
 		<dict>
 			<key>symlink</key>
 			<string>numpy/.dylibs/libquadmath.0.dylib</string>
+		</dict>
+		<key>Frameworks/libsndfile.1.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			V+3Vpy/VP4buKc2rEE9LL/nO994=
+			</data>
+			<key>requirement</key>
+			<string>cdhash H"57edd5a72fd53f86ee29cdab104f4b2ff9cef7de"</string>
+		</dict>
+		<key>Frameworks/libvorbis.0.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			IYmASO4VzrGN+GdauwGnYTxstqY=
+			</data>
+			<key>requirement</key>
+			<string>cdhash H"21898048ee15ceb18df8675abb01a7613c6cb6a6"</string>
+		</dict>
+		<key>Frameworks/libvorbisenc.2.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			4IPASANBzwjbBZ0qj3Tdx72nYgY=
+			</data>
+			<key>requirement</key>
+			<string>cdhash H"e083c0480341cf08db059d2a8f74ddc7bda76206"</string>
 		</dict>
 		<key>Frameworks/markupsafe/_speedups.cpython-39-darwin.so</key>
 		<dict>
@@ -2889,7 +2961,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			BCO7xz4lTKg5lBnmTs7GbXCqOEKTxyR6NOekk3WpVwY=
+			cdb3qdJALpRiXG/5DwZLSsIVY8ZRpmKi/3CIUnKx0+k=
 			</data>
 		</dict>
 		<key>Resources/files/fonts/RobotoCondensed-Bold.ttf</key>
@@ -4117,6 +4189,11 @@
 			NRcyjqm0QSPuVoXGisKdG/JchNwW4q602ZUoMpKzzUA=
 			</data>
 		</dict>
+		<key>Resources/libFLAC.14.dylib</key>
+		<dict>
+			<key>symlink</key>
+			<string>../Frameworks/libFLAC.14.dylib</string>
+		</dict>
 		<key>Resources/libgcc_s.1.1.dylib</key>
 		<dict>
 			<key>symlink</key>
@@ -4127,10 +4204,30 @@
 			<key>symlink</key>
 			<string>numpy/.dylibs/libgfortran.5.dylib</string>
 		</dict>
+		<key>Resources/libmp3lame.0.dylib</key>
+		<dict>
+			<key>symlink</key>
+			<string>../Frameworks/libmp3lame.0.dylib</string>
+		</dict>
+		<key>Resources/libmpg123.0.dylib</key>
+		<dict>
+			<key>symlink</key>
+			<string>../Frameworks/libmpg123.0.dylib</string>
+		</dict>
+		<key>Resources/libogg.0.dylib</key>
+		<dict>
+			<key>symlink</key>
+			<string>../Frameworks/libogg.0.dylib</string>
+		</dict>
 		<key>Resources/libopenblas64_.0.dylib</key>
 		<dict>
 			<key>symlink</key>
 			<string>numpy/.dylibs/libopenblas64_.0.dylib</string>
+		</dict>
+		<key>Resources/libopus.0.dylib</key>
+		<dict>
+			<key>symlink</key>
+			<string>../Frameworks/libopus.0.dylib</string>
 		</dict>
 		<key>Resources/libportaudio.2.dylib</key>
 		<dict>
@@ -4141,6 +4238,21 @@
 		<dict>
 			<key>symlink</key>
 			<string>numpy/.dylibs/libquadmath.0.dylib</string>
+		</dict>
+		<key>Resources/libsndfile.1.dylib</key>
+		<dict>
+			<key>symlink</key>
+			<string>../Frameworks/libsndfile.1.dylib</string>
+		</dict>
+		<key>Resources/libvorbis.0.dylib</key>
+		<dict>
+			<key>symlink</key>
+			<string>../Frameworks/libvorbis.0.dylib</string>
+		</dict>
+		<key>Resources/libvorbisenc.2.dylib</key>
+		<dict>
+			<key>symlink</key>
+			<string>../Frameworks/libvorbisenc.2.dylib</string>
 		</dict>
 		<key>Resources/markupsafe</key>
 		<dict>

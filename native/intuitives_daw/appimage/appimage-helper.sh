@@ -56,5 +56,5 @@ dpkg -i --log=filename --root=squashfs-root/ packages/* || true
 
 #appimagetool -n \
 #	squashfs-root/ \
-#	StargateDAW-${VERSION}-linux-x86_64.AppImage
+#	IntuitivesDAW-${VERSION}-linux-x86_64.AppImage
 

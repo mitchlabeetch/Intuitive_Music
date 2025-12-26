@@ -1,0 +1,6 @@
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- PRESSED State -->
+  <rect x="4" y="4" width="32" height="32" rx="6" fill="#4F46E5"/>
+  <rect x="5.5" y="5.5" width="29" height="29" rx="4.5" stroke="#1A1A1F" stroke-width="3" fill="none"/>
+  <path d="M11 28V12H14.5L20 21.5L25.5 12H29V28H26V17.5L20 26.5L14 17.5V28H11Z" fill="#FFFEF0"/>
+</svg>

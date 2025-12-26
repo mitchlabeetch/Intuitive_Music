@@ -1,5 +1,18 @@
 <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="128" height="128" rx="12" fill="#8212F2"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M68.5552 56.1361C68.5552 58.6513 66.5164 60.6909 64.0004 60.6909C61.4844 60.6909 59.4456 58.6513 59.4456 56.1361V42.5548C59.4456 40.0396 61.4844 38 64.0004 38C66.5164 38 68.5552 40.0396 68.5552 42.5548V56.1361ZM72.296 47.9268C72.296 46.5243 73.703 45.5651 74.9395 46.227C82.2626 50.1469 87.2581 57.8711 87.2581 66.7424C87.2581 79.5666 76.8246 90 64.0004 90C51.1754 90 40.7419 79.5666 40.7419 66.7424C40.7419 57.8702 45.7371 50.1464 53.0614 46.2267C54.2979 45.565 55.7049 46.5241 55.7049 47.9266V52.31C55.7049 52.9997 55.3438 53.6332 54.7858 54.0386C50.8528 56.896 48.2836 61.5203 48.2836 66.7432C48.2836 75.4073 55.3347 82.4591 64.0004 82.4591C72.6654 82.4591 79.7164 75.4097 79.7164 66.7432C79.7164 61.5203 77.1471 56.8966 73.2147 54.0386C72.6569 53.6333 72.296 52.9999 72.296 52.3103V47.9268Z" fill="#cdcdcd"/>
+  <!-- Neobrutalist Shadow Layer -->
+  <rect x="8" y="8" width="120" height="120" rx="12" fill="#000000"/>
+  <!-- Main Background - Electric Indigo (Primary) -->
+  <rect x="0" y="0" width="120" height="120" rx="12" fill="#6366F1"/>
+  <!-- Border -->
+  <rect x="3" y="3" width="114" height="114" rx="9" stroke="#1A1A1F" stroke-width="6" fill="none"/>
+  
+  <!-- Power Icon - SYMMETRIC AND CLEAN -->
+  <g transform="translate(60, 60)">
+    <!-- Vertical line (top part of power symbol) -->
+    <rect x="-4" y="-28" width="8" height="24" rx="4" fill="#FFFEF0"/>
+    
+    <!-- Circular arc (bottom part of power symbol) - using a proper symmetric path -->
+    <path d="M-24 -8 A28 28 0 1 0 24 -8" 
+          stroke="#FFFEF0" stroke-width="8" stroke-linecap="round" fill="none"/>
+  </g>
 </svg>
-

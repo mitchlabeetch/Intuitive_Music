@@ -39,7 +39,7 @@ try:
     #does the user already have libsamplerate installed?
     if sys.platform == 'win32' :
         dllPath = find_library(dllName)
-        # Stargate hack to locate development folder of dlls
+        # Intuitives hack to locate development folder of dlls
         if dllPath is None:
             dllPath = os.path.abspath(
                 os.path.join(

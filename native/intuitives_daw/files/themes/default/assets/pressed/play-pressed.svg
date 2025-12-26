@@ -1,0 +1,9 @@
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Neobrutalist PRESSED State - No shadow, pushed in -->
+  <!-- Main Background - Emerald (Play) - slightly darker on press -->
+  <rect x="4" y="4" width="40" height="40" rx="6" fill="#28CC52"/>
+  <!-- Border -->
+  <rect x="5.5" y="5.5" width="37" height="37" rx="4.5" stroke="#1A1A1F" stroke-width="3" fill="none"/>
+  <!-- Play Icon Triangle -->
+  <path d="M19 16.5C19 15.2 20.4 14.5 21.5 15.2L33.5 22.7C34.6 23.4 34.6 25 33.5 25.7L21.5 33.2C20.4 33.9 19 33.2 19 31.9V16.5Z" fill="#1A1A1F"/>
+</svg>

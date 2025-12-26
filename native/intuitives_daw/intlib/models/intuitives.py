@@ -8,6 +8,9 @@ Following the "experiment-first" philosophy: Does this sound cool?
 import os
 from typing import List, Dict, Any, Optional
 
+# Re-export SgProject from core module (required for main.py)
+from intlib.models.core.project import SgProject
+
 # Re-export from core models (avoid circular imports)
 # These will be imported after this module is loaded
 SgAudioItem = None
@@ -48,6 +51,7 @@ BUILTIN_PLUGINS_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
     "plugins"
 )
+
 
 USER_PLUGINS_DIR = os.path.expanduser("~/.intuitives/plugins")
 

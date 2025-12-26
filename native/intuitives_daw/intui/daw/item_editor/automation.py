@@ -16,6 +16,7 @@ from intlib.lib.translate import _
 from intui.sgqt import *
 from intlib.models import theme
 from intui.util import get_font
+from intui.neobrutalist_icons import create_simple_icon
 
 
 AUTOMATION_POINT_DIAMETER = 15.0
@@ -456,17 +457,9 @@ class AutomationEditorWidget:
         self.toolbar.setIconSize(QtCore.QSize(20, 20))
         self.hlayout.addWidget(self.toolbar)
 
-        # Hamburger menu
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('menu.svg'),
-            ),
-            QIcon.Mode.Normal,
-            #QIcon.State.On,
-        )
+        # Hamburger menu - neobrutalist
         self.menu_button = QToolButton()
-        self.menu_button.setIcon(icon)
+        self.menu_button.setIcon(create_simple_icon('menu.svg'))
         self.menu_button.setPopupMode(
             QToolButton.ToolButtonPopupMode.InstantPopup
         )
@@ -474,16 +467,8 @@ class AutomationEditorWidget:
 
         self.toolbar.addSeparator()
 
-        # Smooth button
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('smooth.svg'),
-            ),
-            QIcon.Mode.Normal,
-            #QIcon.State.On,
-        )
-        self.smooth_button = QAction(icon, '', self.toolbar)
+        # Smooth button - neobrutalist
+        self.smooth_button = QAction(create_simple_icon('smooth.svg'), '', self.toolbar)
         self.toolbar.addAction(self.smooth_button)
         self.smooth_button.setToolTip(
             _("By default, the control points are steppy, "

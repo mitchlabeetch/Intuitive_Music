@@ -1,0 +1,10 @@
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- PRESSED State - Split/Scissors darker -->
+  <rect x="4" y="4" width="40" height="40" rx="6" fill="#4F46E5"/>
+  <rect x="5.5" y="5.5" width="37" height="37" rx="4.5" stroke="#1A1A1F" stroke-width="3" fill="none"/>
+  <!-- Scissors icon -->
+  <circle cx="16" cy="18" r="4" fill="none" stroke="#FFFEF0" stroke-width="2"/>
+  <circle cx="16" cy="30" r="4" fill="none" stroke="#FFFEF0" stroke-width="2"/>
+  <line x1="19" y1="16" x2="33" y2="30" stroke="#FFFEF0" stroke-width="2"/>
+  <line x1="19" y1="32" x2="33" y2="18" stroke="#FFFEF0" stroke-width="2"/>
+</svg>

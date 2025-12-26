@@ -24,6 +24,7 @@ from intlib.models import theme
 from intlib.models.core.audio_pool import PerFileFX
 from intlib.models.theme import get_asset_path
 from intui.util import get_font
+from intui.neobrutalist_icons import create_simple_icon
 
 
 PAIFX_TEXT = """\
@@ -730,16 +731,9 @@ class AudioItemSeqWidget(FileDragDropper):
         self.vlayout.addLayout(self.hlayout)
         self.vlayout.addWidget(shared.AUDIO_SEQ)
 
+        # Menu button - neobrutalist
         self.menu_button = QToolButton()
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('menu.svg'),
-            ),
-            QIcon.Mode.Normal,
-            #QIcon.State.On,
-        )
-        self.menu_button.setIcon(icon)
+        self.menu_button.setIcon(create_simple_icon('menu.svg'))
         self.menu_button.setPopupMode(
             QToolButton.ToolButtonPopupMode.InstantPopup
         )

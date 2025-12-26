@@ -23,6 +23,10 @@ from intlib.lib.translate import _
 from intlib.math import clip_value
 from intlib.models.theme import get_asset_path
 from intui.daw.lib import sequence as sequence_lib
+from intui.neobrutalist_icons import (
+    create_simple_icon, get_follow_icon, get_solo_icon, get_mute_icon,
+    create_neobrutalist_icon,
+)
 
 
 class SequencerWidget:
@@ -44,17 +48,9 @@ class SequencerWidget:
         self.toolbar.setIconSize(QtCore.QSize(20, 20))
         self.hlayout0.addWidget(self.toolbar)
 
-        # Hamburger menu
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('menu.svg'),
-            ),
-            QIcon.Mode.Normal,
-            #QIcon.State.On,
-        )
+        # Hamburger menu - neobrutalist
         self.menu_button = QToolButton()
-        self.menu_button.setIcon(icon)
+        self.menu_button.setIcon(create_simple_icon('menu.svg'))
         self.menu_button.setPopupMode(
             QToolButton.ToolButtonPopupMode.InstantPopup
         )
@@ -95,23 +91,8 @@ class SequencerWidget:
             QKeySequence.fromString("CTRL+E")
         )
 
-        # Follow
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('follow-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('follow-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.follow_checkbox = QAction(icon, '', self.toolbar)
+        # Follow - neobrutalist with hover/pressed states
+        self.follow_checkbox = QAction(get_follow_icon(), '', self.toolbar)
         self.follow_checkbox.setToolTip(
             'Sequencer horizontal scroll follows the playback cursor'
             f" ({KEY_CTRL}+F)"
@@ -123,23 +104,8 @@ class SequencerWidget:
             QKeySequence.fromString("CTRL+F")
         )
 
-        # Un-solo
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('solo-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('solo-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.solo_checkbox = QAction(icon, '', self.toolbar)
+        # Un-solo - neobrutalist with hover/pressed states
+        self.solo_checkbox = QAction(get_solo_icon(), '', self.toolbar)
         self.solo_checkbox.setToolTip(
             'Toggle disabling or enabling solo for any tracks that have '
             f'been soloed ({KEY_CTRL}+J)'
@@ -151,23 +117,8 @@ class SequencerWidget:
         )
         self.solo_checkbox.triggered.connect(self.unsolo_all)
 
-        # Un-mute
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('mute-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('mute-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.mute_checkbox = QAction(icon, '', self.toolbar)
+        # Un-mute - neobrutalist with hover/pressed states
+        self.mute_checkbox = QAction(get_mute_icon(), '', self.toolbar)
         self.mute_checkbox.setToolTip(
             'Toggle disabling or enabling mute for any tracks that have '
             f'been muted ({KEY_CTRL}+M)'

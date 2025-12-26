@@ -12,6 +12,7 @@ from intlib.lib.translate import _
 from intlib.models.daw import loop_marker
 from intlib.models.theme import get_asset_path
 from intui.sgqt import *
+from intui.neobrutalist_icons import get_loop_icon, get_solo_icon, create_simple_icon
 
 
 class ItemEditorWidget:
@@ -96,17 +97,9 @@ class ItemEditorWidget:
         self.toolbar.setIconSize(QtCore.QSize(16, 16))
         self.zoom_hlayout.addWidget(self.toolbar)
 
-        # Hamburger menu
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('menu.svg'),
-            ),
-            QIcon.Mode.Normal,
-            #QIcon.State.On,
-        )
+        # Hamburger menu - neobrutalist
         self.menu_button = QToolButton()
-        self.menu_button.setIcon(icon)
+        self.menu_button.setIcon(create_simple_icon('menu.svg'))
         self.menu_button.setPopupMode(
             QToolButton.ToolButtonPopupMode.InstantPopup
         )
@@ -140,23 +133,8 @@ class ItemEditorWidget:
             lambda: shared.open_rack(shared.CURRENT_ITEM_TRACK)
         )
 
-        # Loop button
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('loop-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('loop-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.loop_mode_checkbox = QAction(icon, '', self.toolbar)
+        # Loop button - neobrutalist with hover/pressed states
+        self.loop_mode_checkbox = QAction(get_loop_icon(), '', self.toolbar)
         self.loop_mode_checkbox.setToolTip(
             'Toggle looping the current item. Set the sequencer region to the '
             'start and end of this item, set the playback cursor to the '
@@ -166,23 +144,8 @@ class ItemEditorWidget:
         self.toolbar.addAction(self.loop_mode_checkbox)
         self.loop_mode_checkbox.triggered.connect(self.on_loop_mode_changed)
 
-        # Solo
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('solo-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('solo-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.solo_checkbox = QAction(icon, '', self.toolbar)
+        # Solo - neobrutalist with hover/pressed states
+        self.solo_checkbox = QAction(get_solo_icon(), '', self.toolbar)
         self.solo_checkbox.setToolTip(
             'Toggle soloing the track of the current item being edited.  This '
             'does not alter the solo state of other tracks, if you are '

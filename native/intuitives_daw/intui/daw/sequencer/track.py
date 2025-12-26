@@ -13,6 +13,9 @@ from intlib.models.theme import get_asset_path
 from intui import shared as glbl_shared
 from intui import widgets
 from intui.daw import shared
+from intui.neobrutalist_icons import (
+    create_simple_icon, get_solo_icon, get_mute_icon, get_fx_icon,
+)
 
 TRACK_COLOR_CLIPBOARD = None
 
@@ -73,9 +76,9 @@ class SeqTrack:
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
 
+        # Menu button - neobrutalist
         self.menu_button = QToolButton()
-        icon = QIcon(get_asset_path('menu.svg'))
-        self.menu_button.setIcon(icon)
+        self.menu_button.setIcon(create_simple_icon('menu.svg'))
         self.button_menu = QMenu()
         self.menu_button.setMenu(self.button_menu)
         self.menu_button.setPopupMode(
@@ -85,52 +88,24 @@ class SeqTrack:
         self.button_menu.aboutToShow.connect(self.menu_button_pressed)
         self.menu_created = False
 
+        # FX/Plugins button - neobrutalist
         self.plugins_button = QToolButton()
         self.plugins_button.setToolTip('Show the plugin rack for this track')
-        icon = QIcon(get_asset_path('fx-off.svg'))
-        self.plugins_button.setIcon(icon)
+        self.plugins_button.setIcon(get_fx_icon())
         self.plugins_button.setToolTip('Open this track in the plugin rack')
         self.toolbar.addWidget(self.plugins_button)
         self.plugins_button.pressed.connect(self.open_plugins)
 
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('solo-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('solo-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.solo_checkbox = QAction(icon, '', self.toolbar)
+        # Solo button - neobrutalist with hover/pressed states
+        self.solo_checkbox = QAction(get_solo_icon(), '', self.toolbar)
         self.solo_checkbox.setToolTip('Solo this track')
         self.solo_checkbox.setCheckable(True)
         if self.track_number != 0:
             self.toolbar.addAction(self.solo_checkbox)
         self.solo_checkbox.triggered.connect(self.on_solo)
 
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('mute-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('mute-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.mute_checkbox = QAction(icon, '', self.toolbar)
+        # Mute button - neobrutalist with hover/pressed states
+        self.mute_checkbox = QAction(get_mute_icon(), '', self.toolbar)
         self.mute_checkbox.setToolTip('Mute this track')
         self.mute_checkbox.setCheckable(True)
         if self.track_number != 0:

@@ -1,0 +1,36 @@
+# Intuitives DAW - Neobrutalist Theme Configuration
+# "Does this sound cool?" - The only rule.
+
+template: default.qss
+palette: intuitives.yaml
+variables:
+  path: common.yaml
+  overrides:
+    # Neobrutalist combobox styling
+    combobox: |-
+      qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #252530, stop:0.5 #2F2F3A, stop:1 #252530
+      )
+    # Transport clock styling
+    transport_clock_background: "#1A1A1F"
+    transport_clock_color: "#FFFEF0"
+    # Highlight using Electric Indigo
+    highlight_border: "#6366F1"
+    
+system:
+  path: default.yaml
+  overrides:
+    daw:
+      seq_antialiasing: true
+      seq_item_background: "#12666666"
+      seq_item_background_use_track_color: true
+      seq_background: "#1A1A1F"
+      seq_header: "#252530"
+      playback_cursor: "#FFFEF0"
+    widgets:
+      knob_arc_pen: "#6366F1"
+      audio_item_viewer_color: "#6366F1"
+
+# Asset subdirectory for off-state icons
+assets_subdir: dark

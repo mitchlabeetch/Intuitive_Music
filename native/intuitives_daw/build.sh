@@ -26,7 +26,7 @@ echo ""
 
 # Parse arguments
 BUILD_TYPE="Release"
-USE_STARGATE="OFF"
+USE_ENGINE="OFF"
 BUILD_GUI="OFF"
 
 while [[ $# -gt 0 ]]; do
@@ -35,8 +35,8 @@ while [[ $# -gt 0 ]]; do
             BUILD_TYPE="Debug"
             shift
             ;;
-        --intuitives)
-            USE_STARGATE="ON"
+        --engine)
+            USE_ENGINE="ON"
             shift
             ;;
         --gui)
@@ -53,7 +53,7 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "Options:"
             echo "  --debug      Build with debug symbols"
-            echo "  --intuitives   Include Stargate engine"
+            echo "  --engine     Include Intuitives Core Engine"
             echo "  --gui        Build with Dear ImGui GUI"
             echo "  --clean      Clean before building"
             echo "  --help       Show this help"
@@ -74,7 +74,7 @@ cd build
 echo -e "${CYAN}Configuring CMake...${NC}"
 cmake .. \
     -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-    -DINTUITIVES_DAW_USE_STARGATE=${USE_STARGATE} \
+    -DINTUITIVES_DAW_USE_ENGINE=${USE_ENGINE} \
     -DINTUITIVES_DAW_BUILD_GUI=${BUILD_GUI}
 
 # Build

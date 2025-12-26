@@ -17,6 +17,7 @@ from intlib.models.theme import get_asset_path
 from intlib.lib.util import *
 from intlib.lib.translate import _
 from intui.sgqt import *
+from intui.neobrutalist_icons import get_draw_icon, get_speaker_icon, create_simple_icon
 
 
 class PianoRollEditorWidget:
@@ -101,17 +102,9 @@ class PianoRollEditorWidget:
         self.toolbar.setIconSize(QtCore.QSize(20, 20))
         self.hlayout.insertWidget(0, self.toolbar)
 
-        # Hamburger menu
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('menu.svg'),
-            ),
-            QIcon.Mode.Normal,
-            #QIcon.State.On,
-        )
+        # Hamburger menu - neobrutalist
         self.menu_button = QToolButton()
-        self.menu_button.setIcon(icon)
+        self.menu_button.setIcon(create_simple_icon('menu.svg'))
         self.menu_button.setPopupMode(
             QToolButton.ToolButtonPopupMode.InstantPopup
         )
@@ -444,23 +437,8 @@ class PianoRollEditorWidget:
             QKeySequence.fromString("CTRL+H"),
         )
 
-        # draw last item toolbar icon
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('draw-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('draw-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.draw_last_action = QAction(icon, '', self.toolbar)
+        # Draw last item toolbar icon - neobrutalist with hover/pressed states
+        self.draw_last_action = QAction(get_draw_icon(), '', self.toolbar)
         self.toolbar.addAction(self.draw_last_action)
         self.draw_last_action.setToolTip(
             'Draw the last item opened before the current as semi-transparent '
@@ -473,23 +451,8 @@ class PianoRollEditorWidget:
             QKeySequence.fromString("CTRL+F"),
         )
 
-        # Preview notes
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('speaker-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('speaker-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.preview_note_action = QAction(icon, '', self.toolbar)
+        # Preview notes - neobrutalist with hover/pressed states
+        self.preview_note_action = QAction(get_speaker_icon(), '', self.toolbar)
         self.toolbar.addAction(self.preview_note_action)
         self.preview_note_action.setToolTip(
             'Enable or disable playing any notes that are drawn or moved.'

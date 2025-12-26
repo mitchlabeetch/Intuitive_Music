@@ -13,6 +13,10 @@ from intui.widgets.transport import AbstractTransportWidget
 from intlib.lib import util
 from intlib.lib.translate import _
 from intlib.models.theme import get_asset_path
+from intui.neobrutalist_icons import (
+    get_loop_icon, get_metronome_icon, get_select_icon, 
+    get_draw_icon, get_erase_icon, get_split_icon,
+)
 
 
 MREC_EVENTS = []
@@ -27,23 +31,8 @@ class TransportWidget(AbstractTransportWidget):
         self.toolbar.setIconSize(QtCore.QSize(32, 32))
         self.group_box = self.toolbar
 
-        # Metronome
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('metronome-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('metronome-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.metronome_checkbox = QAction(icon, '', self.toolbar)
+        # Metronome - uses neobrutalist icons with hover/pressed states
+        self.metronome_checkbox = QAction(get_metronome_icon(), '', self.toolbar)
         self.metronome_checkbox.setToolTip(
             f'(hotkey {util.KEY_CTRL}+SHIFT+M) Toggle enabling or disabling '
             'the metronome.'
@@ -55,24 +44,8 @@ class TransportWidget(AbstractTransportWidget):
             QKeySequence.fromString("CTRL+SHIFT+M")
         )
 
-        # Loop
-
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('loop-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('loop-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.loop_mode_checkbox = QAction(icon, '', self.toolbar)
+        # Loop - uses neobrutalist icons with hover/pressed states
+        self.loop_mode_checkbox = QAction(get_loop_icon(), '', self.toolbar)
         self.loop_mode_checkbox.setToolTip(
             f"(hotkey {util.KEY_CTRL}+L) Enable or disable looping the "
             "sequencer region.  Set the sequencer region by right clicking "
@@ -86,22 +59,8 @@ class TransportWidget(AbstractTransportWidget):
         # Mouse tools
         self.mouse_tool_group = QActionGroup(self.toolbar)
 
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('select-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('select-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.tool_select_rb = QAction(icon, '', self.mouse_tool_group)
+        # Select tool - neobrutalist with hover/pressed states
+        self.tool_select_rb = QAction(get_select_icon(), '', self.mouse_tool_group)
         self.tool_select_rb.setToolTip(
             "(hotkey: a) Select items by clicking an item or clicking and "
             f"dragging to select one or more.  {util.KEY_ALT}+Click to select "
@@ -113,22 +72,8 @@ class TransportWidget(AbstractTransportWidget):
         self.tool_select_rb.setCheckable(True)
         self.tool_select_rb.setChecked(True)
 
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('draw-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('draw-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.tool_draw_rb = QAction(icon, '', self.mouse_tool_group)
+        # Draw tool - neobrutalist with hover/pressed states
+        self.tool_draw_rb = QAction(get_draw_icon(), '', self.mouse_tool_group)
         self.tool_draw_rb.setToolTip(
             "(hotkey: s) Draw items by left-clicking"
         )
@@ -136,22 +81,8 @@ class TransportWidget(AbstractTransportWidget):
         self.tool_draw_rb.triggered.connect(self.tool_draw_clicked)
         self.toolbar.addAction(self.tool_draw_rb)
 
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('erase-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('erase-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.tool_erase_rb = QAction(icon, '', self.mouse_tool_group)
+        # Erase tool - neobrutalist with hover/pressed states
+        self.tool_erase_rb = QAction(get_erase_icon(), '', self.mouse_tool_group)
         self.tool_erase_rb.setCheckable(True)
         self.tool_erase_rb.setToolTip(_(
             "(hotkey: d) Erase items by left-clicking and dragging"
@@ -159,22 +90,8 @@ class TransportWidget(AbstractTransportWidget):
         self.tool_erase_rb.triggered.connect(self.tool_erase_clicked)
         self.toolbar.addAction(self.tool_erase_rb)
 
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('split-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('split-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.tool_split_rb = QAction(icon, '', self.mouse_tool_group)
+        # Split tool - neobrutalist with hover/pressed states
+        self.tool_split_rb = QAction(get_split_icon(), '', self.mouse_tool_group)
         self.tool_split_rb.setCheckable(True)
         self.tool_split_rb.setToolTip(
             "(hotkey: f) Split items by left-clicking on an item"

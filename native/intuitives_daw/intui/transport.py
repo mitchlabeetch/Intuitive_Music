@@ -7,6 +7,10 @@ from intlib.models.theme import get_asset_path
 from intui import shared
 from intui.sgqt import *
 from intui import widgets
+from intui.neobrutalist_icons import (
+    get_play_icon, get_stop_icon, get_rec_icon,
+    create_simple_icon, get_host_icon,
+)
 import time
 
 
@@ -21,12 +25,9 @@ class TransportWidget:
         self.toolbar.setObjectName('transport_panel')
         self.group_box = self.toolbar
 
+        # Menu button - neobrutalist
         self.menu_button = QToolButton(self.toolbar)
-        self.menu_button.setIcon(
-            QIcon(
-                get_asset_path('menu.svg'),
-            ),
-        )
+        self.menu_button.setIcon(create_simple_icon('menu.svg'))
         self.menu_button.setPopupMode(
             QToolButton.ToolButtonPopupMode.InstantPopup
         )
@@ -36,22 +37,8 @@ class TransportWidget:
 
         self.play_group = QActionGroup(self.toolbar)
 
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('play-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('play-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.play_button = QAction(icon, '', self.play_group)
+        # Play button with neobrutalist hover/pressed states
+        self.play_button = QAction(get_play_icon(), '', self.play_group)
         self.play_button.setToolTip(
             'Begin playback.  Press spacebar to toggle',
         )
@@ -59,22 +46,8 @@ class TransportWidget:
         self.play_button.triggered.connect(self.on_play)
         self.toolbar.addAction(self.play_button)
 
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('stop-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('stop-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.stop_button = QAction(icon, '', self.play_group)
+        # Stop button with neobrutalist hover/pressed states
+        self.stop_button = QAction(get_stop_icon(), '', self.play_group)
         self.stop_button.setToolTip(
             'Stop playback or recording.  Press spacebar to toggle',
         )
@@ -83,28 +56,15 @@ class TransportWidget:
         self.stop_button.triggered.connect(self.on_stop)
         self.toolbar.addAction(self.stop_button)
 
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('rec-on.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('rec-off.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.rec_button = QAction(icon, '', self.play_group)
+        # Record button with neobrutalist hover/pressed states
+        self.rec_button = QAction(get_rec_icon(), '', self.play_group)
         self.rec_button.setToolTip(
-            'Stop playback or recording.  Press spacebar to toggle',
+            'Begin recording.  Press spacebar to toggle',
         )
         self.rec_button.setCheckable(True)
         self.rec_button.triggered.connect(self.on_rec)
         self.toolbar.addAction(self.rec_button)
+
 
         self.clock = QLCDNumber()
         self.clock.setToolTip(
@@ -118,12 +78,9 @@ class TransportWidget:
         self.clock.display("0:00.0")
         self.toolbar.addWidget(self.clock)
 
+        # Panic button - neobrutalist
         self.panic_button = QToolButton(self.toolbar)
-        self.panic_button.setIcon(
-            QIcon(
-                get_asset_path('panic.svg'),
-            ),
-        )
+        self.panic_button.setIcon(create_simple_icon('panic.svg'))
         self.panic_button.setPopupMode(
             QToolButton.ToolButtonPopupMode.InstantPopup
         )
@@ -150,22 +107,8 @@ class TransportWidget:
 
         self.toolbar.addWidget(self.panic_button)
 
-        icon = QIcon()
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('daw.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.On,
-        )
-        icon.addPixmap(
-            QPixmap(
-                get_asset_path('wave-editor.svg'),
-            ),
-            QIcon.Mode.Normal,
-            QIcon.State.Off,
-        )
-        self.host_button = QAction(icon, '')
+        # Host toggle button (DAW/Wave Editor) - neobrutalist
+        self.host_button = QAction(get_host_icon(), '')
         self.host_button.setToolTip(
             'The host to use.  DAW is a full digital audio workstation '
             'optimized for producing electronic music.  Wave Editor '

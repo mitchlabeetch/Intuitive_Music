@@ -13,6 +13,7 @@ from intlib import constants
 from intlib.models.project.abstract import AbstractProject
 from intlib.models.track_plugin import track_plugin, track_plugins
 from intlib.models.core.audio_item import SgAudioItem
+from intlib.models.core.tracks import track, tracks
 from intlib.models.core.midi_events import MIDINote, MIDIControl, MIDIPitchbend
 # Aliases
 note = MIDINote

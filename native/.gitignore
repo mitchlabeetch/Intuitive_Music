@@ -2,3 +2,7 @@
 # MacOS App Bundle
 *.app/
 *.dylib
+
+# Staging Artifacts
+native/intuitives_daw/engine/
+native/intuitives_daw/patch_macos.py

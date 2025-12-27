@@ -600,26 +600,36 @@ class MainWindow(QTabWidget):
             return False
 
     def tab_changed(self):
-        f_index = self.currentIndex()
+        try:
+            f_index = self.currentIndex()
 
-        shared.ITEM_EDITOR.clear_solo_loop()
-        shared.TRANSPORT.tab_changed(f_index)
+            shared.ITEM_EDITOR.clear_solo_loop()
+            shared.TRANSPORT.tab_changed(f_index)
 
-        constants.DAW_PROJECT.set_undo_context(f_index)
-        if f_index == shared.TAB_SEQUENCER and not glbl_shared.IS_PLAYING:
-            shared.SEQUENCER.open_sequence()
-        elif f_index == shared.TAB_ITEM_EDITOR:
-            shared.ITEM_EDITOR.tab_changed()
-        elif f_index == shared.TAB_ROUTING:
-            shared.ROUTING_GRAPH_WIDGET.draw_graph(
-                constants.DAW_PROJECT.get_routing_graph(),
-                shared.TRACK_NAMES,
+            constants.DAW_PROJECT.set_undo_context(f_index)
+            if f_index == shared.TAB_SEQUENCER and not glbl_shared.IS_PLAYING:
+                shared.SEQUENCER.open_sequence()
+            elif f_index == shared.TAB_ITEM_EDITOR:
+                shared.ITEM_EDITOR.tab_changed()
+            elif f_index == shared.TAB_ROUTING:
+                shared.ROUTING_GRAPH_WIDGET.draw_graph(
+                    constants.DAW_PROJECT.get_routing_graph(),
+                    shared.TRACK_NAMES,
+                )
+            elif f_index == shared.TAB_MIXER:
+                global_open_mixer()
+
+            shared.PLUGIN_RACK.tab_selected(f_index == shared.TAB_PLUGIN_RACK)
+        except Exception as ex:
+            LOG.error(f"Error changing tab to index {self.currentIndex()}")
+            LOG.exception(ex)
+            QMessageBox.warning(
+                self,
+                _("Error"),
+                _("An error occurred while changing tabs. check the log for details."),
             )
-        elif f_index == shared.TAB_MIXER:
-            global_open_mixer()
-
-        shared.PLUGIN_RACK.tab_selected(f_index == shared.TAB_PLUGIN_RACK)
-        QApplication.restoreOverrideCursor()
+        finally:
+            QApplication.restoreOverrideCursor()
 
 
     def midi_scrollContentsBy(self, x, y):

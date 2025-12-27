@@ -1,7 +1,0 @@
-<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- PRESSED State - Crimson darker -->
-  <rect x="4" y="4" width="32" height="32" rx="6" fill="#CC2952"/>
-  <rect x="5.5" y="5.5" width="29" height="29" rx="4.5" stroke="#1A1A1F" stroke-width="3" fill="none"/>
-  <!-- S Letter -->
-  <text x="20" y="27" font-family="Space Grotesk, sans-serif" font-size="18" font-weight="700" fill="#FFFEF0" text-anchor="middle">S</text>
-</svg>

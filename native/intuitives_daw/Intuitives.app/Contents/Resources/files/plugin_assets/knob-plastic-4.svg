@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Intuitives Plastic Knob 4 - Small Neobrutalist Style -->
-  <circle cx="28" cy="28" r="18" fill="#000000"/>
-  <circle cx="24" cy="24" r="18" fill="#252530" stroke="#FF9933" stroke-width="2"/>
-  <circle cx="24" cy="24" r="10" fill="#1A1A1F"/>
-  <line x1="24" y1="8" x2="24" y2="14" stroke="#FF9933" stroke-width="2" stroke-linecap="round"/>
-</svg>

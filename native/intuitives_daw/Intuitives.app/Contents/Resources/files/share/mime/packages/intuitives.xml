@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
-  <mime-type type="text/intuitives.project">
-    <comment>Intuitives DAW project file</comment>
-    <glob pattern="intuitives.project"/>
-  </mime-type>
-</mime-info>

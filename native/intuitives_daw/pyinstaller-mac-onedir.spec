@@ -26,10 +26,12 @@ if os.path.exists('engine/intuitives-engine'):
     BINARIES.extend([
         ('engine/intuitives-engine', 'engine'),
         ('engine/*.dylib', '.'),
-        ('engine/rubberband', 'engine'),
-        ('engine/intuitives-soundstretch', 'engine'),
-        ('engine/sbsms', 'engine'),
     ])
+    
+    # Optional tools
+    for tool in ['rubberband', 'intuitives-soundstretch', 'sbsms']:
+        if os.path.exists(os.path.join('engine', tool)):
+            BINARIES.append((os.path.join('engine', tool), 'engine'))
 
 a = Analysis(['intuitives.py'],
              pathex=[

@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44">
-  <!-- Neobrutalist DC Offset Icon - Hover State -->
-  <!-- Coral pink with extended shadow -->
-  <rect x="5" y="7" width="34" height="34" rx="6" fill="#111111"/>
-  <rect x="3" y="3" width="34" height="34" rx="6" fill="#FF6B6B"/>
-  <!-- DC text -->
-  <text x="10" y="28" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="white">DC</text>
-</svg>

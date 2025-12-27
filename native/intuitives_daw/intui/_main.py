@@ -1,5 +1,6 @@
 import os
 import sys
+import traceback
 import time
 
 from .preflight import preflight
@@ -25,7 +26,17 @@ from intui.sgqt import (
 )
 from intui.splash import SplashScreen
 from intui.util import setup_theme, ui_scaler_factory
-from intui.welcome import Welcome
+from intui.util import setup_theme, ui_scaler_factory
+from intui.enhanced_welcome import EnhancedWelcome
+from intui.project import (
+    new_project,
+    open_project,
+    clone_project,
+    check_project_version,
+    set_project,
+    get_history,
+    IntuitivesProjectVersionError,
+)
 
 
 class MainStackedWidget(QStackedWidget):
@@ -60,11 +71,86 @@ class MainStackedWidget(QStackedWidget):
 
     def show_welcome(self):
         if not self.welcome_window:
-            self.welcome_window = Welcome()
-            self.addWidget(self.welcome_window.widget)
-        self.setCurrentWidget(self.welcome_window.widget)
-        self.welcome_window.load_rp()
+            self.welcome_window = EnhancedWelcome()
+            self.addWidget(self.welcome_window)
+            
+            # Connect signals
+            self.welcome_window.new_project_requested.connect(self.on_welcome_new)
+            self.welcome_window.open_project_requested.connect(self.on_welcome_open)
+            self.welcome_window.clone_project_requested.connect(self.on_welcome_clone)
+            self.welcome_window.recent_project_selected.connect(self.on_welcome_recent)
+            self.welcome_window.hardware_settings_requested.connect(self.on_welcome_hardware)
+            
+        self.setCurrentWidget(self.welcome_window)
+        self.populate_welcome_recent()
         self.setWindowTitle('Intuitives DAW')
+
+    def populate_welcome_recent(self):
+        self.welcome_window.clear_recent_projects()
+        history = get_history()
+        for path in history:
+            self.welcome_window.add_recent_project(path)
+
+    def on_welcome_new(self):
+        try:
+            if not self.check_hardware(self.on_welcome_new):
+                return
+            path = new_project(self.welcome_window)
+            if path:
+                self.start()
+        except Exception as ex:
+            LOG.exception(ex)
+            QMessageBox.warning(None, "Error", f"An error occurred: {ex}")
+
+    def on_welcome_open(self):
+        try:
+            if not self.check_hardware(self.on_welcome_open):
+                return
+            if open_project(self.welcome_window):
+                self.start()
+        except Exception as ex:
+            LOG.exception(ex)
+            QMessageBox.warning(None, "Error", f"An error occurred: {ex}")
+
+    def on_welcome_clone(self):
+        try:
+            if not self.check_hardware(self.on_welcome_clone):
+                return
+            if clone_project(self.welcome_window):
+                self.start()
+        except Exception as ex:
+            LOG.exception(ex)
+            QMessageBox.warning(None, "Error", f"An error occurred: {ex}")
+
+    def on_welcome_recent(self, path):
+         try:
+             if not self.check_hardware():
+                return
+             if not os.path.isfile(path):
+                 QMessageBox.warning(
+                     None,
+                     "Error",
+                     f"'{path}' was moved, deleted or the storage device is no longer readable"
+                 )
+                 self.populate_welcome_recent()
+                 return
+                 
+             try:
+                 check_project_version(self.welcome_window, path)
+             except IntuitivesProjectVersionError:
+                 return
+                 
+             set_project(path)
+             self.start()
+         except Exception as ex:
+            LOG.exception(ex)
+            QMessageBox.warning(None, "Error", f"An error occurred: {ex}")
+
+    def on_welcome_hardware(self):
+        self.show_hardware_dialog(
+            self.show_welcome,
+            self.show_welcome
+        )
 
     def start(self):
         if self.show_splash():
@@ -173,8 +259,24 @@ def qt_message_handler(mode, context, message):
         LOG.warning(f'Could not log Qt message: {ex}')
 
 
+
+def exception_hook(exctype, value, tb):
+    """
+    Global exception hook to catch unhandled exceptions
+    """
+    LOG.error("Unhandled exception caught by global hook")
+    LOG.error("".join(traceback.format_exception(exctype, value, tb)))
+    
+    # Try to show a message box if possible
+    try:
+        msg = f"An unexpected error occurred:\n\n{value}\n\nSee log for details."
+        QMessageBox.critical(None, "Critical Error", msg)
+    except:
+        pass
+
 def _setup():
     LOG.info(f"sys.argv == {sys.argv}")
+    sys.excepthook = exception_hook
     QtCore.qInstallMessageHandler(qt_message_handler)
     try:
         QGuiApplication.setHighDpiScaleFactorRoundingPolicy(

@@ -14,6 +14,8 @@ function App() {
   const [tracks, setTracks] = useState([]);
   const [playing, setPlaying] = useState(false);
   const [recording, setRecording] = useState(false);
+  // Integration State
+  const [plugins, setPlugins] = useState([]);
 
   useEffect(() => {
     // Connect to WebSocket
@@ -97,10 +99,23 @@ function App() {
     }
   };
 
+  const loadPlugin = async (type, path) => {
+      try {
+          await axios.post(`${API_URL}/api/plugins/load`, {
+              type: type,
+              path: path
+          });
+          setPlugins([...plugins, {type, path}]);
+          alert(`Loaded ${type} plugin!`);
+      } catch (error) {
+          console.error("Failed to load plugin:", error);
+      }
+  };
+
   return (
     <div className="app">
       <header className="header">
-        <h1>🎵 Intuitive Music DAW</h1>
+        <h1>🎵 Intuitives DAW</h1>
         <div className="connection-status">
           <span className={`status-indicator ${connected ? 'connected' : 'disconnected'}`}></span>
           {connected ? 'Connected' : 'Disconnected'}
@@ -117,6 +132,10 @@ function App() {
         <button onClick={() => addTrack('midi')} disabled={!project}>
           Add MIDI Track
         </button>
+        <div className="plugin-loader">
+            <button onClick={() => loadPlugin('CLAP', '/path/to/plugin.clap')} disabled={!project}>Load CLAP</button>
+            <button onClick={() => loadPlugin('FAUST', 'process = osc(440);')} disabled={!project}>Load Faust Code</button>
+        </div>
       </div>
 
       <div className="transport">
@@ -156,6 +175,12 @@ function App() {
               </div>
             ))
           )}
+        </div>
+        <div className="plugin-rack">
+            <h3>Loaded Plugins (Engine Side)</h3>
+            <ul>
+                {plugins.map((p, i) => <li key={i}>{p.type}: {p.path}</li>)}
+            </ul>
         </div>
       </div>
 

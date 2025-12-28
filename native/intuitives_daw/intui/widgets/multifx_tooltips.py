@@ -1,4 +1,9 @@
 class MultiFXInfo:
+    """
+    PURPOSE: A data container for MultiFX algorithm metadata.
+    ACTION: Stores the engine index and a descriptive tooltip for a specific effect type.
+    MECHANISM: Simple attribute storage for 'index' and 'tooltip'.
+    """
     def __init__(
         self,
         index: int,
@@ -104,6 +109,14 @@ MULTIFX_INFO = {
 }
 
 def mfx_set_tooltip(knobs, idx: int):
+    """
+    PURPOSE: Dynamically updates UI tooltips when a MultiFX algorithm changes.
+    ACTION: Reassigns the descriptive 'hover' text for up to 3 knobs based on the current FX type.
+    MECHANISM: 
+        1. Look up the tooltip tuple in MULTIFX_KNOB_TOOLTIPS using the algorithm ID.
+        2. Pads the list with empty strings if the knob count exceeds the metadata count.
+        3. Calls setToolTip() on each knob's underlying control widget.
+    """
     tooltips = MULTIFX_KNOB_TOOLTIPS.get(idx, [])
     if len(knobs) > len(tooltips):
         tooltips += (len(knobs) - len(tooltips)) * ('',)

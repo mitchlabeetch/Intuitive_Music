@@ -76,6 +76,15 @@ QLabel#plugin_value_label{
 """
 
 class sg_comp_plugin_ui(AbstractPluginUI):
+    """
+    PURPOSE: A dedicated dynamic range compressor interface.
+    ACTION: Provides precise control over signal gain reduction to balance loudness and consistency.
+    MECHANISM: 
+        1. Primary Controls: Features knobs for Threshold (in 0.1 dB increments), Ratio, Attack, and Release.
+        2. Gain Management: Includes a ‘Makeup’ gain control to restore level after compression.
+        3. Visual Feedback: Integrates a real-time peak meter to visualize gain reduction or output levels.
+        4. State Handling: Implements custom save/close logic to manage engine-side meter updates efficiently.
+    """
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(
             self,

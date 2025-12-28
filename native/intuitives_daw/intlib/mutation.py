@@ -75,11 +75,12 @@ class MutationEngine:
         on_mutation: Optional[Callable[[str, float, float], None]] = None,
     ):
         """
-        Initialize the Mutation Engine.
-        
-        Args:
-            config: Mutation configuration
-            on_mutation: Callback(param_name, old_value, new_value) on mutation
+        PURPOSE: Initializes the Mutation Engine for introducing controlled randomness into project parameters.
+        ACTION: Sets the engine's configuration, initializes snapshot history, and resets evolution and statistic trackers.
+        MECHANISM: 
+            1. Assigns a MutationConfig (or default).
+            2. Connects a mutation callback.
+            3. Sets up empty dictionaries and lists for snapshot management (undo functionality) and parameter evolution.
         """
         self.config = config or MutationConfig()
         self.on_mutation = on_mutation
@@ -109,16 +110,13 @@ class MutationEngine:
         amount: Optional[float] = None,
     ) -> float:
         """
-        Mutate a single value within bounds.
-        
-        Args:
-            current: Current parameter value
-            min_val: Minimum allowed value
-            max_val: Maximum allowed value
-            amount: Mutation amount (0-1), or None for config default
-            
-        Returns:
-            New mutated value
+        PURPOSE: Modifies a single numerical value based on randomization logic.
+        ACTION: Returns a new value that is slightly offset from the original.
+        MECHANISM: 
+            1. Determines the mutation delta relative to the parameter range.
+            2. For bipolar mode, uses a range of [-amount, +amount].
+            3. For unipolar mode, uses [0, +amount].
+            4. Clamps the result within the specified min/max bounds if config.respect_bounds is True.
         """
         if amount is None:
             amount = self.config.amount
@@ -146,15 +144,13 @@ class MutationEngine:
         amount: Optional[float] = None,
     ) -> Dict[str, float]:
         """
-        Mutate a dictionary of parameters.
-        
-        Args:
-            parameters: Dict of parameter_name -> current_value
-            param_info: Optional dict with min/max for each param
-            amount: Mutation amount override
-            
-        Returns:
-            Dict of parameter_name -> new_value
+        PURPOSE: Mass-randomizes a set of parameters while respecting exclusion rules.
+        ACTION: Iterates through a dictionary of parameters and returns a mutated version.
+        MECHANISM: 
+            1. Skips parameters matched by _should_skip_param() (e.g. Master Volume).
+            2. Applies a per-parameter probability check.
+            3. Calls mutate_value() for each qualifying parameter.
+            4. Triggers the on_mutation callback to notify the system of changes.
         """
         result = {}
         
@@ -193,7 +189,11 @@ class MutationEngine:
         return result
     
     def _should_skip_param(self, param_name: str) -> bool:
-        """Check if a parameter should be skipped based on config."""
+        """
+        PURPOSE: Safety filter to prevent randomization of critical "stability" parameters.
+        ACTION: Returns True if the parameter name matches exclusion criteria (like Volume or Mute).
+        MECHANISM: Performs case-insensitive substring checks against keywords defined in self.config.
+        """
         name_lower = param_name.lower()
         
         if self.config.exclude_volume and 'volume' in name_lower:
@@ -214,7 +214,11 @@ class MutationEngine:
         parameters: Dict[str, float],
         description: str = "",
     ) -> ParameterSnapshot:
-        """Save a parameter snapshot for undo/compare."""
+        """
+        PURPOSE: Captures the current state of parameters to allow for "Undo" or comparison.
+        ACTION: Creates a new ParameterSnapshot and adds it to the internal history list.
+        MECHANISM: Instantiates the snapshot with a timestamp and a copy of the parameter dictionary, maintaining a max buffer of 50 items.
+        """
         snapshot = ParameterSnapshot(
             timestamp=time.time(),
             parameters=parameters.copy(),
@@ -229,9 +233,13 @@ class MutationEngine:
         
         LOG.debug(f"Saved snapshot: {description or 'unnamed'}")
         return snapshot
-    
+
     def restore_snapshot(self, index: int = -1) -> Optional[Dict[str, float]]:
-        """Restore a parameter snapshot by index (default: last)."""
+        """
+        PURPOSE: Reverts parameters to a previously captured state.
+        ACTION: Returns a deep copy of the parameter dictionary from the specified snapshot index.
+        MECHANISM: Accesses the snapshots list by index and returns the 'parameters' field if it exists.
+        """
         if not self.snapshots:
             return None
         
@@ -241,9 +249,13 @@ class MutationEngine:
             return snapshot.parameters.copy()
         except IndexError:
             return None
-    
+
     def clear_snapshots(self):
-        """Clear all snapshots."""
+        """
+        PURPOSE: Resets the snapshot history.
+        ACTION: Empties the internal snapshot list.
+        MECHANISM: Calls .clear() on the snapshots list.
+        """
         self.snapshots.clear()
     
     # ========================================================================
@@ -257,12 +269,12 @@ class MutationEngine:
         duration_ms: float = 5000.0,
     ):
         """
-        Start evolving parameters toward a target over time.
-        
-        Args:
-            current_params: Current parameter values
-            target_params: Target values (None = random)
-            duration_ms: Evolution duration in milliseconds
+        PURPOSE: Initiates a slow, automated morph from one parameter state to another.
+        ACTION: Sets the start and target states and starts the evolution timer.
+        MECHANISM: 
+            1. Copies current parameters to _evolution_start.
+            2. Generates random target parameters if none are provided.
+            3. Sets the _evolving flag to True.
         """
         self._evolution_start = current_params.copy()
         
@@ -280,21 +292,24 @@ class MutationEngine:
         self._evolving = True
         
         LOG.info(f"Started evolution over {duration_ms}ms")
-    
+
     def stop_evolution(self):
-        """Stop the evolution process."""
+        """
+        PURPOSE: Halts any active parameter morphing.
+        ACTION: Sets the _evolving flag to False.
+        MECHANISM: Direct boolean assignment.
+        """
         self._evolving = False
         LOG.info("Evolution stopped")
     
     def update_evolution(self, delta_ms: float) -> Optional[Dict[str, float]]:
         """
-        Update evolution progress and return interpolated parameters.
-        
-        Args:
-            delta_ms: Time elapsed since last update in milliseconds
-            
-        Returns:
-            Interpolated parameters, or None if not evolving
+        PURPOSE: Calculates the interpolated parameter values for the current point in an evolution sequence.
+        ACTION: Returns a dictionary of "in-between" values.
+        MECHANISM: 
+            1. Calculates progress based on delta_ms.
+            2. Applies a 'smoothstep' easing function (3t^2 - 2t^3) for natural transitions.
+            3. Linearly interpolates between start and end values using the smoothed progress.
         """
         if not self._evolving:
             return None
@@ -319,7 +334,11 @@ class MutationEngine:
     
     @property
     def is_evolving(self) -> bool:
-        """Check if evolution is in progress."""
+        """
+        PURPOSE: External check for evolution status.
+        ACTION: Returns the current boolean state of morphing logic.
+        MECHANISM: Returns self._evolving.
+        """
         return self._evolving
     
     # ========================================================================
@@ -332,17 +351,12 @@ class MutationEngine:
         intensity: float = 0.5,
     ) -> Dict[str, float]:
         """
-        Trigger a "Happy Accident" - extreme randomization.
-        
-        This is for when you want to completely break out of your
-        current sound and discover something new.
-        
-        Args:
-            parameters: Current parameter values
-            intensity: 0.0-1.0, how extreme the changes are
-            
-        Returns:
-            Wildly mutated parameters
+        PURPOSE: Truncates intentional structure by applying extreme, high-impact randomization.
+        ACTION: Returns a dictionary of wildly modified parameters.
+        MECHANISM: 
+            1. Increases mutation probability and magnitude based on 'intensity'.
+            2. Occasionally resets parameters to completely random values (0.0-1.0) instead of relative offsets.
+            3. High intensity yields 20-100% mutation ranges.
         """
         LOG.info(f"HAPPY ACCIDENT! Intensity: {intensity:.0%}")
         
@@ -372,9 +386,13 @@ class MutationEngine:
         
         self.total_mutations += 1
         return result
-    
+
     def get_statistics(self) -> Dict[str, Any]:
-        """Get mutation statistics."""
+        """
+        PURPOSE: Provides insights into the chaos generated by the engine.
+        ACTION: Returns statistical counts and current state descriptions.
+        MECHANISM: Returns a dictionary containing mutation counters and evolution progress levels.
+        """
         return {
             "total_mutations": self.total_mutations,
             "total_parameters_mutated": self.total_parameters_mutated,
@@ -392,7 +410,11 @@ _mutation_engine: Optional[MutationEngine] = None
 
 
 def get_mutation_engine() -> MutationEngine:
-    """Get the global MutationEngine instance."""
+    """
+    PURPOSE: Managed access to the global MutationEngine instance.
+    ACTION: Returns the active engine, instantiating it lazily if required.
+    MECHANISM: Uses a singleton pattern with the _mutation_engine global.
+    """
     global _mutation_engine
     if _mutation_engine is None:
         _mutation_engine = MutationEngine()
@@ -403,7 +425,11 @@ def mutate(
     parameters: Dict[str, float],
     amount: float = 0.05,
 ) -> Dict[str, float]:
-    """Quick mutation of parameters."""
+    """
+    PURPOSE: Lightweight entry point for a single-pass mutation event.
+    ACTION: Returns a dictionary of mutated parameters.
+    MECHANISM: Calls mutate_parameters() on the global engine instance.
+    """
     return get_mutation_engine().mutate_parameters(parameters, amount=amount)
 
 
@@ -411,7 +437,11 @@ def happy_accident(
     parameters: Dict[str, float],
     intensity: float = 0.5,
 ) -> Dict[str, float]:
-    """Trigger a happy accident."""
+    """
+    PURPOSE: Lightweight entry point for triggering a high-intensity "Happy Accident".
+    ACTION: Returns a wildly randomized parameter set.
+    MECHANISM: Calls happy_accident() on the global engine instance with the specified intensity.
+    """
     return get_mutation_engine().happy_accident(parameters, intensity)
 
 
@@ -429,7 +459,11 @@ MUTATION_PRESETS = {
 
 
 def apply_preset(preset_name: str) -> bool:
-    """Apply a mutation preset."""
+    """
+    PURPOSE: Configures the mutation engine using a named behavioral template (e.g., 'Wild', 'Subtle').
+    ACTION: Updates the configuration of the global mutation engine.
+    MECHANISM: Looks up the preset name in MUTATION_PRESETS and assigns the corresponding MutationConfig object.
+    """
     if preset_name in MUTATION_PRESETS:
         get_mutation_engine().config = MUTATION_PRESETS[preset_name]
         LOG.info(f"Applied mutation preset: {preset_name}")

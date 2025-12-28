@@ -145,6 +145,15 @@ QTabBar::tab:selected
 """
 
 class sgeq_plugin_ui(AbstractPluginUI):
+    """
+    PURPOSE: A comprehensive 6-band Parametric EQ with integrated spectrum analysis.
+    ACTION: Provides surgical frequency control and visual feedback for tonal balancing.
+    MECHANISM: 
+        1. Multi-Band Engine: Encapsulates a full eq6_widget with 6 independent Gain/Freq/BW bands.
+        2. Flexible Routing: Features ‘PreFX’ and ‘PostFX’ tabs, each containing 6 slots of MultiFXSingle for additional serial processing.
+        3. Real-Time Analysis: Integrates a real-time spectrum analyzer HUD that overlays the EQ curve.
+        4. Resource Efficiency: Includes custom logic to enable/disable the spectrum analyzer based on widget visibility to save CPU.
+    """
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(
             self,

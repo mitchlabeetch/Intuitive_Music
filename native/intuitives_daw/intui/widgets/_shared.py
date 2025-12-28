@@ -2,6 +2,15 @@ from intui.sgqt import *
 from intlib.models import theme
 
 
+"""
+PURPOSE: Global constants and configuration shared across the widget library.
+ACTION: Defines knob conversion types (KC), global tempo, and visual settings for the EQ and ADSR components.
+MECHANISM: 
+    1. KC Constants: Enums (KC_INTEGER, KC_PITCH, etc.) that dictate how raw 0-127 MIDI values are rendered as text in the GUI.
+    2. EQ Configuration: Dimensions and colors for the parametric EQ display, including a spectral gradient for the waveform fill.
+    3. Global State: Tracks 'TEMPO' for time-synced widgets (LFO, envelopes).
+    4. ADSR_CLIPBOARD: A simple dictionary for copying envelope states between ADSR widgets.
+"""
 KC_INTEGER = 0
 KC_DECIMAL = 1
 KC_PITCH = 2
@@ -22,7 +31,7 @@ TEMPO = 128.0
 
 ADSR_CLIPBOARD = {}
 
-def set_global_tempo(a_tempo):
+def set_global_tempo(a_tempo: float) -> None:
     global TEMPO
     TEMPO = a_tempo
 

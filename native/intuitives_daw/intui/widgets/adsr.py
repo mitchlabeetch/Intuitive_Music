@@ -6,6 +6,14 @@ from intui.sgqt import *
 
 
 class adsr_widget:
+    """
+    PURPOSE: Provides a unified UI group for Attack-Decay-Sustain-Release envelope controls.
+    ACTION: Displays multiple knobs and checkboxes within a QGroupBox for sound sculpting.
+    MECHANISM: 
+        1. Instantiates knob_control objects for each ADSR parameter.
+        2. Organizes them in a QGridLayout.
+        3. Handles copy/paste operations via a shared clipboard.
+    """
     def __init__(
         self,
         a_size,
@@ -26,8 +34,13 @@ class adsr_widget:
         a_hold_port=None,
         a_lin_port=None,
         a_lin_default=1,
-        knob_kwargs={},
-    ):
+        knob_kwargs: dict = {},
+    ) -> None:
+        """
+        PURPOSE: Initializes the ADSR control group.
+        ACTION: Creates controls for all active envelope phases (including optional Delay and Hold).
+        MECHANISM: Uses knob_control for continuous parameters and checkbox_control for options (PreFX, Linear).
+        """
         self.clipboard_dict = {}
         self.groupbox = QGroupBox(a_label)
         self.groupbox.contextMenuEvent = self.context_menu_event
@@ -208,6 +221,7 @@ class adsr_widget:
             self.lin_checkbox.add_to_grid_layout(self.layout, 12)
 
     def context_menu_event(self, a_event):
+        """PURPOSE: Displays the right-click menu for envelope copy/paste."""
         f_menu = QMenu(self.groupbox)
         f_copy_action = f_menu.addAction(_("Copy"))
         f_copy_action.triggered.connect(self.copy)
@@ -216,10 +230,23 @@ class adsr_widget:
         f_menu.exec(QCursor.pos())
 
     def copy(self):
+        """
+        PURPOSE: Exports the current ADSR settings to a global clipboard.
+        ACTION: Stores a dictionary of parameter values in _shared.ADSR_CLIPBOARD.
+        MECHANISM: Iterates through clipboard_dict and calls get_value() on each control.
+        """
         _shared.ADSR_CLIPBOARD = dict([(k, v.get_value())
             for k, v in self.clipboard_dict.items()])
 
     def paste(self):
+        """
+        PURPOSE: Applies settings from the global clipboard to this widget.
+        ACTION: Updates all internal knobs to match the stored values.
+        MECHANISM: 
+            1. Reads _shared.ADSR_CLIPBOARD.
+            2. Handles conversion between DB and linear sustain if necessary using sg_math helpers.
+            3. Calls set_value(..., True) to trigger engine updates.
+        """
         if not _shared.ADSR_CLIPBOARD:
             return
         for k, v in self.clipboard_dict.items():

@@ -5,6 +5,14 @@ from intui.sgqt import *
 
 
 class ramp_env_widget:
+    """
+    PURPOSE: A simple single-stage modulation envelope.
+    ACTION: Provides Time, Amount, and Curve controls for basic parameter ramps.
+    MECHANISM: 
+        1. Encapsulates knob_control instances for time (in ms) and modulation depth.
+        2. Optionally includes a Curve knob to switch between linear and exponential slopes.
+        3. Uses standard val_callback to update the engine's internal modulation state.
+    """
     def __init__(
         self,
         a_size,

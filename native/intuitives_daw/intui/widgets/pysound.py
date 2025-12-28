@@ -6,7 +6,15 @@ import os
 PYSOUND_FOLDER = os.path.join(util.HOME, "presets")
 
 class pysound_file:
-    """ Pre-production, work in progress... """
+    """
+    PURPOSE: A metadata-rich serialization format for plugin states and tags.
+    ACTION: Parses and generates pipe-delimited preset files (.pysound) containing control values, versioning, and searchable tags.
+    MECHANISM: 
+        1. Encapsulates a control_dict mapping port IDs to integer values.
+        2. string_to_data(): Iterates through newline-separated rows, splitting by the '|' delimiter to extract 'name', 'tag', 'hash', and port data.
+        3. Supports 'version' tracking to ensure compatibility across different plugin iterations.
+        4. Designed to be indexed by pysound_index for high-performance tag searches.
+    """
     def __init__(self, **kwargs):
         self.name = None
         self.hash = None

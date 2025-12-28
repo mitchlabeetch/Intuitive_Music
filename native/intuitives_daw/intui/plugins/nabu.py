@@ -128,6 +128,15 @@ QMenu::separator
 
 
 class NabuPluginUI(AbstractPluginUI):
+    """
+    PURPOSE: A specialized multi-algorithm phase distortion and filtering interface.
+    ACTION: Provides complex modulation and routing for advanced sound design.
+    MECHANISM: 
+        1. Modulated Path: Features independent controls for phase distortion depth, resonance, and cutoff.
+        2. Flexible Routing: Implements a specialized routing system (via NABU_PORT_MAP) that allow effects to bypass or serial-process audio based on active states.
+        3. Visual Monitoring: Includes integrated peak metering to monitor output levels and gain reduction.
+        4. State Efficiency: Automatically manages engine-side messaging (UI_MSG_ENABLED) based on widget visibility to optimize CPU usage.
+    """
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(
             self,

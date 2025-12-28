@@ -121,7 +121,7 @@ def open_project(a_parent=None):
         QMessageBox.warning(a_parent, "Error", str(ex))
         return False
 
-def set_project(project):
+def set_project(project: str) -> None:
     global PROJECT_DIR
     project = pi_path(project)
     PROJECT_DIR = project
@@ -139,7 +139,7 @@ def set_project(project):
         "\n".join(history[:20]),
     )
 
-def get_history():
+def get_history() -> list:
     history = get_file_setting("project-history", str, "")
     if IS_PORTABLE_INSTALL:
         history = [

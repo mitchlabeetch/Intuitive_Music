@@ -70,6 +70,15 @@ QLabel#plugin_value_label{
 """
 
 class scc_plugin_ui(AbstractPluginUI):
+    """
+    PURPOSE: A dedicated sidechain compressor interface.
+    ACTION: Compresses the primary audio signal based on the volume of an external sidechain input.
+    MECHANISM: 
+        1. Dynamic Detection: Provides knobs for Threshold (sidechain level), Ratio, Attack, and Release.
+        2. Parallel Processing: Includes a ‘Wet’ knob to blend between the compressed and dry signals.
+        3. Visual Feedback: Integrates an inverted peak_meter that displays gain reduction caused by the sidechain signal.
+        4. Performance Guards: Implements custom save logic to ensure metering is disabled when the preset is saved/loaded to prevent CPU spikes.
+    """
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(
             self,

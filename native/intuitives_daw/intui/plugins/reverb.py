@@ -86,6 +86,15 @@ QLabel#plugin_name_label
 """
 
 class ReverbPluginUI(AbstractPluginUI):
+    """
+    PURPOSE: A high-quality spatial reverberation interface.
+    ACTION: Simulates physical acoustic environments through complex reflection and decay controls.
+    MECHANISM: 
+        1. Temporal Evolution: Provides specialized knobs for Decay time, Predelay (ms), and Density.
+        2. Frequency Damping: Features High-Cut and Low-Cut filters to simulate room absorption and prevent muddiness.
+        3. Width & Space: Includes Stereo width and Room Size controls to transform the reverb from a small closet to a cavernous hall.
+        4. Mix Management: Balancing of Dry and Wet signals with dedicated high-precision knobs.
+    """
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(
             self,

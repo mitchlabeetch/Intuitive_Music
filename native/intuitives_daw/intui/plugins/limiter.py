@@ -58,6 +58,15 @@ QLabel#plugin_value_label{
 
 
 class LimiterPluginUI(AbstractPluginUI):
+    """
+    PURPOSE: A high-precision peak limiter interface.
+    ACTION: Ensures audio signals do not exceed a strict ceiling, preventing digital clipping.
+    MECHANISM: 
+        1. Core Thresholding: Features a high-precision ‘Thresh’ knob (0.1 dB steps) to set the saturation point.
+        2. Auto-Normalization: Uses a ‘Ceiling’ control to adjust auto-gain and maintain consistent peak output levels.
+        3. Recovery Timing: Includes a Release knob (50ms - 1500ms) to manage the speed of gain recovery for transparency or loudness.
+        4. Performance HUD: Integrates a dedicated, inverted peak_meter with a custom color gradient to visualize gain reduction or clipping.
+    """
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(
             self,

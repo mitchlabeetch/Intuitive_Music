@@ -16,8 +16,14 @@ from intlib.log import LOG
 
 
 class NoteParticle:
-    """A visual particle representing a note"""
-    
+    """
+    PURPOSE: A transient visual entity representing a MIDI note event.
+    ACTION: Animates a glowing circle that drifts and fades over its lifetime.
+    MECHANISM: 
+        1. Stores position, velocity (mapped to size), and color.
+        2. In update(), applies physics (velocity drift) and life decay.
+        3. In draw(), renders a multi-layered circle with varying opacity for a glow effect.
+    """
     def __init__(self, x, y, velocity, note, color):
         self.x = x
         self.y = y
@@ -68,8 +74,14 @@ class NoteParticle:
 
 
 class WaveformRing:
-    """Animated ring that pulses with audio level"""
-    
+    """
+    PURPOSE: A reactive circular pulse synchronized with audio amplitude.
+    ACTION: Expands and fades an outline ring in response to audio "triggers".
+    MECHANISM: 
+        1. Maintains current and target radii for smooth expansion.
+        2. Uses exponential decay for opacity and target radius to create a "snappy" pulse feel.
+        3. Renders a QPainter drawEllipse with no brush and a colored pen.
+    """
     def __init__(self, cx, cy, max_radius=100):
         self.cx = cx
         self.cy = cy
@@ -112,10 +124,13 @@ class WaveformRing:
 
 class ChromasynesthesiaVisualizer(QWidget):
     """
-    Real-time visualization of music using chromasynesthesia colors.
-    Maps pitch to color, velocity to brightness, and rhythm to movement.
+    PURPOSE: A pitch-to-color mapping visualizer (Synesthesia engine).
+    ACTION: Spawns particles and rings where the color depends on the MIDI note's pitch class.
+    MECHANISM: 
+        1. Bridges MIDI events (note_on/off) to particle system management.
+        2. Maps Note % 12 to specific color palettes (CHROMA_COLORS).
+        3. Uses a 60fps local QTimer to drive animation calculations and repaints.
     """
-    
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setObjectName('chroma_visualizer')
@@ -235,10 +250,13 @@ class ChromasynesthesiaVisualizer(QWidget):
 
 class OrbitalVisualizer(QWidget):
     """
-    Circular visualizer where notes orbit around a center point.
-    Creates beautiful, mesmerizing patterns.
+    PURPOSE: A circular geometry visualizer for musical harmony.
+    ACTION: Renders notes as orbiting orbs where radius relates to octave and angle relates to pitch class.
+    MECHANISM: 
+        1. Maintains a list of 'orbits' dictionaries containing physics state.
+        2. Calculates cartesian coordinates from polar (r, theta) for rendering.
+        3. Animates a central "pulsing" sun synchronized with note velocity.
     """
-    
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setMinimumSize(200, 200)
@@ -362,10 +380,13 @@ class OrbitalVisualizer(QWidget):
 
 class SpectrumBars(QWidget):
     """
-    Simple spectrum analyzer visualization.
-    Shows frequency distribution with chromasynesthesia colors.
+    PURPOSE: A standard multi-band frequency analyzer with themed aesthetics.
+    ACTION: Displays vertical bars that jump with frequency intensity and slowly decay with peak-hold physics.
+    MECHANISM: 
+        1. Interpolates bar heights toward target levels derived from FFT analysis.
+        2. Uses QLinearGradients for each bar to match the Chromasynesthesia color scheme.
+        3. Features "falling" peak indicators at the top of each bar.
     """
-    
     def __init__(self, num_bars=12, parent=None):
         super().__init__(parent)
         self.num_bars = num_bars
@@ -436,9 +457,10 @@ class SpectrumBars(QWidget):
 
 class VisualizerSelector(QWidget):
     """
-    Widget to switch between different visualizers.
+    PURPOSE: A container for switching between various visualization modes.
+    ACTION: Provides a toggle interface to select between Particle, Orbital, and Spectrum views.
+    MECHANISM: Uses a QStackedWidget indexed by a set of QPushButtons. Forwards incoming data to all sub-visualizers.
     """
-    
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setObjectName('visualizer_selector')

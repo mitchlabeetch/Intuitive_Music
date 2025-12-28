@@ -190,13 +190,13 @@ class TransportWidget:
             f_result = db_to_lin(float(a_val) * 0.1)
         constants.IPC.main_vol(f_result)
 
-    def set_time(self, a_text):
+    def set_time(self, a_text: str) -> None:
         if a_text == self.last_clock_text:
             return
         self.last_clock_text = a_text
         self.clock.display(a_text)
 
-    def on_spacebar(self):
+    def on_spacebar(self) -> None:
         if shared.IS_PLAYING:
             self.stop_button.trigger()
         else:

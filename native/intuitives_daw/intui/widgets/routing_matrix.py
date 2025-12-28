@@ -15,6 +15,14 @@ ROUTE_TYPES = {
 }
 
 class RoutingGraphNode(QGraphicsRectItem):
+    """
+    PURPOSE: Represents a single track or bus within the routing visualizer.
+    ACTION: Displays the track name and provides a clickable target for patching and rack access.
+    MECHANISM: 
+        1. Inherits from QGraphicsRectItem for modular scene placement.
+        2. Overrides mouseDoubleClickEvent to jump to the track's plugin rack.
+        3. Updates its visual brush (To/From/Normal) based on user hover state to indicate potential routing paths.
+    """
     def __init__(
         self,
         a_text: str,
@@ -64,6 +72,15 @@ class RoutingGraphNode(QGraphicsRectItem):
 
 
 class RoutingGraphWidget(QGraphicsView):
+    """
+    PURPOSE: A high-level visual matrix for managing signal flow between DAW tracks.
+    ACTION: Renders interactive "wires" representing Audio, MIDI, and Sidechain connections.
+    MECHANISM: 
+        1. Draws a grid based on the number of tracks (up to 32).
+        2. Renders tracks along a diagonal axis to clearly distinguish inputs vs outputs.
+        3. Generates vector paths (wires) with color-coded pens (Blue: Audio, Magenta: MIDI, Cyan: Sidechain).
+        4. Handles complex interaction logic via backgroundMousePressEvent to toggle routes using modifier keys (Ctrl/Shift).
+    """
     def __init__(self, a_toggle_callback=None):
         super().__init__()
         self.setHorizontalScrollBarPolicy(

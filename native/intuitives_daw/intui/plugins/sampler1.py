@@ -653,6 +653,15 @@ QScrollBar::sub-line:vertical
 """
 
 class sampler1_plugin_ui(AbstractPluginUI):
+    """
+    PURPOSE: A high-density, multi-sample instrument interface (Sampler).
+    ACTION: Manages a large table of audio samples with per-sample pitch, mapping, and effects processing.
+    MECHANISM: 
+        1. Sample Mapping: Uses a QTableWidget to coordinate 100+ sample slots, each with dedicated NoteSelectorWidgets for root pitch and velocity/note ranges.
+        2. Per-Sample DSP: Provides individual controls for volume, tuning, interpolation modes, and noise injection (White/Pink).
+        3. Modulating Audio: Features per-sample ADSR envelopes and complex loop/crossfade markers (Start/End/Loop).
+        4. Integrated Effects: Routes each sample through a dedicated 4-slot MonoFX chain (Distortion, Filters, etc.) and a global 6-band EQ.
+    """
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(
             self,

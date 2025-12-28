@@ -20,6 +20,11 @@ SG_DEBUG = 'SG_DEBUG' in os.environ
 
 
 class RedactingFilter(logging.Filter):
+    """
+    PURPOSE: Prevents sensitive user information (like home directory paths) from appearing in log files.
+    ACTION: Scans log messages and metadata for specific patterns and replaces them with generic placeholders (e.g., '~').
+    MECHANISM: Overrides the filter() method to intercept log records and applies substring replacement via the redact() helper.
+    """
     def __init__(self, patterns: dict):
         super(RedactingFilter, self).__init__()
         self._patterns = patterns
@@ -41,9 +46,16 @@ class RedactingFilter(logging.Filter):
         return msg
 
 def namer(name):
+    """Appends .gz extension to rotated log files."""
     return f"{name}.gz"
 
+
 def rotator(source, dest):
+    """
+    PURPOSE: Compresses inactive log files to save disk space.
+    ACTION: Compresses the source log file using GZIP and writes it to the destination.
+    MECHANISM: Reads the file in binary mode, uses gzip.compress() at maximum compression level (9), and deletes the original source file.
+    """
     with open(source, "rb") as sf:
         data = sf.read()
         compressed = gzip.compress(data, 9)
@@ -52,6 +64,11 @@ def rotator(source, dest):
     os.remove(source)
 
 class FailProofEmitter:
+    """
+    PURPOSE: Ensures that logging itself does not crash the application due to encoding or IO errors.
+    ACTION: Wraps the emit() call in a try-except block and fallbacks to a safe encoding.
+    MECHANISM: Attempts to encode record data as 'cp850' (common on Windows) with replacements, ensuring data is always writable to the stream.
+    """
     def emit(self, record):
         try:
             record = record.encode('cp850', errors='replace')
@@ -72,6 +89,16 @@ def setup_logging(
     stream=sys.stdout,
     maxBytes=1024*1024*10,
 ):
+    """
+    PURPOSE: Global initialization of the application's logging infrastructure.
+    ACTION: Configures both console (stdout) and file-based (rotating) log handlers.
+    MECHANISM: 
+        1. Creates a shared Formatter.
+        2. Attaches a StreamHandler for live console feedback.
+        3. Attaches a RedactingFilter to sanitize output.
+        4. Attaches a _RotatingFileHandler with automatic GZIP compression.
+        5. Registers a custom sys.excepthook to log uncaught exceptions.
+    """
     fmt = logging.Formatter(format)
     handler = StreamHandler(
         stream=stream,
@@ -101,6 +128,11 @@ def setup_logging(
 
 
 def _excepthook(exc_type, exc_value, tb):
+    """
+    PURPOSE: Captures and logs application-level crashes that aren't handled by try-except blocks.
+    ACTION: Formats the exception traceback and sends it to the LOG.error channel.
+    MECHANISM: Uses traceback.format_exception to convert the error data into a string and invokes LOG.error().
+    """
     exc = traceback.format_exception(exc_type, exc_value, tb)
     LOG.error("\n".join(exc))
 

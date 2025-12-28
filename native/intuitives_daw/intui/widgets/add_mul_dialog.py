@@ -3,10 +3,14 @@ from .playback_widget import playback_widget
 
 
 def add_mul_dialog(a_update_callback, a_save_callback):
-    """ Generic dialog for doing event transforms.  The actual transforms
-        are performed by the caller using the event callbacks.  The
-        caller should create a list of event objects and their original
-        values.
+    """
+    PURPOSE: A utility dialog for bulk transformation of numeric data (e.g., MIDI values).
+    ACTION: Provides sliders for "Add" (offset) and "Multiply" (scaling), applying changes in real-time via callbacks.
+    MECHANISM: 
+        1. Encapsulates a QSpinBox for additive offsets (-127 to 127) and a QDoubleSpinBox for multiplicative scaling.
+        2. mul_changed(): Maps a -1.0 to 1.0 range to a 0.0 to 2.0 scaling factor (1.0 + slider_val).
+        3. a_update_callback: Injected logic that apply the (Add, Mul) parameters to the target dataset on every UI interaction.
+        4. a_save_callback: Triggers persistent storage of the transformed values once the user is satisfied.
     """
     def ok_handler():
         f_dialog.close()

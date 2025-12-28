@@ -6,6 +6,16 @@ from intui.sgqt import *
 
 
 class main_widget:
+    """
+    PURPOSE: A unified control group for global instrument parameters.
+    ACTION: Provides knobs for Volume, Pitch, Glide, and Pitchbend, along with polyphony modes and key-range selectors.
+    MECHANISM: 
+        1. Encapsulates multiple knob_control, combobox_control, and NoteSelectorWidget instances.
+        2. Glide: Maps to a KC_TIME_DECIMAL conversion for precise millisecond control over portamento.
+        3. Unison: Conditionally includes Voices (integer) and Spread (decimal) knobs if the engine supports multi-voice layering.
+        4. Range: Uses two NoteSelectorWidgets to define the MIDI note boundaries (e.g., C-2 to G8) for the instrument.
+        5. Poly Mode: Switches between Retrig, Free, and Monophonic voice allocation algorithms via the poly_port.
+    """
     def __init__(
         self,
         a_size,

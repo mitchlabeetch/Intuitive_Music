@@ -13,6 +13,15 @@ def create_sample_graph(
     a_height=None,
     a_audio_item=None,
 ):
+    """
+    PURPOSE: Generates optimized vector paths for audio waveform visualization.
+    ACTION: Translates raw peak data into a closed QPainterPath that can be rendered by the GUI.
+    MECHANISM: 
+        1. Accesses high and low peak data from the sample_graph model.
+        2. Respects Start/End slicing and Reverse states if an a_audio_item is provided.
+        3. Scales peak amplitudes by the item's volume (normalization/gain).
+        4. Constructs a single polygon per channel by drawing the upper envelope forward and the lower envelope backward, then closing the path for efficient fill-rendering.
+    """
     if a_audio_item:
         f_ss = a_audio_item.sample_start * 0.001
         f_se = a_audio_item.sample_end * 0.001

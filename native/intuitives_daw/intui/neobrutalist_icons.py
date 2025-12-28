@@ -5,7 +5,10 @@ Creates QIcons with full state support (normal, hover, pressed, disabled)
 from intui.sgqt import QIcon, QPixmap
 from intlib.models.theme import get_asset_path
 import os
+from typing import Dict, Optional
 
+
+ICON_CACHE: Dict[str, QIcon] = {}
 
 def create_neobrutalist_icon(
     base_name: str,
@@ -13,22 +16,17 @@ def create_neobrutalist_icon(
     has_pressed: bool = True,
 ) -> QIcon:
     """
-    Create a QIcon with neobrutalist state support.
-    
-    Looks for assets in:
-    - assets/{base_name}-on.svg (Normal, On state)
-    - assets/dark/{base_name}-off.svg (Normal, Off state)
-    - assets/hover/{base_name}-hover.svg (Active/Hover state)
-    - assets/pressed/{base_name}-pressed.svg (Selected state for press feedback)
-    
-    Args:
-        base_name: The icon base name (e.g., 'play', 'stop', 'mute')
-        has_hover: Whether a hover variant exists
-        has_pressed: Whether a pressed variant exists
-    
-    Returns:
-        QIcon configured with all available states
+    PURPOSE: Creates or retrieves a QIcon with full Neobrutalist state support.
+    ACTION: Returns a QIcon configured for Normal (On/Off), Active (Hover), selected (Pressed), and Disabled states.
+    MECHANISM: 
+        1. Checks a global ICON_CACHE to avoid redundant filesystem hits and resource allocation.
+        2. Resolves SVG asset paths using get_asset_path.
+        3. Configures specific QIcon.Mode and QIcon.State combinations to match the DAW's interaction design.
     """
+    global ICON_CACHE
+    if base_name in ICON_CACHE:
+        return ICON_CACHE[base_name]
+
     icon = QIcon()
     
     # Normal state - On (colorful)
@@ -93,6 +91,7 @@ def create_neobrutalist_icon(
             QIcon.State.Off,
         )
     
+    ICON_CACHE[base_name] = icon
     return icon
 
 

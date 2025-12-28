@@ -32,7 +32,11 @@ from intlib.log import LOG
 
 
 class SuggestionCategory(Enum):
-    """Categories of creative suggestions"""
+    """
+    PURPOSE: Classifies creative suggestions into musical and technical domains.
+    ACTION: Provides enumerable keys for categorizing UI assets and filtering logic.
+    MECHANISM: Standard Enum with string values.
+    """
     MELODY = "melody"
     RHYTHM = "rhythm"
     HARMONY = "harmony"
@@ -44,7 +48,11 @@ class SuggestionCategory(Enum):
 
 @dataclass
 class Suggestion:
-    """A creative suggestion for the user"""
+    """
+    PURPOSE: Encapsulates a single creative idea/prompt for the user.
+    ACTION: Holds metadata and optional executable logic for a "happy accident".
+    MECHANISM: Dataclass with fields for display (title, icon) and logic (action callback).
+    """
     title: str
     description: str
     category: SuggestionCategory
@@ -139,14 +147,23 @@ SUGGESTION_POOL = [
 
 class HappyAccidentWidget(QWidget):
     """
-    The main "Happy Accident" suggestion widget.
-    Shows dynamic, contextual suggestions to inspire experimentation.
+    PURPOSE: The primary interface for the "Happy Accidents" inspiration engine.
+    ACTION: Displays animated, contextual musical suggestions and allows one-click application.
+    MECHANISM: 
+        1. Periodically picks suggestions from SUGGESTION_POOL.
+        2. Uses TypingLabel and PulseIndicator for dynamic visual feedback.
+        3. Monitors idle time to refresh suggestions automatically.
     """
     
     suggestion_accepted = Signal(Suggestion)
     suggestion_dismissed = Signal(Suggestion)
     
     def __init__(self, parent=None):
+        """
+        PURPOSE: Initializes the happy accident inspiration widget.
+        ACTION: Sets up the UI layout, animations, and auto-refresh timers.
+        MECHANISM: Calls _setup_ui() and _setup_auto_refresh().
+        """
         super().__init__(parent)
         self.setObjectName('happy_accident_widget')
         self.current_suggestion: Optional[Suggestion] = None
@@ -236,7 +253,13 @@ class HappyAccidentWidget(QWidget):
             self.show_random_suggestion()
             
     def show_suggestion(self, suggestion: Suggestion):
-        """Display a specific suggestion"""
+        """
+        PURPOSE: Updates the widget display with a new creative prompt.
+        ACTION: Triggers typing animations and updates category-specific styling.
+        MECHANISM: 
+            1. Updates labels and resets the pulse animation.
+            2. Dynamically generates CSS colors based on the suggestion's category.
+        """
         self.current_suggestion = suggestion
         self._last_interaction = time.time()
         
@@ -340,11 +363,16 @@ class HappyAccidentWidget(QWidget):
 
 class SuggestionToast(QWidget):
     """
-    Floating toast notification for quick suggestions.
-    Appears briefly and auto-dismisses.
+    PURPOSE: A non-intrusive, temporary notification for creative suggestions.
+    ACTION: Animates a small card onto the screen and auto-dismisses it.
+    MECHANISM: 
+        1. Uses FramelessWindowHint and Tool flag for a modern overlay look.
+        2. Implements AnimatedValue for smooth opacity and position transitions.
+        3. Employs a single-shot timer for auto-cleanup.
     """
     
     def __init__(self, suggestion: Suggestion, parent=None):
+        """Initializes the toast with suggestion content and starts the entrance animation."""
         super().__init__(parent)
         self.suggestion = suggestion
         self.setWindowFlags(
@@ -430,13 +458,15 @@ class SuggestionToast(QWidget):
 
 class QuickExperimentBar(QWidget):
     """
-    Horizontal bar with one-click experiment buttons.
-    Encourages rapid experimentation without deep menu diving.
+    PURPOSE: Provides rapid access to common experimental musical operations.
+    ACTION: Emits signals for actions like randomization, reversal, and transposition.
+    MECHANISM: A QHBoxLayout containing stylized QPushButtons with lambda connectors for easy action routing.
     """
     
     experiment_triggered = Signal(str)  # Emits action name
     
     def __init__(self, parent=None):
+        """Initializes the experiment bar and populates it with action icons."""
         super().__init__(parent)
         self.setObjectName('quick_experiment_bar')
         self.setFixedHeight(48)

@@ -5,6 +5,15 @@ from intui.sgqt import *
 
 
 class perc_env_widget:
+    """
+    PURPOSE: A specialized envelope for percussive pitch modulation.
+    ACTION: Provides 2-stage pitch and timing controls (Time1/Pitch1, Time2/Pitch2) for "kick" or "impact" sounds.
+    MECHANISM: 
+        1. Encapsulates four knob_control instances (two for time, two for pitch).
+        2. Includes a checkbox_control to enable/disable the modulation.
+        3. Uses KC_PITCH conversion for frequency knobs to ensure accurate musical intervals.
+        4. Transmits parameters to the engine's modulation ports via the standard val_callback pipeline.
+    """
     def __init__(
         self,
         a_size,

@@ -80,6 +80,16 @@ button until you hear audio come out of the correct speakers.
 """)
 
 class HardwareDialog:
+    """
+    PURPOSE: A bootstrap-level configuration utility for audio and MIDI hardware.
+    ACTION: Scans the system for available audio APIs (ASIO, CoreAudio, ALSA) and MIDI ports, allowing the user to select their interface, sample rate, and buffer size.
+    MECHANISM: 
+        1. Uses ctypes to dynamically load and interface with PortAudio and PortMIDI shared libraries.
+        2. open_devices(): Initializes the hardware backends and handles platform-specific shared library paths.
+        3. hardware_dialog_factory(): Builds a QTabWidget-based UI for configuring audio I/O, MIDI inputs, and thread-processing counts.
+        4. create_config(): Serializes the user's choices into a pipe-delimited .sgconfig file (hostApi|name|bufferSize|etc.) and performs FormatSupported validation before saving.
+        5. on_test(): Spawns a 'soundcheck' sub-process using the candidate configuration to verify signal flow without restarting the main engine.
+    """
     def __init__(self):
         self.devices_open = False
         self.device_name = None

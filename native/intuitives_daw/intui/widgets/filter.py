@@ -30,6 +30,15 @@ _FILTER_TYPES = [
 ]
 
 class filter_widget:
+    """
+    PURPOSE: A unified UI group for synthesizer filter controls.
+    ACTION: Displays Cutoff frequency and Resonance knobs, along with a filter type selection combobox.
+    MECHANISM: 
+        1. Encapsulates two knob_control instances (Cutoff and Res).
+        2. Cutoff uses KC_PITCH conversion for musical frequency mapping.
+        3. Uses NestedComboboxControl to allow switching between standard filter topologies (LP2, LP4, HP, Ladder4, etc.).
+        4. Links all controls to a central port_dict for engine communication.
+    """
     def __init__(
         self,
         a_size,

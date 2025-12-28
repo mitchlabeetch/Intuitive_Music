@@ -5,6 +5,15 @@ from intui.sgqt import *
 
 
 class per_audio_item_fx_widget:
+    """
+    PURPOSE: A dedicated effect rack for per-clip (Audio Item) processing.
+    ACTION: Displays a scrollable list of 8 MultiFXSingle slots that apply specifically to the selected audio item.
+    MECHANISM: 
+        1. Instantiates 8 MultiFXSingle instances, each mapped to a block of 4 ports.
+        2. Encapsulates the rack in a QScrollArea to manage UI verticality.
+        3. Provides set_from_list() and get_list() to synchronize UI state with the clip's underlying multifx_settings model.
+        4. clear_effects(): Resets all slots to "Off" and knobs to default positions.
+    """
     def __init__(
         self,
         a_rel_callback,

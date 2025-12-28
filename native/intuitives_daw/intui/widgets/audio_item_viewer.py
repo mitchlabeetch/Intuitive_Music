@@ -37,10 +37,19 @@ def global_set_audio_markers_clipboard(
     AUDIO_MARKERS_CLIPBOARD = (a_s, a_e, a_fi, a_fo, a_ls, a_le)
 
 class audio_marker_widget(QGraphicsRectItem):
+    """
+    PURPOSE: A draggable UI handle for defining Start, End, or Loop points on a waveform.
+    ACTION: Allows the user to precisely position musical boundaries using mouse gestures.
+    MECHANISM: 
+        1. Inherits from QGraphicsRectItem for modular scene selection and drag-and-drop.
+        2. In mouseMoveEvent, maps horizontal pixel coordinates to a normalized 0-1000 range.
+        3. Enforces proximity constraints (Start cannot pass End).
+        4. Updates the linked fade_marker automatically when the primary handle moves.
+    """
     mode_start_end = 0
     mode_loop = 1
-    def __init__(self, a_type, a_val, a_pen, a_brush, a_label, a_graph_object,
-                 a_marker_mode, a_offset=0, a_callback=None):
+    def __init__(self, a_type: int, a_val: float, a_pen: QPen, a_brush: QBrush, a_label: str, a_graph_object,
+                 a_marker_mode: int, a_offset: int = 0, a_callback: Optional[callable] = None) -> None:
         """ a_type:  0 == start, 1 == end, more types eventually... """
         self.audio_item_marker_height = 66.0
         QGraphicsRectItem.__init__(
@@ -194,6 +203,14 @@ class audio_marker_widget(QGraphicsRectItem):
 
 
 class audio_fade_marker_widget(QGraphicsRectItem):
+    """
+    PURPOSE: A specialized handle for managing audio volume ramps (fades).
+    ACTION: Drags a time-offset handle and renders visual ramp lines across the waveform.
+    MECHANISM: 
+        1. Manages a collection of amp_lines (QGraphicsLineItems) to visualize the fade duration.
+        2. Dynamically pushes the parent Start/End marker if the fade duration is dragged past them.
+        3. Calls draw_lines() on every movement to refresh the vector ramp overlay.
+    """
     def __init__(self, a_type, a_val, a_pen, a_brush, a_label, a_graph_object,
                  a_offset=0, a_callback=None):
         """ a_type:  0 == start, 1 == end, more types eventually... """
@@ -346,6 +363,15 @@ class audio_fade_marker_widget(QGraphicsRectItem):
             self.start_end_marker.callback(self.start_end_marker.value)
 
 class AudioItemViewerWidget(QGraphicsView):
+    """
+    PURPOSE: The primary visual editor for individual audio samples.
+    ACTION: Renders a multi-channel waveform with interactive markers and tempo-sync tools.
+    MECHANISM: 
+        1. Uses create_sample_graph to generate optimized QPainterPaths for waveform rendering.
+        2. Orchestrates four interactive markers (Start, End, FadeIn, FadeOut) within a QGraphicsScene.
+        3. Supports "Tempo Sync" logic to mathematically calculate loop lengths based on BPM.
+        4. Implements drag-select regions for quick boundary assignment.
+    """
     def __init__(
         self,
         a_start_callback,

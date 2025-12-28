@@ -62,6 +62,15 @@ QLabel#plugin_value_label {
 """
 
 class sgdelay_plugin_ui(AbstractPluginUI):
+    """
+    PURPOSE: A versatile stereo delay and echo interface.
+    ACTION: Produces time-based repetitions with integrated filtering and ducking.
+    MECHANISM: 
+        1. Time & Feedback: Provides knobs for precise delay time (seconds) and feedback (depth of repetitions).
+        2. Tonal Shaping: Includes a dedicated Lowpass Cutoff knob to darken echoes over time.
+        3. Dynamic Control: Features a ‘Duck’ knob that attenuates wet signal during loud input transients.
+        4. Stereo Imaging: Includes a Stereo width control to transition between mono-center and ping-pong delay styles.
+    """
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(
             self,

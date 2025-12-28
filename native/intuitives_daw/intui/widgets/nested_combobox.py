@@ -3,17 +3,17 @@ from intlib.lib.translate import _
 from intui.sgqt import QAction, QMenu, QPushButton
 
 class NestedComboBox(QPushButton):
+    """
+    PURPOSE: A hierarchical selection control that mimics a combobox with submenus.
+    ACTION: Displays a categorized list of options (e.g., 'Analogue > Moog LP', 'Digital > Formant') and updates its label based on the selection.
+    MECHANISM: 
+        1. Encapsulates a QPushButton with a connected QMenu.
+        2. Maintains a 'lookup' dictionary mapping option names to (UID, Tooltip) tuples for engine synchronization.
+        3. addItems(): Recursively builds the QMenu tree, supporting both top-level entries and nested QMenus.
+        4. action_triggered(): Extracts the UID from the selected QAction and notifies subscribers via the currentIndexChanged pipeline.
+        5. Provides QComboBox-compatible API (currentIndex, currentText, setCurrentIndex) for easy integration into existing control models.
+    """
     def __init__(
-        self,
-        lookup: Dict[str, Tuple[int, Optional[str]]],
-        tooltip=None,
-    ):
-        """
-            lookup:
-                A dictionary of str: (int, str) that maps names to UIDs
-                and tooltips
-            tooltip:  A tooltip for the button.
-        """
         self._callbacks = []
         self.lookup = lookup
         self.reverse_lookup = {v[0]: k for k, v in lookup.items()}

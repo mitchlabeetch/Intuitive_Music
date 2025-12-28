@@ -5,6 +5,15 @@ from intui.sgqt import *
 
 
 class osc_widget:
+    """
+    PURPOSE: A unified control group for Virtual Analog (VA) oscillators.
+    ACTION: Organizes Pitch, Fine, Volume, and Waveform controls into a compact, themed QGroupBox.
+    MECHANISM: 
+        1. Instantiates multiple knob_control objects for frequency and amplitude parameters.
+        2. Links Pitch and Fine knobs (via ratio_callback) for intuitive coarse/fine tuning.
+        3. Dynamically includes Unison and Pitchbend controls if the host engine supports them.
+        4. Uses a NestedComboboxControl or standard combobox_control for waveform selection.
+    """
     def __init__(
         self,
         a_size,
@@ -24,8 +33,8 @@ class osc_widget:
         a_pb_port=None,
         knob_kwargs={},
         nested_lookup=None,
-        vol_min_text=None,
-    ):
+        vol_min_text: Optional[str] = None,
+    ) -> None:
         self.grid_layout = QGridLayout()
         self.group_box = QGroupBox(str(a_label))
         self.group_box.setObjectName("plugin_groupbox")

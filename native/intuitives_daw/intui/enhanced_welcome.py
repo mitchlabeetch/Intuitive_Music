@@ -1,8 +1,10 @@
 """
-INTUITIVES DAW - Enhanced Welcome Screen
-
-A modern, animated welcome experience that sets the tone for
-rule-free experimental music creation.
+PURPOSE: A modern, animated welcome experience that sets the tone for rule-free experimental music creation.
+ACTION: Displays branding, version info, recent projects, and quick-start actions with smooth transitions.
+MECHANISM: 
+    1. Integration: Uses AnimatedValue and TypingLabel for a dynamic entrance sequence.
+    2. Workflow: Bridges to project creation, loading, and recovery submodules.
+    3. Visuals: Implements the signature Intuitives Neobrutalist design with glow effects.
 """
 
 from intui.sgqt import *
@@ -31,8 +33,12 @@ import time
 
 class AnimatedBackground(QWidget):
     """
-    Subtle animated background for the welcome screen.
-    Creates a feeling of life and movement.
+    PURPOSE: Provides a dynamic, ambient background for the welcome screen.
+    ACTION: Renders slow-moving, colored particles that float upwards to create a sense of 'depth' and 'life'.
+    MECHANISM: 
+        1. Maintains a list of particle objects with random positions, speeds, and colors from the chroma palette.
+        2. _animate(): Triggered by a 30fps QTimer; updates Y-coordinates and wraps particles back to the bottom.
+        3. paintEvent(): Uses QPainter to draw semi-transparent ellipses at the calculated screen coordinates.
     """
     
     def __init__(self, parent=None):
@@ -85,7 +91,12 @@ class AnimatedBackground(QWidget):
 
 class WelcomeHeader(QWidget):
     """
-    Animated welcome header with logo and tagline.
+    PURPOSE: Displays the primary branding and identity of the DAW.
+    ACTION: Renders the APP_NAME in a premium high-contrast style and triggers a typing animation for the tagline.
+    MECHANISM: 
+        1. Uses a large QLabel with custom spacing and CSS for the title.
+        2. Wraps the version string in a stylized 'badge' layout.
+        3. TypingLabel.type_text(): Uses a delayed single-shot timer to start the character-by-character typewriter effect for the APP_TAGLINE.
     """
     
     def __init__(self, parent=None):
@@ -150,7 +161,12 @@ class WelcomeHeader(QWidget):
 
 class QuickActionCard(QWidget):
     """
-    A card for a quick action (New, Open, etc.)
+    PURPOSE: A premium interactive button for core workflows (New, Open, Clone).
+    ACTION: Shows hover-based glow effects and border transitions to provide tactile feedback.
+    MECHANISM: 
+        1. Hover Animation: Uses AnimatedValue to interpolate a 0.0-1.0 'glow' state on enter/leave events.
+        2. QPainter: Manually draws the rounded rect background and border, using the accent_color for the glowing halo.
+        3. Mouse Events: Emits a 'clicked' signal when the user presses anywhere within the card rect.
     """
     
     clicked = Signal()
@@ -249,7 +265,12 @@ class QuickActionCard(QWidget):
 
 class RecentProjectItem(QWidget):
     """
-    A recent project item with hover animation.
+    PURPOSE: A specialized list item for previously opened projects.
+    ACTION: Displays the project name and path, with a subtle slide-in color accent on hover.
+    MECHANISM: 
+        1. Parses the directory structure from the project path to extract a user-friendly name.
+        2. AnimatedValue: Drives a horizontal accent bar and background fade during hover states.
+        3. clicked Signal: Passes the absolute project path back to the parent for recruitment by the engine.
     """
     
     clicked = Signal(str)
@@ -341,7 +362,12 @@ class RecentProjectItem(QWidget):
 
 class EnhancedWelcome(QWidget):
     """
-    The complete enhanced welcome screen.
+    PURPOSE: The high-level orchestration widget for the startup experience.
+    ACTION: Integrates animated backgrounds, quick action cards, and the recent projects list into a cohesive layout.
+    MECHANISM: 
+        1. Layout Hierarchy: Combines WelcomeHeader, Horizontal cards (QuickActionCard), and a scrollable list (RecentProjectItem).
+        2. Inter-Widget Signals: Bubbles up workflow requests (new, open, clone, settings) to the MainStackedWidget.
+        3. add_recent_project(): Dynamically injects RecentProjectItem instances into a scrollable container based on the project history module.
     """
     
     # Signals

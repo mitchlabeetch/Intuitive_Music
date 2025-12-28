@@ -197,6 +197,15 @@ def render_stylesheet(
     )
 
 class AbstractPluginUI:
+    """
+    PURPOSE: The base class for all instrument and effect plugin interfaces within the DAW.
+    ACTION: Manages control-to-port mapping, state persistence (vst-like files), and MIDI learn integration.
+    MECHANISM: 
+        1. Encapsulates a QWidget window with optional custom CSS rendering via Jinja2.
+        2. Maintains a port_dict linking GUI controls to engine execution ports.
+        3. Orchestrates MIDI CC mapping and real-time modulation scaling.
+        4. Handles automated state saving/loading from the project's 'folder_plugins' partition.
+    """
     def __init__(
         self,
         a_val_callback,
@@ -209,6 +218,11 @@ class AbstractPluginUI:
         a_is_mixer=False,
         stylesheet="",
     ):
+        """
+        PURPOSE: Initializes the plugin UI container and communication delegates.
+        ACTION: Sets up the base window, layout, and internal state trackers.
+        MECHANISM: Applies stylesheets and initializes dictionaries for ports, configure-keys, and CC mappings.
+        """
         self.is_mixer = a_is_mixer
         self.plugin_uid = int(a_plugin_uid)
         self.folder = str(a_folder)
@@ -248,6 +262,11 @@ class AbstractPluginUI:
             glbl_shared.TRANSPORT.on_spacebar()
 
     def set_midi_learn(self, a_port_map):
+        """
+        PURPOSE: Enables MIDI assignment capabilities for the plugin's controls.
+        ACTION: Updates port-to-name maps and attaches MIDI learn callbacks to all registered controls.
+        MECHANISM: Iterates through port_dict and invokes set_midi_learn on each control object.
+        """
         self.port_map = a_port_map
         self.reverse_port_map = {
             int(v):k
@@ -323,6 +342,14 @@ class AbstractPluginUI:
         self.save_file_on_exit = False
 
     def open_plugin_file(self):
+        """
+        PURPOSE: Restores the plugin's state from a persistent file.
+        ACTION: Populates knobs and internal settings from a project-local data file.
+        MECHANISM: 
+            1. Locates the file using plugin_uid in the project folder.
+            2. Parses data into a plugin_file model.
+            3. Iteratively calls set_control_val and set_configure for all stored entries.
+        """
         if self.folder is not None:
             f_file_path = os.path.join(
                 *(str(x) for x in (self.folder, self.plugin_uid)))
@@ -380,6 +407,11 @@ class AbstractPluginUI:
         pass
 
     def plugin_val_callback(self, a_port, a_val):
+        """
+        PURPOSE: Entry point for control changes initiated by the user.
+        ACTION: Forwards the value to the engine and marks the UI state as modified.
+        MECHANISM: Proxies to self.val_callback and sets has_updated_controls = True.
+        """
         self.val_callback(self.plugin_uid, a_port, a_val)
         self.has_updated_controls = True
 

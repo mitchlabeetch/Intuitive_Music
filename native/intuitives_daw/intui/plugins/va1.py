@@ -386,6 +386,15 @@ QWidget#right_logo {
 
 
 class VA1PluginUI(AbstractPluginUI):
+    """
+    PURPOSE: A dual-oscillator Virtual Analog (VA) synthesizer interface.
+    ACTION: Provides controls for complex subtractive synthesis, including ring modulation, hard sync, and multi-stage envelopes.
+    MECHANISM: 
+        1. Multi-Oscillator: Features two VA oscillators (OSC1/2) with unison, fine tuning, and categorized waveform selection.
+        2. Modulation Matrix: Includes two ADSR envelopes (Amp/Filter), an LFO, and a 1-stage ‘Pitch Env’ (ramp).
+        3. Signal Path: Routes signals through a primary filter (with keytracking and velocity sensitivity) and a multi-algorithm distortion unit.
+        4. Global Controls: Manages master glide, pitchbend range, polyphony modes, and stereo panning.
+    """
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(
             self,

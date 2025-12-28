@@ -5,6 +5,15 @@ from intui.sgqt import *
 
 
 class MultiDistWidget:
+    """
+    PURPOSE: A standard UI component for managing audio distortion.
+    ACTION: Provides controls for input Gain (drive), Dry/Wet mix, Output compensation, and clipping algorithm selection.
+    MECHANISM: 
+        1. Encapsulates three knob_control instances (Gain, Wet, Out).
+        2. Includes a combobox_control for selecting between 'Off', 'Clip' (hard/soft clipping), and 'Fold' (sine/triangle folding).
+        3. Maps Gain to KC_INTEGER (dB) and Output to KC_DECIMAL for precise volume matching.
+        4. Manages a QGroupBox layout for visual consistency with other plugin modules.
+    """
     def __init__(
         self,
         a_size,

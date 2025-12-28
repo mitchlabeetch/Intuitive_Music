@@ -21,6 +21,11 @@ from typing import Optional, Tuple
 LAST_TEMPO_COMBOBOX_INDEX = 2
 
 class GridLayoutControl:
+    """
+    PURPOSE: Provides a mixin for UI controls to easily add their labels and widgets to a QGridLayout.
+    ACTION: Places name label, control widget, and value label in consecutive rows within a specified column.
+    MECHANISM: Uses QGridLayout.addWidget() to position elements at row_offset, row_offset+1, and row_offset+2.
+    """
     def add_to_grid_layout(
             self,
             a_layout,
@@ -28,6 +33,11 @@ class GridLayoutControl:
             a_alignment=QtCore.Qt.AlignmentFlag.AlignHCenter,
             a_row=0,
         ):
+        """
+        PURPOSE: Inserts the control components into a grid layout.
+        ACTION: Adds name_label, control, and value_label to the provided layout.
+        MECHANISM: Calculates row_offset based on a_row and adds the widgets if they exist.
+        """
         row_offset = a_row * 3
         if self.name_label is not None:
             if a_alignment:
@@ -72,6 +82,14 @@ class GridLayoutControl:
                 )
 
 class AbstractUiControl(GridLayoutControl):
+    """
+    PURPOSE: Base class for all plugin-controllable UI widgets.
+    ACTION: Handles value synchronization, undo history, MIDI learn, and human-readable value conversion.
+    MECHANISM: 
+        1. Manages a 'port_num' that identifies the parameter in the audio engine.
+        2. Maintains an undo stack (collections.deque).
+        3. Implements generic set_value/get_value logic.
+    """
     def __init__(
         self,
         a_label,
@@ -88,6 +106,11 @@ class AbstractUiControl(GridLayoutControl):
         value_multiplier=None,
         control_res=127.,
     ):
+        """
+        PURPOSE: Initializes the shared logic for a UI control.
+        ACTION: Sets callbacks, configuration flags, and initializes labels and undo history.
+        MECHANISM: Stores provided parameters and registers the control with the port dictionary and preset manager if provided.
+        """
         self.control_res = control_res
         self.value_multiplier = value_multiplier
         self.min_text = min_text
@@ -123,6 +146,14 @@ class AbstractUiControl(GridLayoutControl):
             self.set_value(self.default_value, True)
 
     def set_value(self, a_val, a_changed=False):
+        """
+        PURPOSE: Updates the UI widget's value from an external source (e.g., preset load or MIDI).
+        ACTION: Sets the widget state and updates the undo history.
+        MECHANISM: 
+            1. Updates the underlying widget (self.control.setValue).
+            2. Optionally suppresses self-referential callbacks if a_changed is False.
+            3. Calls control_value_changed to refresh value labels.
+        """
         f_val = int(a_val)
         if self.value_set < 2:
             self.value_set += 1
@@ -133,10 +164,10 @@ class AbstractUiControl(GridLayoutControl):
         self.control_value_changed(f_val)
         self.suppress_changes = False
 
-    def get_value(self):
+    def get_value(self) -> int:
         return self.control.value()
 
-    def set_min_max(self, a_min, a_max):
+    def set_min_max(self, a_min: float, a_max: float) -> None:
         self._min = a_min;
         self._max = a_max;
         self._add = 0.0 - a_min;
@@ -153,20 +184,15 @@ class AbstractUiControl(GridLayoutControl):
         if self.rel_callback is not None:
             self.rel_callback(self.port_num, value)
 
-    def hide(self):
-        self.name_label.hide()
-        self.control.hide()
-        if self.value_label:
-            self.value_label.hide()
-
-    def show(self):
-        self.name_label.show()
-        self.control.show()
-        if self.value_label:
-            self.value_label.show()
-
     def value_conversion(self, a_value):
-        """ Convert a control value to a human-readable string """
+        """
+        PURPOSE: Converts a raw control value (e.g., 0-127) to a human-readable string.
+        ACTION: Returns a string representing frequency (Hz), time (ms), pitch, or custom labels.
+        MECHANISM: 
+            1. Checks for min/max special labels.
+            2. Applies scaling based on self.val_conversion (KC_PITCH, KC_HZ_DECIMAL, etc.).
+            3. Uses helper functions like pitch_to_hz for logarithmic mappings.
+        """
         if self.min_text and a_value == self.control.minimum():
             return self.min_text
         elif self.max_text and a_value == self.control.maximum():
@@ -232,6 +258,11 @@ class AbstractUiControl(GridLayoutControl):
         )
 
     def control_value_changed(self, a_value=None):
+        """
+        PURPOSE: Triggers the application-level logic when the UI control is moved.
+        ACTION: Calls the value callback and updates the visual value label.
+        MECHANISM: Invokes self.val_callback and refreshes self.value_label text via value_conversion().
+        """
         if not self.suppress_changes and self.val_callback:
             self.val_callback(self.port_num, self.control.value())
 
@@ -664,11 +695,10 @@ class AbstractUiControl(GridLayoutControl):
         f_menu.exec(QCursor.pos())
 
 class MultiplexedControl(GridLayoutControl):
-    """ A control whose name label is a QComboBox or combobox_control
-
-        If the name_label is a custom combobox_control, the selected state
-        will be sent to the engine and stored in the plugin state file,
-        as long as the selected item is not in @excluded_items
+    """
+    PURPOSE: Manages multiple controls whose visibility is determined by a selection widget (QComboBox).
+    ACTION: Switches the displayed control and value label when the selection changes.
+    MECHANISM: Uses QStackedWidget to contain the controls and value labels, synchronized by the name_label combobox.
     """
     def __init__(
         self,
@@ -677,6 +707,11 @@ class MultiplexedControl(GridLayoutControl):
         name_label: Optional[QComboBox]=None,
         tooltip=None,
     ):
+        """
+        PURPOSE: Initializes the multiplexed control.
+        ACTION: Sets up the stacked widgets and connects the selection signal.
+        MECHANISM: Iterates through the provided controls, adding them to stacked containers and connecting name_label.currentIndexChanged.
+        """
         self.controls = controls
 
         if name_label:
@@ -714,10 +749,10 @@ class MultiplexedControl(GridLayoutControl):
 
 
 class null_control:
-    """ For controls with no visual representation,
-        ie: controls that share a UI widget
-        depending on selected index, so that they can participate
-        normally in the data representation mechanisms
+    """
+    PURPOSE: A non-visual control container used for data representation in presets.
+    ACTION: Acts as a proxy for parameters that share a single UI widget.
+    MECHANISM: Implements the standard control interface (set_value, get_value) but redirects updates to a callback.
     """
     def __init__(
         self,
@@ -728,6 +763,11 @@ class null_control:
         a_port_dict,
         a_preset_mgr=None,
     ):
+        """
+        PURPOSE: Initializes the null control.
+        ACTION: Registers it with the plugin state and preset manager.
+        MECHANISM: Binds to a port number and stores standard callbacks.
+        """
         self.name_label = None
         self.value_label = None
         self.port_num = int(a_port_num)
@@ -769,6 +809,11 @@ class null_control:
         pass
 
 class knob_control(AbstractUiControl):
+    """
+    PURPOSE: Standard plugin knob control.
+    ACTION: Combines a PixmapKnob with a name label and value display.
+    MECHANISM: Inherits from AbstractUiControl and uses PixmapKnob as the interactive element.
+    """
     def __init__(
         self,
         a_size,
@@ -790,14 +835,10 @@ class knob_control(AbstractUiControl):
         tooltip=None,
     ):
         """
-            a_size: The size of the knob (x or y), in pixels
-            a_label: The text to display as the name label
-            a_port_num: The port number of this control
-            a_rel_callback: The callback function on knob release
-            a_val_callback: The callback function on knob value changed
-            a_min_val: The minimum value of this knob
-            a_max_val: The maximum value of this knob
-            a_default_val: The default value of this knob
+        PURPOSE: Initializes a plugin knob control.
+        ACTION: Configures the knob range, size, and conversion logic.
+        MECHANISM: Instantiates PixmapKnob and sets up internal labels.
+        """
             a_val_conversion:
                 The conversion algorithm from raw knob value to the
                 value label
@@ -904,6 +945,14 @@ class slider_control(AbstractUiControl):
 
 
 class spinbox_control(AbstractUiControl):
+    """
+    PURPOSE: A numeric input control using a QDoubleSpinBox.
+    ACTION: Allows precise numerical adjustment of project parameters via typing or clicking.
+    MECHANISM: 
+        1. Encapsulates a QDoubleSpinBox configured with custom range and step sizes.
+        2. Automatically synchronizes with the engine via the inherited AbstractUiControl logic.
+        3. Supports human-readable value formatting through the value_conversion system.
+    """
     def __init__(
         self,
         a_label,
@@ -976,6 +1025,11 @@ class doublespinbox_control(AbstractUiControl):
 
 
 class checkbox_control(AbstractUiControl):
+    """
+    PURPOSE: Binary switch control.
+    ACTION: Toggles a project parameter between 0 and 1.
+    MECHANISM: Uses QCheckBox and converts between boolean and integer states.
+    """
     def __init__(
         self,
         a_label,
@@ -987,6 +1041,7 @@ class checkbox_control(AbstractUiControl):
         a_default=0,
         tooltip=None,
     ):
+        """Initializes a checkbox control with label and port assignment."""
         AbstractUiControl.__init__(
             self,
             None,
@@ -1034,6 +1089,14 @@ class checkbox_control(AbstractUiControl):
 
 
 class combobox_control(AbstractUiControl):
+    """
+    PURPOSE: A dropdown selection control using QComboBox.
+    ACTION: Allows users to choose from a discrete list of options, such as waveforms or polyphony modes.
+    MECHANISM: 
+        1. Inherits from AbstractUiControl to bridge QComboBox index changes to engine ports.
+        2. Manages an internal list of strings and maps their indices to integer port values.
+        3. Supports tooltips and automatic state persistence via preset_manager.
+    """
     def __init__(
         self,
         a_size,
@@ -1092,6 +1155,14 @@ class combobox_control(AbstractUiControl):
 
 
 class NestedComboboxControl(AbstractUiControl):
+    """
+    PURPOSE: A hierarchical selection control for complex categorical data.
+    ACTION: Provides a categorized menu interface for selecting one of many options (e.g., specific filter types).
+    MECHANISM: 
+        1. Wraps a NestedComboBox widget which provides a QPushButton triggered QMenu.
+        2. Uses a lookup dictionary to map category/item structure to flat integer indices.
+        3. Integrates with the standard undo and preset management systems through AbstractUiControl.
+    """
     def __init__(
         self,
         a_size,

@@ -22,6 +22,16 @@ import sys
 
 
 class Welcome(QtCore.QObject):
+    """
+    PURPOSE: The classic utility-focused startup screen for the DAW.
+    ACTION: Allows the user to select recent projects, create new ones, manage hardware, or access advanced recovery tools.
+    MECHANISM: 
+        1. Encapsulates a QListWidget (rp_list) for displaying project history.
+        2. on_new/open/clone(): Wrappers around the project module that ensure the hardware backend is ready before launching the main window.
+        3. rp_doubleclick(): Validates the presence and version of a selected project before setting it active.
+        4. on_project_recovery(): Specialized workflow for fixing corrupted or interrupted project states.
+        5. load_rp(): Synchronizes the UI list with the global project history, handling OS-specific path separators.
+    """
     def __init__(self):
         super().__init__()
         self.scaler = ui_scaler_factory()

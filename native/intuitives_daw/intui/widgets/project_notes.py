@@ -2,16 +2,15 @@ from intui.sgqt import QTextEdit
 
 
 class ProjectNotes:
+    """
+    PURPOSE: A simple, persistent text editor for project-specific metadata.
+    ACTION: Allows the user to store lyrics, scales, or production ideas directly within the project.
+    MECHANISM: 
+        1. Encapsulates a QTextEdit widget restricted to plain text.
+        2. Implements auto-save behavior by hooking into the leaveEvent (saving when the widget loses focus).
+        3. Uses dependency injection for _load and _save functions, decoupling the UI from specific file systems or models.
+    """
     def __init__(
-        self,
-        parent,
-        _load,
-        _save,
-    ):
-        """
-            @_load: function():str, A function to load saved notes
-            @_save: function(str), A function to save notes to disk
-        """
         self._save = _save
         self._load = _load
         self.widget = QTextEdit(parent)

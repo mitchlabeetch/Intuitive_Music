@@ -7,6 +7,15 @@ from intlib.log import LOG
 from intui.sgqt import *
 
 
+"""
+PURPOSE: Global state and shared resources for the Intuitives DAW.
+ACTION: Manages application-wide variables (TRANSPORT, MAIN_WINDOW, APP) and lifecycle operations (Engine ready, entropy tracking).
+MECHANISM: 
+    1. Static Variables: Holds references to primary UI and Engine components to allow cross-module access without circular imports.
+    2. Entropy Management: Tracks cumulative processing 'time' and triggers engine restarts for safety if memory fragmentation limits are reached.
+    3. Audio Pool Cleanup: Dynamically identifies and frees inactive audio assets from the engine.
+"""
+
 AUDIO_ITEM_SCENE_HEIGHT = 900.0
 AUDIO_ITEM_SCENE_WIDTH = 3600.0
 AUDIO_ITEM_SCENE_RECT = QtCore.QRectF(
@@ -34,7 +43,7 @@ MEMORY_ENTROPY_UIDS = set()
 CC_CLIPBOARD = None
 IGNORE_CLOSE_EVENT = False
 
-def on_ready():
+def on_ready() -> None:
     LOG.info("Engine sent 'ready' message")
     for mod in HOST_MODULES:
         mod.on_ready()
@@ -75,7 +84,7 @@ def clean_audio_pool():
     #            restart_engine()
     #            break
 
-def add_entropy(a_timedelta):
+def add_entropy(a_timedelta: datetime.timedelta) -> bool:
     """ Use this to restart the engine and clean up the wav pool memory
 
         This returns a bool, to avoid restarting the engine at an
@@ -96,9 +105,9 @@ def restart_engine():
     close_engine()
     reopen_engine()
 
-def prepare_to_quit():
-    global MAIN_WINDOW, TRANSPORT
-    MAIN_WINDOW = TRANSPORT = None
+def prepare_to_quit() -> None:
+    global MAIN_WINDOW, TRANSPORT, CC_CLIPBOARD
+    MAIN_WINDOW = TRANSPORT = CC_CLIPBOARD = None
 
 def set_window_title():
     if not MAIN_WINDOW:

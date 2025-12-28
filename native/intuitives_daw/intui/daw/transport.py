@@ -22,7 +22,25 @@ from intui.neobrutalist_icons import (
 MREC_EVENTS = []
 
 class TransportWidget(AbstractTransportWidget):
+    """
+    PURPOSE: Manages the application's transport controls, playback state, and tool selection.
+    ACTION: Provides a toolbar with buttons for playback, recording, metronome, loop, and editing tools.
+    MECHANISM: 
+        1. Inherits from AbstractTransportWidget to leverage project-wide transport logic.
+        2. Uses QAction and QActionGroup to organize UI elements on a QToolBar.
+        3. Integrates with neobrutalist_icons for a unique visual identity.
+        4. Triggers IPC commands to the audio engine for real-time control.
+    """
     def __init__(self):
+        """
+        PURPOSE: Initializes the transport toolbar and its associated interactive elements.
+        ACTION: Sets up tool actions, mouse modes, and configures tooltips and shortcuts.
+        MECHANISM: 
+            1. Creates a QToolBar and configures its style.
+            2. Instantiates metronome and loop actions.
+            3. Sets up a QActionGroup for mutual exclusivity of editing tools (Select, Draw, Erase, Split).
+            4. Connects UI triggers to internal logic handlers.
+        """
         self.recording_timestamp = None
         self.suppress_osc = True
         self.last_open_dir = HOME
@@ -106,6 +124,11 @@ class TransportWidget(AbstractTransportWidget):
             "existing events"))
 
     def tab_changed(self, index):
+        """
+        PURPOSE: Adapts the transport toolbar visibility based on the active DAW tab.
+        ACTION: Toggles tool button visibility when switching between Sequencer, Item Editor, etc.
+        MECHANISM: Checks the provided tab index and calls set_tool_button_visibility() with appropriate flags.
+        """
         if index == shared.TAB_ITEM_EDITOR:
             shared.ITEM_EDITOR.set_transport_tool_visibility()
         elif index == shared.TAB_SEQUENCER:
@@ -121,6 +144,11 @@ class TransportWidget(AbstractTransportWidget):
         erase=True,
         split=True,
     ):
+        """
+        PURPOSE: Low-level utility to show/hide specific editing tools on the toolbar.
+        ACTION: Toggles visibility and enabled states for tool buttons and their global shortcuts.
+        MECHANISM: Iterates through tool flags and calls .setVisible() and .setEnabled() on the corresponding QAction objects.
+        """
         self.tool_select_rb.setVisible(select)
         shared.DAW.select_mode_action.setEnabled(select)
 
@@ -151,33 +179,63 @@ class TransportWidget(AbstractTransportWidget):
                 self.tool_select_clicked()
 
     def tool_select_clicked(self, a_val=None):
+        """
+        PURPOSE: Activates the 'Select' mouse mode.
+        ACTION: Updates shared editor state and changes the global cursor.
+        MECHANISM: Sets shared.EDITOR_MODE to shared.EDITOR_MODE_SELECT and calls shared.set_cursor().
+        """
         shared.EDITOR_MODE = shared.EDITOR_MODE_SELECT
         shared.set_cursor()
         if not self.tool_select_rb.isChecked():
             self.tool_select_rb.setChecked(True)
 
     def tool_draw_clicked(self, a_val=None):
+        """
+        PURPOSE: Activates the 'Draw' mouse mode for creating new items.
+        ACTION: Updates shared editor state and changes the global cursor.
+        MECHANISM: Sets shared.EDITOR_MODE to shared.EDITOR_MODE_DRAW and calls shared.set_cursor().
+        """
         shared.EDITOR_MODE = shared.EDITOR_MODE_DRAW
         shared.set_cursor()
         if not self.tool_draw_rb.isChecked():
             self.tool_draw_rb.setChecked(True)
 
     def tool_erase_clicked(self, a_val=None):
+        """
+        PURPOSE: Activates the 'Erase' mouse mode for deleting items.
+        ACTION: Updates shared editor state and changes the global cursor.
+        MECHANISM: Sets shared.EDITOR_MODE to shared.EDITOR_MODE_ERASE and calls shared.set_cursor().
+        """
         shared.EDITOR_MODE = shared.EDITOR_MODE_ERASE
         shared.set_cursor()
         if not self.tool_erase_rb.isChecked():
             self.tool_erase_rb.setChecked(True)
 
     def tool_split_clicked(self, a_val=None):
+        """
+        PURPOSE: Activates the 'Split' mouse mode for cutting items.
+        ACTION: Updates shared editor state and changes the global cursor.
+        MECHANISM: Sets shared.EDITOR_MODE to shared.EDITOR_MODE_SPLIT and calls shared.set_cursor().
+        """
         shared.EDITOR_MODE = shared.EDITOR_MODE_SPLIT
         shared.set_cursor()
         if not self.tool_split_rb.isChecked():
             self.tool_split_rb.setChecked(True)
 
     def open_project(self):
+        """
+        PURPOSE: Refreshes hardware-related transport settings when a project is loaded.
+        ACTION: Instructs the hardware widget to open project settings.
+        MECHANISM: Calls shared.HARDWARE_WIDGET.audio_inputs.open_project().
+        """
         shared.HARDWARE_WIDGET.audio_inputs.open_project()
 
     def on_metronome_changed(self, enabled):
+        """
+        PURPOSE: Toggles the audio engine's metronome click.
+        ACTION: Sends an IPC command to the back-end audio engine.
+        MECHANISM: Converts the boolean to 1/0 and calls constants.DAW_PROJECT.ipc().metronome().
+        """
         # The states we expect are 0 or 2, not 0 or 1
         if enabled in (0, QtCore.Qt.CheckState.Unchecked):
             enabled = 0
@@ -187,20 +245,40 @@ class TransportWidget(AbstractTransportWidget):
             constants.DAW_PROJECT.ipc().metronome(enabled)
 
     def on_panic(self):
+        """
+        PURPOSE: Emergency stop for all MIDI notes and audio signals.
+        ACTION: Sends a 'Panic' command to the engine.
+        MECHANISM: Invokes constants.DAW_PROJECT.ipc().panic().
+        """
         constants.DAW_PROJECT.ipc().panic()
 
     def set_time(self, a_beat=None):
+        """
+        PURPOSE: Updates the digital clock display in the transport bar.
+        ACTION: Formats the current beat into a human-readable time string.
+        MECHANISM: Calls get_time_at_beat() on the current sequence and updates the global transport widget.
+        """
         if a_beat is None:
             a_beat = shared.SEQUENCER.get_beat_value()
         f_text = shared.CURRENT_SEQUENCE.get_time_at_beat(a_beat)
         glbl_shared.TRANSPORT.set_time(f_text)
 
     def set_pos_from_cursor(self, a_beat):
+        """
+        PURPOSE: Synchronizes the transport clock with a specific cursor position during playback.
+        ACTION: Updates the UI time display.
+        MECHANISM: Calls self.set_time() with the provided beat if the engine is active.
+        """
         if glbl_shared.IS_PLAYING or glbl_shared.IS_RECORDING:
             f_beat = float(a_beat)
             self.set_time(f_beat)
 
     def set_controls_enabled(self, a_enabled):
+        """
+        PURPOSE: Disables certain UI controls during playback/record to prevent project corruption.
+        ACTION: Toggles the enabled state of specific widgets like snap and hardware checkboxes.
+        MECHANISM: Iterates through a set of widgets and calls .setEnabled(a_enabled).
+        """
         for f_widget in (
             shared.SEQ_WIDGET.snap_combobox,
             shared.HARDWARE_WIDGET.overdub_checkbox,
@@ -209,6 +287,14 @@ class TransportWidget(AbstractTransportWidget):
         shared.TRACK_PANEL.set_controls_enabled(a_enabled)
 
     def on_play(self):
+        """
+        PURPOSE: Initiates project playback.
+        ACTION: Notifies all DAW sub-components of the playback start and sends an IPC start command.
+        MECHANISM: 
+            1. Calls on_play() on all major shared widgets.
+            2. Starts the software sequencer clock via shared.SEQUENCER.start_playback().
+            3. Invokes engine IPC en_playback(1, beat).
+        """
         if shared.MAIN_WINDOW.currentIndex() == shared.TAB_ITEM_EDITOR:
             shared.SEQUENCER.open_sequence()
         shared.PLAYLIST_EDITOR.on_play()
@@ -226,6 +312,14 @@ class TransportWidget(AbstractTransportWidget):
         return True
 
     def on_stop(self):
+        """
+        PURPOSE: Halts project playback or recording.
+        ACTION: Disables the playback engine and updates UI component states.
+        MECHANISM: 
+            1. Sends IPC en_playback(0).
+            2. Triggers on_stop() on sub-widgets.
+            3. If recording was active, initiates the 'Save recorded items' workflow.
+        """
         constants.DAW_PROJECT.ipc().en_playback(0)
         shared.PLAYLIST_EDITOR.on_stop()
         shared.ITEMLIST.on_stop()
@@ -256,6 +350,14 @@ class TransportWidget(AbstractTransportWidget):
         #shared.global_set_playback_pos()
 
     def show_save_items_dialog(self, a_restart=False):
+        """
+        PURPOSE: Prompts the user to save or discard recently recorded audio or MIDI data.
+        ACTION: Opens a QDialog where the user can enter an item name.
+        MECHANISM: 
+            1. Validates the item name length.
+            2. Calls item_lib.save_recorded_items() to persist the data.
+            3. Refreshes the sequencer view and optionally restarts the engine to incorporate the new entropy.
+        """
         f_inputs = shared.HARDWARE_WIDGET.audio_inputs.inputs
         def ok_handler():
             f_file_name = str(f_file.text())
@@ -297,6 +399,7 @@ class TransportWidget(AbstractTransportWidget):
             f_window.close()
 
         def text_edit_handler(a_val=None):
+            """Sanitizes the item name text by removing invalid characters."""
             text = util.remove_bad_chars(
                 f_file.text()
             )
@@ -304,6 +407,7 @@ class TransportWidget(AbstractTransportWidget):
                 f_file.setText(text)
 
         def cancel_handler():
+            """Discards the recording and cleans up temporary files."""
             constants.PROJECT.clear_audio_tmp_folder()
             f_window.close()
 
@@ -342,6 +446,14 @@ class TransportWidget(AbstractTransportWidget):
         f_window.exec()
 
     def on_rec(self):
+        """
+        PURPOSE: Initiates project recording.
+        ACTION: Validates armed tracks and enters the recording state.
+        MECHANISM: 
+            1. Scans shared.MIDI_DEVICES_DIALOG and audio_inputs for record-armed sources.
+            2. Triggers on_rec() or on_play() across all widgets.
+            3. Synchronizes the IPC engine with en_playback(2, beat).
+        """
         if self.loop_mode_checkbox.isChecked():
             QMessageBox.warning(
                 self.group_box,
@@ -390,6 +502,11 @@ class TransportWidget(AbstractTransportWidget):
         return True
 
     def on_loop_mode_changed(self, a_loop_mode):
+        """
+        PURPOSE: Toggles the project's looping behavior.
+        ACTION: Sends the loop state to the back-end engine.
+        MECHANISM: Normalizes CheckState to 0/1 and invokes engine IPC set_loop_mode().
+        """
         # The states we expect are 0 or 2, not 0 or 1
         if a_loop_mode in (0, QtCore.Qt.CheckState.Unchecked):
             a_loop_mode = 0
@@ -399,6 +516,11 @@ class TransportWidget(AbstractTransportWidget):
             constants.DAW_PROJECT.ipc().set_loop_mode(a_loop_mode)
 
     def reset(self):
+        """
+        PURPOSE: Resets transport UI state to defaults.
+        ACTION: Unchecks loop and overdub controls.
+        MECHANISM: Calls .setChecked(False) on the respective widgets.
+        """
         self.loop_mode_checkbox.setChecked(False)
         shared.HARDWARE_WIDGET.overdub_checkbox.setChecked(False)
 

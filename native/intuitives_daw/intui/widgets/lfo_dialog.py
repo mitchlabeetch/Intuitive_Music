@@ -5,10 +5,14 @@ from intlib.lib.translate import _
 from intui.sgqt import *
 
 def lfo_dialog(a_update_callback, a_save_callback):
-    """ Generic dialog for doing event transforms that are LFO-like.
-        The actual transforms are performed by the caller using the
-        event callbacks.  The caller should create a list of event
-        objects and their original values.
+    """
+    PURPOSE: Provides a specialized dialog for applying LFO-based event transformations (e.g., to MIDI CCs).
+    ACTION: Calculates modulated values for a range of musical events and provides real-time preview.
+    MECHANISM: 
+        1. Creates a modal QDialog with knobs for Phase, Frequency, Amplitude, and Center.
+        2. Supports "morphed" LFOs by optional end-point knobs for frequency and amp.
+        3. Calls back to the owner via a_update_callback on ogni control movement for non-destructive preview.
+        4. Finalizes changes on 'OK' via the a_save_callback.
     """
     def ok_handler():
         f_dialog.close()

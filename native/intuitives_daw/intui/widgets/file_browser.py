@@ -25,6 +25,15 @@ class FileDragDropListWidget(QListWidget):
         drag.exec(QtCore.Qt.DropAction.MoveAction)
 
 class AbstractFileBrowserWidget:
+    """
+    PURPOSE: Provides a base implementation for a dual-pane file and folder navigator.
+    ACTION: Displays directories, bookmarks, and filtered file lists with navigation history.
+    MECHANISM: 
+        1. Uses a complex layout of QSplitters, QStackedWidgets, and QListWidgets.
+        2. Maintains a 'history' list for forward/back navigation.
+        3. Integrates with the 'bookmark' module to manage and recall favorite paths.
+        4. Employs os.listdir and os.walk for disk enumeration, with filtering via filter_func.
+    """
     def __init__(
         self,
         a_filter_func=util.is_audio_file,
@@ -251,6 +260,7 @@ class AbstractFileBrowserWidget:
         FILE_BROWSER_WIDGETS.append(self)
 
     def set_multiselect(self, a_bool):
+        """PURPOSE: Toggles between single and extended item selection in the file list."""
         mode = (
             QAbstractItemView.SelectionMode.ExtendedSelection
             if a_bool else
@@ -259,6 +269,11 @@ class AbstractFileBrowserWidget:
         self.list_file.setSelectionMode(mode)
 
     def open_file_in_browser(self, a_path):
+        """
+        PURPOSE: Directs the browser to a specific file location.
+        ACTION: Navigates to the file's directory and highlights the file item.
+        MECHANISM: Extracts dirname/basename and calls set_folder and select_file.
+        """
         f_path = str(a_path)
         f_dir = os.path.dirname(f_path)
         if os.path.isdir(f_dir):
@@ -600,6 +615,15 @@ class AbstractFileBrowserWidget:
         self.set_folder("..")
 
     def set_folder(self, a_folder, a_full_path=False):
+        """
+        PURPOSE: Changes the current working directory of the browser.
+        ACTION: Populates folder and file lists for the new path and updates the breadcrumb UI.
+        MECHANISM: 
+            1. Resolves absolute vs relative paths via os.path.abspath.
+            2. Handles specialized Windows drive enumeration if path is empty.
+            3. Filters hidden files and applies the filter_func.
+            4. Manages the navigation history stack and scroll position cache (scroll_dict).
+        """
         if (
             a_full_path
             and
@@ -741,6 +765,11 @@ class AbstractFileBrowserWidget:
 
 
 class FileBrowserWidget(AbstractFileBrowserWidget):
+    """
+    PURPOSE: The standard file browser used in the DAW's main interface.
+    ACTION: Inherits directory navigation and adds specific "Load" functionality.
+    MECHANISM: Extends AbstractFileBrowserWidget by adding a Load button to the bottom layout and enabling multiselect by default.
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.load_button = QPushButton(_("Load"))

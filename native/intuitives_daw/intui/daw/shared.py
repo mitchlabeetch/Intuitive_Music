@@ -20,6 +20,11 @@ MIDI_FILES_TO_DROP = []
 ITEM_TO_DROP = None
 
 def clear_seq_drop():
+    """
+    PURPOSE: Resets the state of pending drag-and-drop operations for items and files.
+    ACTION: Clears the ITEM_TO_DROP, AUDIO_ITEMS_TO_DROP, and MIDI_FILES_TO_DROP globals.
+    MECHANISM: Assigns None to ITEM_TO_DROP and calls .clear() on the list globals.
+    """
     global ITEM_TO_DROP
     ITEM_TO_DROP = None
     AUDIO_ITEMS_TO_DROP.clear()
@@ -199,21 +204,29 @@ CURSORS = {
 IS_IN_CURSOR_WIDGET = False
 
 def set_cursor():
+    """
+    PURPOSE: Updates the mouse cursor shape based on the current DAW editor mode (Select, Draw, etc.).
+    ACTION: Sets the application-wide override cursor if the mouse is within a designated cursor widget.
+    MECHANISM: Checks IS_IN_CURSOR_WIDGET, retrieves the specific cursor shape from the CURSORS dictionary using EDITOR_MODE, and applies it via QApplication.setOverrideCursor.
+    """
     if IS_IN_CURSOR_WIDGET:
         QApplication.restoreOverrideCursor()
         shape = CURSORS[EDITOR_MODE]
         QApplication.setOverrideCursor(QCursor(shape))
 
 def _is_move_cursor():
+    """Checks if the current editor mode is one that allows moving items."""
     return EDITOR_MODE in (EDITOR_MODE_SELECT, EDITOR_MODE_DRAW)
 
 def set_move_cursor():
+    """Sets the cursor to a 'SizeAll' shape for moving operations."""
     if _is_move_cursor():
         QApplication.setOverrideCursor(
             QCursor(QtCore.Qt.CursorShape.SizeAllCursor),
         )
 
 def restore_move_cursor():
+    """Restores the previous cursor after a moving operation completes."""
     if _is_move_cursor():
         QApplication.restoreOverrideCursor()
 
@@ -299,6 +312,11 @@ def global_update_hidden_rows(a_val=None):
 #    SEQUENCE_EDITOR.update()
 
 def global_set_midi_zoom(a_val):
+    """
+    PURPOSE: Adjusts the horizontal scaling factor for MIDI and automation editors.
+    ACTION: Updates the MIDI_SCALE global and refreshes the grid quantization.
+    MECHANISM: Assigns a_val to MIDI_SCALE and invokes set_piano_roll_quantize() to recalculate grid spacing.
+    """
     global MIDI_SCALE
     MIDI_SCALE = a_val
     set_piano_roll_quantize()
@@ -311,11 +329,13 @@ def global_open_items(
     item_track=None,
 ):
     """
-        @a_items:
-            str, The name of the item.
-            Leave blank to reopen the existing item.
-        @a_reset_scrollbar:
-            bool, True to reset the horizontal scrollbar of all editors to 0
+    PURPOSE: Main entry point for opening a MIDI/Automation item into the low-level editors.
+    ACTION: Updates internal state tracking for "current" and "last" items, refreshes editor content, and handles undo/redo context resets.
+    MECHANISM: 
+        1. Manages item history (LAST_ITEM_NAME, etc.) for rapid switching.
+        2. Retrieves the item object from the project by name.
+        3. Updates shared.CURRENT_ITEM and calculates its length based on tempo.
+        4. Triggers widget-specific updates (CC_EDITOR_WIDGET, etc.).
     """
     global \
         CURRENT_ITEM, \
@@ -427,7 +447,15 @@ def open_last():
         )
 
 def global_open_project(a_project_file):
-    """ Opens or creates a new project """
+    """
+    PURPOSE: Loads an existing DAW project and synchronizes all GUI components.
+    ACTION: Parses the project file, initializes tracks, mixer, routing, and sequencer views.
+    MECHANISM: 
+        1. Instantiates constants.DAW_PROJECT.
+        2. Calls project.open_project().
+        3. Notifies major components (TRACK_PANEL, ROUTING_GRAPH_WIDGET, MIXER_WIDGET, TRANSPORT, PLUGIN_RACK) to refresh their data.
+        4. Calls reset_globals() to clear any stale item context.
+    """
     # TODO: SG DEPRECATED
     global PROJECT, TRACK_NAMES, TRACK_COLORS
     constants.DAW_PROJECT = DawProject(util.WITH_AUDIO)
@@ -540,6 +568,13 @@ def reset_globals():
     LAST_ITEM_TRACK = None
 
 def global_set_playback_pos(a_beat=None):
+    """
+    PURPOSE: Broadcasts the current audio engine playback position to all UI observers.
+    ACTION: Updates the PLAYBACK_POS global and notifies transport and editor widgets.
+    MECHANISM: 
+        1. Assigns a_beat to PLAYBACK_POS.
+        2. Invokes .set_playback_pos() or .set_time() on all sequence and MIDI editors.
+    """
     if a_beat is not None:
         global PLAYBACK_POS
         PLAYBACK_POS = float(a_beat)
@@ -555,6 +590,11 @@ def global_set_playback_pos(a_beat=None):
     TRANSPORT.set_time(PLAYBACK_POS)
 
 def global_update_peak_meters(a_val):
+    """
+    PURPOSE: Updates the peak meter bars in the mixer and track panels based on real-time engine data.
+    ACTION: Parses a string of peak values and distributes them to the registered meter widgets.
+    MECHANISM: Splits the input string by '|' and ':', finds the meter index in ALL_PEAK_METERS, and calls .set_value().
+    """
     for f_val in a_val.split("|"):
         f_list = f_val.split(":")
         f_index = int(f_list[0])
@@ -565,9 +605,15 @@ def global_update_peak_meters(a_val):
             LOG.info("{} not in ALL_PEAK_METERS".format(f_index))
 
 def active_audio_pool_uids():
+    """Returns a list of all audio sample UIDs currently active in the project pool."""
     return constants.DAW_PROJECT.active_audio_pool_uids()
 
 def global_close_all():
+    """
+    PURPOSE: Performs a clean shutdown of project-related UI elements.
+    ACTION: Closes plugin windows and clears all transient editor states.
+    MECHANISM: Invokes close_all_plugin_windows() and clear_drawn_items() on major widgets.
+    """
     global AUDIO_ITEMS_TO_DROP
     if glbl_shared.PLUGIN_UI_DICT:
         glbl_shared.PLUGIN_UI_DICT.close_all_plugin_windows()
@@ -579,8 +625,12 @@ def global_close_all():
     AUDIO_ITEMS_TO_DROP = []
 
 def global_ui_refresh_callback(a_restore_all=False):
-    """ Use this to re-open all existing items/sequences/song in
-        their editors when the files have been changed externally
+    """
+    PURPOSE: Force-refreshes the entire DAW interface to match the current project state on disk.
+    ACTION: Re-opens items, tracks, sequences, and instructs the audio engine to reload the project.
+    MECHANISM: 
+        1. Calls global_open_items() and SEQ_WIDGET.open_sequence().
+        2. Invokes constants.DAW_PROJECT.ipc().open_song() to synchronize the background engine.
     """
     global_open_items(CURRENT_ITEM_NAME)
     TRACK_PANEL.open_tracks()
@@ -593,18 +643,32 @@ def global_ui_refresh_callback(a_restore_all=False):
 
 
 def on_ready():
-    """ Called after re-opening the audio engine """
-    # Ensure that loop mode is restored in the engine
-    # to the same setting as the UI, since this is not part
-    # of the saved data
+    """
+    PURPOSE: Finalizes project loading logic once the audio engine signals readiness.
+    ACTION: Restores temporary UI states (like loop mode) that aren't stored in the project file.
+    MECHANISM: Polls TRANSPORT.loop_mode_checkbox and sends the state to the engine via on_loop_mode_changed().
+    """
     check_state = TRANSPORT.loop_mode_checkbox.isChecked()
     TRANSPORT.on_loop_mode_changed(check_state)
 
 def get_mixer_peak_meters():
+    """
+    PURPOSE: Maps mixer track meters to the global ALL_PEAK_METERS registry for fast updates.
+    ACTION: Populates the global meter lookup table.
+    MECHANISM: Iterates through MIXER_WIDGET.tracks and appends their peak_meter references to ALL_PEAK_METERS.
+    """
     for k, v in MIXER_WIDGET.tracks.items():
         ALL_PEAK_METERS[k].append(v.peak_meter)
 
 def routing_graph_toggle_callback(a_src, a_dest, conn_type):
+    """
+    PURPOSE: Handles interactive routing changes made in the Routing Graph UI.
+    ACTION: Modifies the project's routing graph and persists the change.
+    MECHANISM: 
+        1. Calls f_graph.toggle() to add/remove a connection.
+        2. Saves the updated graph to the project.
+        3. Commits the change to the project history (Undo).
+    """
     f_graph = constants.DAW_PROJECT.get_routing_graph()
     f_result = f_graph.toggle(a_src, a_dest, conn_type)
     if f_result:
@@ -616,7 +680,13 @@ def routing_graph_toggle_callback(a_src, a_dest, conn_type):
 
 
 def global_open_mixer():
-    """ Update the mixer to reflect the current routing and track names """
+    """
+    PURPOSE: Synchronizes the Mixer UI with the project's current channel and plugin configuration.
+    ACTION: Updates track names, sends, and plugin lists on the mixer strips.
+    MECHANISM: 
+        1. Retrieves the current routing graph and plugin state for each track.
+        2. Invokes MIXER_WIDGET.update_sends() and .update_track_names().
+    """
     f_graph = constants.DAW_PROJECT.get_routing_graph()
     f_track_names = {
         f_i:x
@@ -645,6 +715,14 @@ def global_open_mixer():
     )
 
 def set_piano_roll_quantize(a_index=None):
+    """
+    PURPOSE: Recalculates the grid spacing and "snap-to-value" for the Piano Roll and automation editors.
+    ACTION: Updates the PIANO_ROLL_SNAP_VALUE and grid display state.
+    MECHANISM: 
+        1. Calculates scale factors based on widget width.
+        2. Retrieves the snap divisor from util.ITEM_SNAP_DIVISORS.
+        3. Updates the grid division on PIANO_ROLL_EDITOR.
+    """
     global PIANO_ROLL_SNAP, PIANO_ROLL_SNAP_VALUE, PIANO_ROLL_SNAP_DIVISOR, \
         PIANO_ROLL_SNAP_BEATS, LAST_NOTE_RESIZE, PIANO_ROLL_QUANTIZE_INDEX, \
         PIANO_ROLL_MIN_NOTE_LENGTH, PIANO_ROLL_GRID_WIDTH
@@ -693,6 +771,11 @@ def global_open_audio_items(
     a_update_viewer=True,
     a_reload=True,
 ):
+    """
+    PURPOSE: Refreshes the display of audio items in the audio sequence editor.
+    ACTION: Clears current items and re-renders them based on the current project state.
+    MECHANISM: Iterates through CURRENT_ITEM.items, retrieves sample graphs from the project, and invokes AUDIO_SEQ.draw_item().
+    """
     if a_update_viewer:
         f_selected_list = []
         for f_item in AUDIO_SEQ.audio_items:
@@ -737,6 +820,14 @@ def global_open_audio_items(
         AUDIO_SEQ.horizontalScrollBar().setMinimum(0)
 
 def global_update_track_comboboxes(a_index=None, a_value=None):
+    """
+    PURPOSE: Synchronizes track name dropdowns across all DAW views (Mixer, Sequencer, Plugin Rack).
+    ACTION: Updates the TRACK_NAMES list and repopulates all registered QComboBox widgets.
+    MECHANISM: 
+        1. Updates a specific name if a_index is provided.
+        2. Iterates through TRACK_NAME_COMBOBOXES, clearing and re-adding the updated items.
+        3. Notifies the plugin rack and refreshes the routing graph.
+    """
     if (
         a_index is not None
         and
@@ -762,6 +853,11 @@ def global_update_track_comboboxes(a_index=None, a_value=None):
     global_open_mixer()
 
 def seconds_to_beats(a_seconds):
+    """
+    PURPOSE: Converts a time duration from seconds to musical beats based on the current tempo.
+    ACTION: Returns a beat value as a float.
+    MECHANISM: Multiplies seconds by (Tempo / 60.0).
+    """
     return a_seconds * (
         CURRENT_SEQUENCE.get_tempo_at_pos(
             CURRENT_ITEM_REF.start_beat
@@ -769,7 +865,10 @@ def seconds_to_beats(a_seconds):
     )
 
 def open_rack(track_index: int):
-    """ Open a particular track in the plugin rack
+    """
+    PURPOSE: Switches focus to the plugin rack for a specific track.
+    ACTION: Sets the rack index and changes the active DAW tab.
+    MECHANISM: Calls PLUGIN_RACK.set_index() and sets MAIN_WINDOW to TAB_PLUGIN_RACK.
     """
     if track_index is None:
         QMessageBox.warning(
@@ -782,6 +881,11 @@ def open_rack(track_index: int):
     MAIN_WINDOW.setCurrentIndex(TAB_PLUGIN_RACK)
 
 def setup():
+    """
+    PURPOSE: Performs initial one-time configuration of DAW-wide visual resources.
+    ACTION: Initializes custom pens and drawing tools based on the active theme.
+    MECHANISM: Instantiates QPen objects using colors retrieved from theme.SYSTEM_COLORS.daw.
+    """
     global \
         AUDIO_ITEM_HANDLE_PEN, \
         AUDIO_ITEM_LINE_PEN, \

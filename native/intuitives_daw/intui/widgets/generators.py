@@ -17,15 +17,14 @@ from intlib.brand import (
 
 class GeneratorPanel(QWidget):
     """
-    Panel for AI/Procedural music generation tools.
-    
-    Features:
-    - Markov Melody Generator
-    - Genetic Algorithm Evolution
-    - Cellular Automata Rhythms
-    - L-System Patterns
-    - Text-to-Melody
-    - Color-to-Harmony
+    PURPOSE: A central hub for algorithmic and AI-driven music creation tools.
+    ACTION: Provides tabbed interfaces for Markov chains, Genetic algorithms, Cellular Automata, and Synesthetic mappings.
+    MECHANISM: 
+        1. Uses a QTabWidget to organize disparate generative paradigms.
+        2. Markov: Maps temperature/randomness sliders to probabilistic note transpositions.
+        3. Genetic: Configures population/generation parameters for iterative pattern evolution.
+        4. Text-to-Melody: Parses string inputs and maps ASCII characters to pitch/rhythm offsets.
+        5. Color-to-Harmony: Maps Hue values to root notes and Saturation to chord complexity/inversion.
     """
     
     # Signals
@@ -309,8 +308,12 @@ class GeneratorPanel(QWidget):
 
 class ChromasynesthesiaWidget(QWidget):
     """
-    Visual indicator that shows the current color based on pitch.
-    Updates in real-time based on audio analysis.
+    PURPOSE: A visual HUD element for real-time Pitch-to-Color feedback.
+    ACTION: Displays a pulsing, glowing circle that changes color based on the analyzed MIDI or audio pitch.
+    MECHANISM: 
+        1. Subscribes to pitch updates via set_note().
+        2. Performs smooth RGB interpolation toward target colors in _animate_color() at 60fps.
+        3. Renders multi-layered ellipses with QPainter to create a soft "aura" effect.
     """
     
     def __init__(self, parent=None):

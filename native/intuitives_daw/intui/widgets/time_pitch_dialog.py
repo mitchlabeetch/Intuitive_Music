@@ -8,12 +8,16 @@ from intlib.log import LOG
 
 
 class TimePitchDialogWidget:
+    """
+    PURPOSE: A specialized dialog for high-quality offline time-stretching and pitch-shifting.
+    ACTION: Provides precise semitone pitch adjustment and ratio-based time manipulation across multiple DSP backends.
+    MECHANISM: 
+        1. Supports polymorphic DSP modes: Rubberband (real-time/pro), SBSMS (bendable), Paulstretch (extreme), and Soundtouch.
+        2. timestretch_mode_changed(): Dynamically reconfigures the UI, showing/hiding 'End' handles for pitch/time ramps (SBSMS) or 'Crispness' settings (Rubberband).
+        3. Enforces DSP-specific constraints: For example, Paulstretch usually ignores pitch bending, while SBSMS allows independent start/end ratios.
+        4. Serializes the final state (mode index, pitch, time, crispness) for the backend processing engine.
+    """
     def __init__(
-        self,
-        audio_item=None,
-        modes=TIMESTRETCH_MODES,
-        ps_pitch=False,
-    ):
         LOG.info(modes)
         self.mode_indices = [util.TIMESTRETCH_INDEXES[x] for x in modes]
         LOG.info(f'mode_indices: {self.mode_indices}')

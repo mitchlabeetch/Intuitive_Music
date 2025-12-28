@@ -43,6 +43,11 @@ class MainStackedWidget(QStackedWidget):
     resized = Signal()
 
     def __init__(self, *args, **kwargs):
+        """
+        PURPOSE: Initializes the main container widget that manages switching between splash, welcome, and main DAW screens.
+        ACTION: Sets the object name and initializes references for main_window, welcome_window, splash_screen, and hardware_dialog.
+        MECHANISM: Calls the parent QStackedWidget constructor and sets internal state variables to None.
+        """
         QStackedWidget.__init__(self, *args, **kwargs)
         self.setObjectName('main_window')
         self.main_window = None
@@ -53,6 +58,11 @@ class MainStackedWidget(QStackedWidget):
         self.previous = None
 
     def toggle_full_screen(self):
+        """
+        PURPOSE: Switches the application window between full-screen mode and maximized window mode.
+        ACTION: Checks the current screen state and toggles it.
+        MECHANISM: Uses isFullScreen() to determine state, then calls showMaximized() or showFullScreen() accordingly.
+        """
         fs = self.isFullScreen()
         if fs:
             self.showMaximized()
@@ -60,6 +70,14 @@ class MainStackedWidget(QStackedWidget):
             self.showFullScreen()
 
     def show_main(self):
+        """
+        PURPOSE: Transitions the UI to the main DAW interface.
+        ACTION: Displays the splash screen, initializes the main window with the current project, and adds it to the stack.
+        MECHANISM: 
+            1. Verifies splash screen availability via show_splash().
+            2. Calls the main_window_open factory function.
+            3. Registers the resulting widget in the QStackedWidget and sets it as current.
+        """
         if not self.show_splash():
             return
         self.main_window = main_window_open(
@@ -70,6 +88,11 @@ class MainStackedWidget(QStackedWidget):
         self.setCurrentWidget(self.main_window)
 
     def show_welcome(self):
+        """
+        PURPOSE: Displays the initial "Welcome" screen where users can create or open projects.
+        ACTION: Instantiates the EnhancedWelcome widget if needed, connects its signals to logic handlers, and refreshes the recent projects list.
+        MECHANISM: Checks for welcome_window existence, connects Qt signals (new, open, clone, recent, hardware), and calls populate_welcome_recent().
+        """
         if not self.welcome_window:
             self.welcome_window = EnhancedWelcome()
             self.addWidget(self.welcome_window)
@@ -86,12 +109,25 @@ class MainStackedWidget(QStackedWidget):
         self.setWindowTitle('Intuitives DAW')
 
     def populate_welcome_recent(self):
+        """
+        PURPOSE: Updates the list of recently opened projects on the welcome screen.
+        ACTION: Clears existing items and repopulates the list from the project history.
+        MECHANISM: Retrieves path strings via get_history() and iterates through them to add items to the welcome_window.
+        """
         self.welcome_window.clear_recent_projects()
         history = get_history()
         for path in history:
             self.welcome_window.add_recent_project(path)
 
     def on_welcome_new(self):
+        """
+        PURPOSE: Handles the "New Project" workflow from the welcome screen.
+        ACTION: Checks hardware status, prompts for a new project file, and starts the DAW if successful.
+        MECHANISM: 
+            1. Calls check_hardware().
+            2. Invokes new_project() from the project module.
+            3. On success, calls self.start() to proceed.
+        """
         try:
             if not self.check_hardware(self.on_welcome_new):
                 return
@@ -103,6 +139,14 @@ class MainStackedWidget(QStackedWidget):
             QMessageBox.warning(None, "Error", f"An error occurred: {ex}")
 
     def on_welcome_open(self):
+        """
+        PURPOSE: Handles the "Open Project" workflow from the welcome screen.
+        ACTION: Checks hardware status, opens an existing project file, and starts the DAW if successful.
+        MECHANISM: 
+            1. Calls check_hardware().
+            2. Invokes open_project().
+            3. On success, calls self.start().
+        """
         try:
             if not self.check_hardware(self.on_welcome_open):
                 return
@@ -113,6 +157,14 @@ class MainStackedWidget(QStackedWidget):
             QMessageBox.warning(None, "Error", f"An error occurred: {ex}")
 
     def on_welcome_clone(self):
+        """
+        PURPOSE: Handles the "Clone Project" workflow from the welcome screen.
+        ACTION: Checks hardware status, clones an existing project, and starts the DAW.
+        MECHANISM: 
+            1. Calls check_hardware().
+            2. Invokes clone_project().
+            3. On success, calls self.start().
+        """
         try:
             if not self.check_hardware(self.on_welcome_clone):
                 return
@@ -123,40 +175,67 @@ class MainStackedWidget(QStackedWidget):
             QMessageBox.warning(None, "Error", f"An error occurred: {ex}")
 
     def on_welcome_recent(self, path):
-         try:
-             if not self.check_hardware():
+        """
+        PURPOSE: Handles selecting a project from the "Recent" list.
+        ACTION: Verifies hardware, file existence, and project version compatibility before setting it as the active project.
+        MECHANISM: 
+            1. Verifies hardware.
+            2. Checks os.path.isfile().
+            3. Validates version via check_project_version().
+            4. Calls set_project(path) and self.start().
+        """
+        try:
+            if not self.check_hardware():
+               return
+            if not os.path.isfile(path):
+                QMessageBox.warning(
+                    None,
+                    "Error",
+                    f"'{path}' was moved, deleted or the storage device is no longer readable"
+                )
+                self.populate_welcome_recent()
                 return
-             if not os.path.isfile(path):
-                 QMessageBox.warning(
-                     None,
-                     "Error",
-                     f"'{path}' was moved, deleted or the storage device is no longer readable"
-                 )
-                 self.populate_welcome_recent()
-                 return
-                 
-             try:
-                 check_project_version(self.welcome_window, path)
-             except IntuitivesProjectVersionError:
-                 return
-                 
-             set_project(path)
-             self.start()
-         except Exception as ex:
-            LOG.exception(ex)
-            QMessageBox.warning(None, "Error", f"An error occurred: {ex}")
+                
+            try:
+                check_project_version(self.welcome_window, path)
+            except IntuitivesProjectVersionError:
+                return
+                
+            set_project(path)
+            self.start()
+        except Exception as ex:
+           LOG.exception(ex)
+           QMessageBox.warning(None, "Error", f"An error occurred: {ex}")
 
     def on_welcome_hardware(self):
+        """
+        PURPOSE: Opens the hardware settings dialog from the welcome screen.
+        ACTION: Displays the hardware configuration UI.
+        MECHANISM: Calls show_hardware_dialog() with the welcome screen as both next and previous target.
+        """
         self.show_hardware_dialog(
             self.show_welcome,
             self.show_welcome
         )
 
     def start(self):
+        """
+        PURPOSE: Initiates the transition sequence from project selection to active DAW usage.
+        ACTION: Shows the splash screen and then the main window.
+        MECHANISM: Sequentially calls show_splash() and show_main().
+        """
         if self.show_splash():
             self.show_main()
 
     def check_hardware(self, _next=None):
+        """
+        PURPOSE: Verifies that audio/MIDI hardware is correctly configured before starting engine-dependent tasks.
+        ACTION: Performs a device check and opens the hardware dialog if interaction is required.
+        MECHANISM: 
+            1. Instantiates HardwareDialog and calls check_device().
+            2. If an issue/message is returned, it calls show_hardware_dialog and returns False.
+            3. Otherwise, returns True.
+        """
         hardware_dialog = widgets.HardwareDialog()
         result = hardware_dialog.check_device()
         if result:
@@ -169,6 +248,11 @@ class MainStackedWidget(QStackedWidget):
         return True
 
     def show_splash(self):
+        """
+        PURPOSE: Displays the application splash screen during loading sequences.
+        ACTION: Instantiates the SplashScreen if it doesn't exist and brings it to the front.
+        MECHANISM: Uses lazy initialization for the SplashScreen widget and sets it as the current stacked widget.
+        """
         if not self.splash_screen:
             self.splash_screen = SplashScreen(self)
             self.addWidget(self.splash_screen)
@@ -182,10 +266,12 @@ class MainStackedWidget(QStackedWidget):
         msg=None,
     ):
         """
-        @_next:
-            The MainStackedWidget.show_*() method to call upon success
-        @_previous:
-            The MainStackedWidget.show_*() method to call if the user cancels
+        PURPOSE: Displays the hardware configuration dialog to the user.
+        ACTION: Replaces any existing hardware dialog with a new one and focuses it.
+        MECHANISM: 
+            1. Unregisters the old dialog instance.
+            2. Calls the hardware_dialog_factory to create a new instance (potentially with a specific message).
+            3. Adds it to the widget stack and makes it current.
         """
         self.next = _next
         self.previous = previous
@@ -197,6 +283,14 @@ class MainStackedWidget(QStackedWidget):
         self.setCurrentWidget(self.hardware_dialog)
 
     def closeEvent(self, event):
+        """
+        PURPOSE: Intercepts the window close event to ensure data integrity and user confirmation.
+        ACTION: Prevents closure if critical tasks (like project saving or playback) are occurring without consent.
+        MECHANISM: 
+            1. Checks IGNORE_CLOSE_EVENT and provides feedback if a dialog is open or audio is playing.
+            2. Triggers a confirmation QMessageBox with 'Yes' and 'Cancel' options.
+            3. If 'Yes', cleans up solo loops, prepares the window for quitting, and accepts the event.
+        """
         self.raise_()
         if glbl_shared.IGNORE_CLOSE_EVENT:
             if sgqt.DIALOG_SHOWING:
@@ -236,10 +330,20 @@ class MainStackedWidget(QStackedWidget):
             event.accept()
 
     def resizeEvent(self, event):
+        """
+        PURPOSE: Handles window resizing events for responsive layout adjustments.
+        ACTION: Passes the event to the parent and emits a custom 'resized' signal.
+        MECHANISM: Calls super().resizeEvent(event) and then self.resized.emit().
+        """
         super().resizeEvent(event)
         self.resized.emit()
 
 def qt_message_handler(mode, context, message):
+    """
+    PURPOSE: Captures and redirects low-level Qt framework messages to the application's logging system.
+    ACTION: Formats Qt warnings, errors, and debug messages and writes them to the LOG.
+    MECHANISM: Uses a conditional mapping of QtMsgType to LOG levels (warning, error, info).
+    """
     line = (
         f'qt_message_handler: {mode} '
         f'{context.file}:{context.line}:{context.function}'
@@ -262,7 +366,9 @@ def qt_message_handler(mode, context, message):
 
 def exception_hook(exctype, value, tb):
     """
-    Global exception hook to catch unhandled exceptions
+    PURPOSE: Provides a global safety net to catch and log any unhandled Python exceptions.
+    ACTION: Logs the exception traceback and displays a critical error message box to the user.
+    MECHANISM: Uses the traceback module to format the error and attempts to show a QMessageBox.critical dialog.
     """
     LOG.error("Unhandled exception caught by global hook")
     LOG.error("".join(traceback.format_exception(exctype, value, tb)))
@@ -275,6 +381,14 @@ def exception_hook(exctype, value, tb):
         pass
 
 def _setup():
+    """
+    PURPOSE: Performs pre-launch environment configuration and application-level setup.
+    ACTION: Configures exception hooks, message handlers, DPI settings, and UI themes.
+    MECHANISM: 
+        1. Registers exception_hook and qt_message_handler.
+        2. Sets HighDpiScaleFactorRoundingPolicy.
+        3. Initializes the QApplication and applies the custom Intuitives theme.
+    """
     LOG.info(f"sys.argv == {sys.argv}")
     sys.excepthook = exception_hook
     QtCore.qInstallMessageHandler(qt_message_handler)
@@ -294,6 +408,17 @@ def _setup():
     return app
 
 def main(args):
+    """
+    PURPOSE: Orchestrates the high-level startup sequence and manages the application lifecycle.
+    ACTION: Initializes the app, checks for existing instances (PID check), sets up the main widget stack, and runs the main loop.
+    MECHANISM: 
+        1. Calls _setup() to get the QApp instance.
+        2. Verifies uniqueness via check_pidfile.
+        3. Configures global_shared.MAIN_STACKED_WIDGET.
+        4. Runs preflight() checks.
+        5. Switches to either the welcome screen or starts a specific project.
+        6. Enters QAPP.exec() loop and performs final cleanup on exit.
+    """
     if 'APPDIR' in os.environ:
         LD_LIBRARY_PATH = os.environ.get('LD_LIBRARY_PATH', None)
         LOG.info(f'LD_LIBRARY_PATH={LD_LIBRARY_PATH}')

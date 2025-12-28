@@ -18,8 +18,17 @@ from intlib.log import LOG
 from intlib.models import theme
 from intui import shared as glbl_shared
 import sys
+from typing import Optional, Tuple
 
 
+"""
+PURPOSE: General-purpose UI utilities and system helpers.
+ACTION: Provides font management, SVG rendering, permission checks, and hardware-aware UI scaling logic.
+MECHANISM: 
+    1. Resource Accessors: Wraps OS-specific path logic and file permission checks.
+    2. Graphical Helpers: High-quality SVG-to-Pixmap conversion and dynamic FPS calculation.
+    3. Input Management: Implements the TouchpadFilter to debounce jittery scrolling/zooming gestures.
+"""
 FONT = None
 def get_font():
     assert FONT, FONT
@@ -41,7 +50,7 @@ def show_generic_exception(
         _(f"The following error happened:\n{ex}\n\n{extra}"),
     )
 
-def check_for_rw_perms(a_file):
+def check_for_rw_perms(a_file: str) -> bool:
     if not os.access(
         os.path.dirname(str(a_file)),
         os.W_OK,
@@ -70,7 +79,11 @@ def check_for_empty_directory(a_dir):
     else:
         return True
 
-def svg_to_pixmap(path: str, width=None, height=None):
+def svg_to_pixmap(
+    path: str,
+    width: Optional[int] = None,
+    height: Optional[int] = None,
+) -> QPixmap:
     """ Convert an SVG file to a scaled QPixmap without pixelation
         If width or height is omitted, the image will be scaled maintaining
         aspect ratio
@@ -251,9 +264,7 @@ def get_fps() -> int:
     if CPU_COUNT >= 8:
         if is_gt_hd:
             return 36
-        if screen.refreshRate() > 60:
-            return 60
-        return int(screen.refreshRate())
+        return min(60, int(screen.refreshRate()))
     elif CPU_COUNT >= 6:
         return 30
     elif CPU_COUNT >= 4:

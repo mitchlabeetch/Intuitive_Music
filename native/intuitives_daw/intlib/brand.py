@@ -245,6 +245,11 @@ LOGO_ASCII = """
 
 # Export version info function
 def get_version_info():
+    """
+    PURPOSE: Aggregates core branding and versioning information into a single dictionary for easy access by other modules.
+    ACTION: Constructs and returns a dictionary containing the application name, version string, codename, and tagline.
+    MECHANISM: Retrieves predefined constants (APP_NAME, VERSION_STRING, etc.) and packages them into a standard dictionary format.
+    """
     return {
         "name": APP_NAME,
         "version": VERSION_STRING,

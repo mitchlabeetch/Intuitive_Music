@@ -125,15 +125,12 @@ class ScaleLock:
         on_correction: Optional[Callable[[int, int], None]] = None,
     ):
         """
-        Initialize Scale Lock.
-        
-        Args:
-            root_note: Root note of the scale (0=C, 1=C#, ..., 11=B)
-            scale_type: Type of scale to lock to
-            enabled: Whether scale lock is active
-            correction_strength: 0.0-1.0, probability of correction
-            learning_mode: If True, gradually reduce correction strength
-            on_correction: Callback(original, corrected) when correction occurs
+        PURPOSE: Initializes the ScaleLock processor with specific musical and behavioral parameters.
+        ACTION: Sets the root note, scale type, and correction logic, then initializes internal counters and caches.
+        MECHANISM: 
+            1. Assigns initial state variables.
+            2. Calls _update_scale_cache() to generate valid note sets.
+            3. Sets up history and learning mode trackers.
         """
         self.root_note = root_note
         self.scale_type = scale_type
@@ -161,7 +158,11 @@ class ScaleLock:
         )
     
     def _update_scale_cache(self):
-        """Update the cached set of valid notes for the current scale."""
+        """
+        PURPOSE: Pre-calculates all valid MIDI notes for the current scale configuration.
+        ACTION: Populates the internal _scale_notes set with every valid semitone across all 11 MIDI octaves.
+        MECHANISM: Iterates through 11 octaves and applies scale intervals relative to the root note, filtering for the 0-127 range.
+        """
         intervals = SCALE_INTERVALS.get(self.scale_type, SCALE_INTERVALS[ScaleType.MAJOR])
         self._scale_notes = set()
         
@@ -173,24 +174,34 @@ class ScaleLock:
                     self._scale_notes.add(note)
     
     def set_scale(self, root_note: int, scale_type: ScaleType):
-        """Change the active scale."""
+        """
+        PURPOSE: Updates the active musical scale and refreshes the correction logic.
+        ACTION: Updates internal root and scale parameters and rebuilds the valid note cache.
+        MECHANISM: Sets root_note and scale_type, then invokes _update_scale_cache().
+        """
         self.root_note = root_note % 12
         self.scale_type = scale_type
         self._update_scale_cache()
         LOG.info(f"Scale changed to: {NOTE_NAMES[self.root_note]} {scale_type.value}")
     
     def is_in_scale(self, note: int) -> bool:
-        """Check if a note is in the current scale."""
+        """
+        PURPOSE: Determines if a given MIDI note belongs to the current active scale.
+        ACTION: Returns a boolean indicating membership.
+        MECHANISM: Checks if the note exists in the pre-calculated _scale_notes set (always True for Chromatic).
+        """
         if self.scale_type == ScaleType.CHROMATIC:
             return True
         return note in self._scale_notes
     
     def find_nearest_in_scale(self, note: int) -> int:
         """
-        Find the nearest note that is in the current scale.
-        
-        Uses a smart algorithm that considers the direction of the melody
-        and prefers the root, fifth, and third for more musical results.
+        PURPOSE: Identifies the musically closest valid note when an input falls outside the current scale.
+        ACTION: Returns a corrected MIDI note number.
+        MECHANISM: 
+            1. Checks for exact matches first.
+            2. For RANDOM mode, picks a random direction and searches linearly.
+            3. For standard modes, searches outwards in both directions simultaneously, with a slight preference for lower notes to maintain gravity.
         """
         if note in self._scale_notes:
             return note
@@ -227,14 +238,13 @@ class ScaleLock:
     
     def process_note(self, note: int, velocity: int = 100) -> Tuple[int, bool]:
         """
-        Process an incoming MIDI note through the scale lock.
-        
-        Args:
-            note: MIDI note number (0-127)
-            velocity: MIDI velocity (0-127)
-            
-        Returns:
-            Tuple of (corrected_note, was_corrected)
+        PURPOSE: The core MIDI event transformer that enforces scale locking.
+        ACTION: Processes an incoming note and returns a corrected version along with a status flag.
+        MECHANISM: 
+            1. Bypasses if disabled or scale is Chromatic.
+            2. Validates against the current scale.
+            3. If invalid, applies correction probability (strength) and finds the nearest valid note.
+            4. Updates statistics and invokes visual feedback callbacks.
         """
         self.total_notes += 1
         
@@ -291,7 +301,11 @@ class ScaleLock:
         return corrected, was_corrected
     
     def _update_learning_progress(self):
-        """Update learning mode progress based on correct note streaks."""
+        """
+        PURPOSE: Gradually reduces the AI "assistance" (correction strength) as the user plays more valid notes.
+        ACTION: Increments learning progress and decrements correction strength.
+        MECHANISM: Tracks 'correct streaks' and adjusts self.correction_strength every 10 notes, capping the reduction at 50% of original assistance.
+        """
         if not self.learning_mode:
             return
         
@@ -308,13 +322,21 @@ class ScaleLock:
                 )
     
     def get_scale_notes(self, octave: int = 4) -> List[int]:
-        """Get the notes in the current scale for a given octave."""
+        """
+        PURPOSE: Provides a list of valid MIDI note numbers for a specific octave in the current scale.
+        ACTION: Returns an integer list of notes.
+        MECHANISM: Calculates the starting pitch for the octave and applies intervals from SCALE_INTERVALS.
+        """
         intervals = SCALE_INTERVALS.get(self.scale_type, SCALE_INTERVALS[ScaleType.MAJOR])
         base_note = (octave * 12) + self.root_note
         return [base_note + i for i in intervals if 0 <= base_note + i <= 127]
     
     def get_statistics(self) -> dict:
-        """Get scale lock statistics."""
+        """
+        PURPOSE: Summarizes the efficacy and activity of the Scale Lock system.
+        ACTION: Returns a dictionary of formatted strings and raw counters.
+        MECHANISM: Calculates correction rates and retrieves strength/progress metrics for display in the UI.
+        """
         correction_rate = (
             self.corrected_notes / self.total_notes * 100
             if self.total_notes > 0 else 0
@@ -330,13 +352,13 @@ class ScaleLock:
     
     def suggest_scale(self, played_notes: List[int]) -> List[Tuple[ScaleType, int, float]]:
         """
-        Analyze played notes and suggest matching scales.
-        
-        Args:
-            played_notes: List of MIDI notes played
-            
-        Returns:
-            List of (scale_type, root_note, match_percentage) sorted by match
+        PURPOSE: Analyzes performance history to recommend the most suitable musical scale.
+        ACTION: Returns an ordered list of potential scales with match confidence scores.
+        MECHANISM: 
+            1. Converts input notes to pitch classes (0-11).
+            2. Iterates through all known scales and root positions.
+            3. Intersects played pitches with scale pitches to calculate a match percentage.
+            4. Filters results above a 70% threshold and sorts by confidence.
         """
         if not played_notes:
             return []
@@ -378,7 +400,11 @@ _scale_lock: Optional[ScaleLock] = None
 
 
 def get_scale_lock() -> ScaleLock:
-    """Get the global ScaleLock instance, creating if needed."""
+    """
+    PURPOSE: Safe accessor for the global ScaleLock singleton.
+    ACTION: Returns the active ScaleLock instance, creating it if it doesn't exist.
+    MECHANISM: Uses a lazy-instantiation pattern inside the global scope.
+    """
     global _scale_lock
     if _scale_lock is None:
         _scale_lock = ScaleLock()
@@ -386,16 +412,20 @@ def get_scale_lock() -> ScaleLock:
 
 
 def set_scale_lock(scale_lock: ScaleLock):
-    """Set the global ScaleLock instance."""
+    """
+    PURPOSE: Allows manual override/injection of a specific ScaleLock instance.
+    ACTION: Replaces the current global instance.
+    MECHANISM: Assigns the provided object to the global _scale_lock variable.
+    """
     global _scale_lock
     _scale_lock = scale_lock
 
 
 def process_midi_note(note: int, velocity: int = 100) -> Tuple[int, bool]:
     """
-    Process a MIDI note through the global scale lock.
-    
-    Convenience function for quick access.
+    PURPOSE: One-line interface for scale correction from external modules.
+    ACTION: Runs a MIDI note through the global processor.
+    MECHANISM: Calls process_note() on the instance returned by get_scale_lock().
     """
     return get_scale_lock().process_note(note, velocity)
 
@@ -418,7 +448,11 @@ SCALE_PRESETS = {
 
 
 def apply_preset(preset_name: str) -> bool:
-    """Apply a scale preset by name."""
+    """
+    PURPOSE: Quickly configures the DAW for a specific musical style.
+    ACTION: Applications a root note and scale type based on a descriptive name string.
+    MECHANISM: Looks up the name in SCALE_PRESETS and invokes set_scale() on the global instance if found.
+    """
     if preset_name in SCALE_PRESETS:
         root, scale = SCALE_PRESETS[preset_name]
         get_scale_lock().set_scale(root, scale)

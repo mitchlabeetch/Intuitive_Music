@@ -973,6 +973,16 @@ QWidget#plugin_window {
 
 
 class fm1_plugin_ui(AbstractPluginUI):
+    """
+    PURPOSE: A high-end, 6-operator FM synthesizer interface.
+    ACTION: Provides deep control over frequency modulation algorithms, 6 oscillators with unison, 6 ADSR envelopes, and a modular PolyFX matrix.
+    MECHANISM: 
+        1. Operator Architecture: 6 independent oscillators (OSC1-6) each with volume, pitch, tune, and pan, plus categorized FM amount knobs.
+        2. Modulation: Features 6 dedicated ADSR envelopes (one per oscillator) and a global LFO.
+        3. Custom Waveforms: Supports 'Additive' oscillator types that link to real-time additive synthesis controls.
+        4. PolyFX Matrix: A 4x4 modulation matrix (FM1_PFXMATRIX) that routes envelopes and LFOs to per-voice modular effects (Distortion, Filters, etc.).
+        5. Macros: Implements 2 FM Macro controls that can simultaneously drive multiple modulation depths across the matrix for rapid timbral shifting.
+    """
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(
             self,

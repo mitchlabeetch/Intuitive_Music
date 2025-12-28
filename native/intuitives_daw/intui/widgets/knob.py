@@ -18,10 +18,28 @@ DEFAULT_KNOB_SIZE = 48
 DEFAULT_LARGE_KNOB_SIZE = 64
 
 class PixmapKnobCache:
+    """
+    PURPOSE: Optimizes performance by caching scaled pixmaps of knob assets.
+    ACTION: Stores and retrieves QPixmap objects based on their file path and size.
+    MECHANISM: Uses a dictionary (self.cache) where the key is a tuple of (path, size).
+    """
     def __init__(self):
+        """
+        PURPOSE: Initializes the knob pixmap cache.
+        ACTION: Creates an empty cache dictionary.
+        MECHANISM: simple assignment.
+        """
         self.cache = {}
 
     def get_scaled_pixmap_knob(self, path, size):
+        """
+        PURPOSE: Retrieves a scaled pixmap for a knob from the cache or disk.
+        ACTION: Returns a QPixmap of the requested SVG at the specified size.
+        MECHANISM: 
+            1. Resolves 'default' placeholders to theme-defined paths.
+            2. Checks the cache dictionary for a hit.
+            3. On miss, calls svg_to_pixmap() to render the SVG and stores it in the cache.
+        """
         if not path:
             return None
         if path == 'default':
@@ -42,6 +60,13 @@ class PixmapKnobCache:
             return pixmap
 
 def knob_setup():
+    """
+    PURPOSE: Global initialization of theme-dependent knob assets.
+    ACTION: populates the default asset paths and instantiates the global pixmap cache.
+    MECHANISM: 
+        1. Joins theme.ASSETS_DIR with theme.SYSTEM_COLORS configuration.
+        2. Assigns the results to DEFAULT_THEME_KNOB and DEFAULT_THEME_KNOB_BG.
+    """
     global DEFAULT_THEME_KNOB, DEFAULT_THEME_KNOB_BG, KNOB_PIXMAP_CACHE
     DEFAULT_THEME_KNOB = os.path.join(
         theme.ASSETS_DIR,
@@ -60,6 +85,14 @@ class ArcType(Enum):
     BIDIRECTIONAL = 1
 
 class PixmapKnob(QDial):
+    """
+    PURPOSE: A skinnable, high-performance rotary control (knob) using SVG assets.
+    ACTION: Displays a foreground and optional background image with a custom indicator arc.
+    MECHANISM: 
+        1. Inherits from QDial for core range/value logic.
+        2. Loads SVG assets as scaled pixmaps.
+        3. Customizes paintEvent to handle rotation and arc drawing.
+    """
     def __init__(
         self,
         a_size,
@@ -71,36 +104,17 @@ class PixmapKnob(QDial):
         arc_type=ArcType.UP,
         arc_brush=None,
         arc_bg_brush=None,
-        arc_pen_kwargs={},
-        draw_line=False,
-        arc_space=0.0,
-    ):
+        arc_pen_kwargs: dict = {},
+        draw_line: bool = False,
+        arc_space: float = 0.0,
+    ) -> None:
         """
-        @a_size:    The size of the knobs bounding square
-        @a_min_val: THe minimum value of the knob
-        @a_max_val: THe maximum value of the knob
-        @fg_svg:
-            The full path to an SVG image to draw as the foreground image, will
-            be rotated with the knob value from -135 to +135 degrees from top
-            center.  It is expected that the knob initially points to -135
-            degrees from the top.
-        @bg_svg: A static image drawn behind @fg_svg, will not be rotated
-        @arc_width_pct:
-            The 0-100 percentage of @a_size that the arc drawn around the knob
-            should be.  0.0 to not draw an arc
-        @arc_type:  See ArcType for details
-        @arc_brush:
-            The brush to use for the arc pen.  Use a QColor or QGradient
-        @arc_bg_brush:
-            The brush to use for the arc background pen.  This is the static
-            arc drawn behind the main arc, always from -135 to +135 degrees
-            from the top
-        @arc_pen_kwargs:
-            Additional keyword arguments to pass to the QPen for the
-            foreground arc.
-        @draw_line:
-            True to draw a line from the center of the knob to the end of
-            the arc.
+        PURPOSE: Initializes the skinnable knob with graphical and range parameters.
+        ACTION: Sets the knob's size, range, colors, and loads asset pixmaps.
+        MECHANISM: 
+            1. Configures internal brushes (arc_brush, etc.) based on the system theme.
+            2. Calculates pixmap dimensions relative to the total size and arc width.
+            3. Uses KNOB_PIXMAP_CACHE to get appropriately sized foreground/background images.
         """
         self.arc_brush = arc_brush if arc_brush else QColor(
             theme.SYSTEM_COLORS.widgets.knob_arc_pen,
@@ -136,14 +150,29 @@ class PixmapKnob(QDial):
         self._button = QtCore.Qt.MouseButton.NoButton
 
     def wheelEvent(self, event):
+        """PURPOSE: Disables mouse wheel interaction for the knob to prevent accidental changes."""
         event.ignore()
 
     def keyPressEvent(self, a_event):
+        """
+        PURPOSE: Handles keyboard input, specifically allowing spacebar to control the transport.
+        ACTION: Passes key events to parent or triggers transport toggle.
+        MECHANISM: Calls QDial.keyPressEvent and emits spacebar signal to glbl_shared.TRANSPORT.
+        """
         QDial.keyPressEvent(self, a_event)
         if a_event.key() == QtCore.Qt.Key.Key_Space:
             glbl_shared.TRANSPORT.on_spacebar()
 
     def paintEvent(self, a_event):
+        """
+        PURPOSE: Renders the custom graphical representation of the knob.
+        ACTION: Draws background pixmap, indicators, foreground rotated pixmap, and arcs.
+        MECHANISM: 
+            1. Calculates fractional rotation (0-270 degrees).
+            2. Draws the background arc (unfilled) and foreground arc (filled) using QPainter.drawArc.
+            3. Translates and rotates the painter to draw the foreground pixmap in the center.
+            4. Optionally draws a pointer line for high-precision visual feedback.
+        """
         p = QPainter(self)
         p.setRenderHints(
             QPainter.RenderHint.Antialiasing
@@ -239,6 +268,11 @@ class PixmapKnob(QDial):
             p.drawPixmap(int(rx), int(ry), self.pixmap_fg)
 
     def mousePressEvent(self, a_event):
+        """
+        PURPOSE: Initiates interactive value changes.
+        ACTION: Stores original values and hides the cursor for "infinite" vertical drag logic.
+        MECHANISM: Captures mouse position, original value, and modifiers (e.g., Ctrl for fine adjustment).
+        """
         self._button = a_event.button()
         self.mouse_pos = QCursor.pos()
         if self._button == QtCore.Qt.MouseButton.RightButton:
@@ -254,6 +288,14 @@ class PixmapKnob(QDial):
         QApplication.setOverrideCursor(QtCore.Qt.CursorShape.BlankCursor)
 
     def mouseMoveEvent(self, a_event):
+        """
+        PURPOSE: Handles value updates during drag operations.
+        ACTION: Calculates a new value based on mouse displacement and updates the widget.
+        MECHANISM: 
+            1. Reads Y-axis movement for coarse/fine adjustment.
+            2. If 'fine_only' is active, uses X-axis delta for ultra-high precision.
+            3. Clamps and emits valueChanged signal.
+        """
         if self._button != QtCore.Qt.MouseButton.LeftButton:
             QDial.mouseMoveEvent(self, a_event)
             return
@@ -275,6 +317,11 @@ class PixmapKnob(QDial):
             self.valueChanged.emit(f_val)
 
     def mouseReleaseEvent(self, a_event):
+        """
+        PURPOSE: Completes a drag operation.
+        ACTION: Restores the application cursor and resets interaction state.
+        MECHANISM: Calls QApplication.restoreOverrideCursor() and emits sliderReleased.
+        """
         # Does not work on Wayland
         #QCursor.setPos(self.mouse_pos)
         self._button = QtCore.Qt.MouseButton.NoButton
@@ -288,16 +335,12 @@ class PixmapKnob(QDial):
 
 class NeobrutalistKnob(QDial):
     """
-    Neobrutalist-styled knob for Intuitives DAW.
-    
-    Features:
-    - Hard shadows (no soft gradients)
-    - Bold, saturated colors
-    - Chromasynesthesia-aware coloring
-    - Thick arc indicators
-    - Sharp, geometric styling
-    
-    "Does this sound cool?" - The only rule.
+    PURPOSE: A specialized rotary control following the Intuitives "Neobrutalist" aesthetic.
+    ACTION: Displays a high-contrast, geometric knob with bold colors and hard shadows.
+    MECHANISM: 
+        1. Implements custom vector drawing (no SVG dependencies).
+        2. Uses Chromasynesthesia-aware color mapping for parameter recognition.
+        3. Features center-aligned value display and hover effects.
     """
     
     # Chromasynesthesia colors (for parameter-specific coloring)
@@ -328,20 +371,11 @@ class NeobrutalistKnob(QDial):
         label: str = "",
         arc_width_pct: float = 15.0,
         shadow_offset: int = 3,
-    ):
+    ) -> None:
         """
-        Create a Neobrutalist knob.
-        
-        Args:
-            a_size: Size of the knob in pixels
-            a_min_val: Minimum value
-            a_max_val: Maximum value
-            color_index: -1 for default purple, 0-6 for chroma colors
-            show_value: Display the current value in the center
-            value_format: Format string for the value display
-            label: Label text below the knob
-            arc_width_pct: Arc width as percentage of knob size
-            shadow_offset: Hard shadow offset in pixels
+        PURPOSE: Initializes the Neobrutalist knob with styling and range parameters.
+        ACTION: Sets the color palette and physical dimensions.
+        MECHANISM: Assigns internal state variables and maps color_index to CHROMA_COLORS.
         """
         super().__init__()
         
@@ -382,16 +416,27 @@ class NeobrutalistKnob(QDial):
             glbl_shared.TRANSPORT.on_spacebar()
     
     def enterEvent(self, event):
+        """PURPOSE: Toggles hover state on mouse entry."""
         self._hover = True
         self.update()
         super().enterEvent(event)
     
     def leaveEvent(self, event):
+        """PURPOSE: Toggles hover state on mouse leave."""
         self._hover = False
         self.update()
         super().leaveEvent(event)
     
     def paintEvent(self, a_event):
+        """
+        PURPOSE: Renders the Neobrutalist visual style.
+        ACTION: Draws the hard shadow, background circle, progress arc, and indicator.
+        MECHANISM: 
+            1. Manual offset drawing for the "hard shadow" effect.
+            2. QPainter.drawArc for the primary value indicator.
+            3. Dynamic font scaling for the center value display.
+            4. Coordinate transformation for drawing the rotated pointer line.
+        """
         p = QPainter(self)
         p.setRenderHints(
             QPainter.RenderHint.Antialiasing

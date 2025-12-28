@@ -83,6 +83,14 @@ MULTIFX_ITEMS_EFFECT = [
 ]
 
 class MultiFXSingle:
+    """
+    PURPOSE: A polymorphic effect slot for the multi-FX rack.
+    ACTION: Provides a dynamic UI that adapts its knobs and labels based on the selected effect type (e.g., Filter, Distortion).
+    MECHANISM: 
+        1. Encapsulates three knob_control instances and one NestedComboboxControl.
+        2. In type_combobox_changed, it reconfigures the labels, visibility, and value conversion logic (KC_NONE, KC_PITCH, etc.) for each knob based on the selected effect.
+        3. Supports copy/paste/reset operations via a context menu, using the multifx_settings model for data transfer.
+    """
     def __init__(
         self,
         a_title,
@@ -95,8 +103,8 @@ class MultiFXSingle:
         knob_kwargs={},
         fixed_height=False,
         fixed_width=False,
-        multifx_items=MULTIFX_ITEMS_EFFECT,
-    ):
+        multifx_items: list = MULTIFX_ITEMS_EFFECT,
+    ) -> None:
         self.group_box = QGroupBox()
         self.group_box.contextMenuEvent = self.contextMenuEvent
         self.group_box.setObjectName("plugin_groupbox")
@@ -267,6 +275,15 @@ class MultiFXSingle:
         )
 
     def type_combobox_changed(self, a_val):
+        """
+        PURPOSE: Reconfigures the UI to match the selected effect algorithm.
+        ACTION: Updates knob visibility, labels, and unit conversion settings.
+        MECHANISM: 
+            1. Receives the index of the selected effect.
+            2. Branches into specific configuration blocks (if a_val == 1: #LP2 ...).
+            3. Sets val_conversion flags and min/max ranges for the three knobs to match the engine's requirements.
+            4. Triggers tooltip updates via mfx_set_tooltip.
+        """
         if a_val == 0: #Off
             self.knobs[0].control.hide()
             self.knobs[1].control.hide()

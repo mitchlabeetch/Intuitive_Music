@@ -9,7 +9,17 @@ from intui.util import get_font
 
 
 class eq_item(QGraphicsEllipseItem):
+    """
+    PURPOSE: An interactive handle representing a single EQ band in the visualizer.
+    ACTION: Allows users to drag the point to adjust frequency (X) and gain (Y) simultaneously.
+    MECHANISM: 
+        1. Inherits from QGraphicsEllipseItem and enables ItemIsMovable.
+        2. In mouseMoveEvent, calculates new frequency/gain based on pixel position.
+        3. Updates linked knob_control objects and triggers engine callbacks.
+        4. Manages a secondary QGraphicsPathItem (path_item) to show bandwidth/resonance visualization.
+    """
     def __init__(self, a_eq, a_num, a_val_callback):
+        """Initializes the EQ handle and links it to an eq_widget instance."""
         QGraphicsEllipseItem.__init__(
             self, 0, 0, _shared.EQ_POINT_DIAMETER, _shared.EQ_POINT_DIAMETER)
         self.val_callback = a_val_callback
@@ -99,7 +109,17 @@ class eq_item(QGraphicsEllipseItem):
 
 
 class eq_viewer(QGraphicsView):
+    """
+    PURPOSE: The graphical canvas for EQ visualization and interaction.
+    ACTION: Renders the background grid, frequency scale, spectrum analyzer, and interactive EQ points.
+    MECHANISM: 
+        1. Wraps a QGraphicsScene with custom scaling logic in resizeEvent.
+        2. Manages a background 'spectrum' item for real-time FFT visualization.
+        3. Draws decibel and frequency grid lines and labels.
+        4. Instantiates eq_item handles for each active EQ band.
+    """
     def __init__(self, a_val_callback):
+        """Sets up the graphics view, scene, and rendering hints."""
         QGraphicsView.__init__(self)
         self.val_callback = a_val_callback
         self.eq_points = []
@@ -250,6 +270,11 @@ class eq_viewer(QGraphicsView):
 
 
 class eq_widget:
+    """
+    PURPOSE: A logical grouping of knobs for one EQ band.
+    ACTION: Provides Attack/Freq, Resonance/BW, and Gain controls.
+    MECHANISM: Encapsulates three knob_control instances and adds them to a grid.
+    """
     def __init__(
         self,
         a_number,
@@ -264,6 +289,7 @@ class eq_widget:
         a_size=48,
         knob_kwargs={},
     ):
+        """Initializes the three knobs for a single EQ band."""
         self.groupbox = QGroupBox("EQ{}".format(a_number))
         self.groupbox.setObjectName("plugin_groupbox")
         self.layout = QGridLayout(self.groupbox)
@@ -384,6 +410,14 @@ EQ6_FORMANTS = {
 
 
 class eq6_widget:
+    """
+    PURPOSE: A full 6-band Parametric EQ interface.
+    ACTION: Combines iterative knob controls with a collective graphical viewer.
+    MECHANISM: 
+        1. Instantiates 6 eq_widget objects.
+        2. Integrates an eq_viewer for master visualization.
+        3. Implements advanced features like Formant presets (vowel sounds) and clipboard operations.
+    """
     def __init__(
         self,
         a_first_port,
@@ -395,6 +429,7 @@ class eq6_widget:
         a_vlayout=True,
         knob_kwargs={},
     ):
+        """Initializes the 6-band EQ interface, viewer, and menu systems."""
         self.rel_callback = a_rel_callback
         self.val_callback = a_val_callback
         self.widget = QWidget()

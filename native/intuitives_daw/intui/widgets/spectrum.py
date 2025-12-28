@@ -5,13 +5,32 @@ from intui.sgqt import *
 
 
 class spectrum(QGraphicsPathItem):
+    """
+    PURPOSE: Visualizes real-time frequency distribution (spectrum analysis).
+    ACTION: Draws a continuous vector path representing amplitude across the frequency range.
+    MECHANISM: 
+        1. Inherits from QGraphicsPathItem for efficient scene-based rendering.
+        2. Receives raw FFT data via string messages.
+        3. Maps linear frequency data to logarithmic pitch-based coordinates for musical relevance.
+    """
     def __init__(self, a_height, a_width):
+        """Initializes the spectrum item with fixed dimensions and white pen."""
         self.spectrum_height = float(a_height)
         self.spectrum_width = float(a_width)
         QGraphicsPathItem.__init__(self)
         self.setPen(QtCore.Qt.GlobalColor.white)
 
     def set_spectrum(self, a_message):
+        """
+        PURPOSE: Updates the visual spectrum path from incoming audio data.
+        ACTION: Constructs a new QPainterPath by iterating through FFT bins.
+        MECHANISM: 
+            1. Parses the pipe-delimited message into amplitude values.
+            2. Calculates X positions based on EQ_LOW_PITCH to EQ_HIGH_PITCH range.
+            3. Converts linear amplitude to dB and applies frequency-dependent weighting (tilt).
+            4. Clamps values and generates a smooth path using lineTo operations.
+            5. Updates the graphics item with the new path.
+        """
         self.painter_path = QPainterPath(QtCore.QPointF(0.0, 20.0))
         self.values = a_message.split("|")
         self.painter_path.moveTo(0.0, self.spectrum_height)

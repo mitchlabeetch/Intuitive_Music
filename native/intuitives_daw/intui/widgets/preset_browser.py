@@ -3,7 +3,14 @@ from intui.sgqt import *
 
 
 class preset_browser_widget:
-    """ To eventually replace the legacy preset system """
+    """
+    PURPOSE: A modern, tag-based navigation system for plugin presets (Beta).
+    ACTION: Provides a menu for administrative tasks (Reload) and a list of searchable tags to filter preset results.
+    MECHANISM: 
+        1. Encapsulates a QListWidget for tag display and a QPushButton with a QMenu for actions.
+        2. Intended to interface with the reconfigure_callback to swap plugin states without global DAW reloads.
+        3. Designed to eventually replace the file-based bank/program selector with a metadata-driven database view.
+    """
     def __init__(
         self,
         a_plugin_name,

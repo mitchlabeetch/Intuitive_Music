@@ -16,6 +16,15 @@ def global_set_audio_loop_clipboard(a_ls, a_le):
 
 
 class sample_viewer_widget(AudioItemViewerWidget):
+    """
+    PURPOSE: A specialized waveform editor for samplers and loop-based instruments.
+    ACTION: Extends the base audio viewer with dedicated Loop Start and Loop End markers.
+    MECHANISM: 
+        1. Inherits core rendering and marker logic from AudioItemViewerWidget.
+        2. Adds two additional audio_marker_widget instances in mode_loop for defining sustain loops.
+        3. Supports independent copy/paste state for loop markers via a global clipboard.
+        4. Links loop boundaries so they can be dragged simultaneously or restricted by one another.
+    """
     def __init__(
         self,
         a_start_callback,

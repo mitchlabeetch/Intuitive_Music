@@ -11,6 +11,15 @@ PLUGIN_SETTINGS_CLIPBOARD = {}
 PLUGIN_CONFIGURE_CLIPBOARD = None
 
 class preset_manager_widget:
+    """
+    PURPOSE: The global state manager for instrument and effect presets.
+    ACTION: Provides a unified UI for browsing banks, selecting programs, and managing persistent settings.
+    MECHANISM: 
+        1. Manages a directory hierarchy for preset banks (one .sgp file per bank).
+        2. Tracks a 'last-bank' text file per plugin to remember the user's focus.
+        3. Serializes control states into pipe-delimited strings with colon-separated key-value pairs (e.g., 'Port:Value' or 'c:ConfigKey:ConfigValue').
+        4. Provides a global clipboard for cloning settings between plugin instances.
+    """
     def __init__(
         self,
         a_plugin_name,
@@ -370,6 +379,14 @@ class preset_manager_widget:
             self.reconfigure_callback({})
 
     def load_presets(self):
+        """
+        PURPOSE: Populates the UI with presets from the currently selected bank file.
+        ACTION: Reads the .sgp file and fills the program combobox with valid entry names.
+        MECHANISM: 
+            1. Reads the raw text from self.preset_path.
+            2. Validates that the bank's plugin header matches self.plugin_name.
+            3. Parses each line into the presets_delimited dictionary for fast lookup during program_changed.
+        """
         if os.path.isfile(self.preset_path):
             LOG.info("loading presets from file {}".format(self.preset_path))
             f_text = util.read_file_text(self.preset_path)
@@ -512,6 +529,15 @@ class preset_manager_widget:
         self.load_presets()
 
     def program_changed(self, a_val=None):
+        """
+        PURPOSE: Recalls a specific preset and applies it to the plugin's controls.
+        ACTION: Updates all registered knobs and triggers reconfiguration for non-knob parameters.
+        MECHANISM: 
+            1. Fetches the delimited list of values from self.presets_delimited.
+            2. Categorizes values as either standard CC ports or configuration ('c:') overrides.
+            3. Iterates through self.controls and updates their values; missing controls are reset to defaults.
+            4. Invokes reconfigure_callback if the preset contains custom engine configuration data.
+        """
         if not a_val or self.suppress_change:
             return
         f_key = str(self.program_combobox.currentText())

@@ -7,6 +7,14 @@ from intlib.lib.translate import _
 
 
 class OrderedTable(QGraphicsView):
+    """
+    PURPOSE: A specialized list view for manual drag-and-drop item reordering.
+    ACTION: Renders a vertical stack of interactive items that swap places when dragged.
+    MECHANISM: 
+        1. Manages a QGraphicsScene containing OrderedTableItem handles.
+        2. reorder_items(): Logic that calculates the new index based on the dragged item's Y-position and repositions the entire list via list.insert/pop.
+        3. Maintains an internal item_list to track the new sequence independently of the original data.
+    """
     def __init__(
         self,
         a_item_labels,
@@ -65,6 +73,13 @@ class OrderedTable(QGraphicsView):
 
 
 class OrderedTableItem(QGraphicsRectItem):
+    """
+    PURPOSE: A draggable row handle within an OrderedTable.
+    ACTION: Represents a single piece of data (text label) that the user can pick up and move.
+    MECHANISM: 
+        1. Captures mouseMoveEvent to trigger the parent table's reordering logic in real-time.
+        2. Stores both current index and orig_index to allow mapping back to the source data on confirmation.
+    """
     def __init__(
         self,
         a_text,
@@ -101,6 +116,13 @@ def ordered_table_dialog(
     a_item_width,
     a_parent=None,
 ):
+    """
+    PURPOSE: A modal dialog for sorting a list of objects.
+    ACTION: Displays the OrderedTable and returns the reordered list of objects once confirmed.
+    MECHANISM: 
+        1. Populates the table with a_labels representing the items in a_list.
+        2. ok_handler: Reconstructs the final list by looking up the orig_index of each graphical item in its new order.
+    """
     def ok_handler():
         f_dialog.retval = [
             a_list[x.orig_index]

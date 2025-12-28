@@ -77,6 +77,16 @@ MULTIFX10_ITEMS = [
 ]
 
 class MultiFX10:
+    """
+    PURPOSE: A high-density polymorphic effect slot for complex processing chains.
+    ACTION: Provides 10 parameter knobs, a routing selector, and a categorized effect type menu (Filters, Distortion, Delay, Dynamics).
+    MECHANISM: 
+        1. Encapsulates 10 knob_control instances and a NestedComboboxControl for algorithm selection.
+        2. In type_combobox_changed: Dynamically reconfigures the labels, value conversion logic (KC_PITCH, KC_TENTH, etc.), and visibility of all 10 knobs based on the chosen algorithm (e.g., Compressor, Formant Filter).
+        3. Features 'Dry', 'Wet', and 'Pan' global controls for every algorithm to ensure consistent parallel processing capabilities.
+        4. Supports complex routing via the route_combobox, allowing serial/parallel patching to subsequent FX slots or the master Output.
+        5. Implements a global clipboard system (MULTIFX10_CLIPBOARD) for cloning complex FX states between instances.
+    """
     def __init__(
         self,
         mfx_index,

@@ -71,8 +71,13 @@ class Gradient:
         )
 
 class UIScaler:
-    """ UI scaling helper class, available to sgui code and Jinja templates
-        Mostly useful for HiDpi scaling across many screen sizes
+    """
+    PURPOSE: Facilitates resolution-independent UI scaling for high-DPI displays.
+    ACTION: Calculates pixel values from physical measurements (mm) or percentages based on screen resolution.
+    MECHANISM: 
+        1. Stores physical screen dimensions and native pixel resolution.
+        2. Provides conversion methods (mm_to_px, pct_to_px) available to Jinja templates.
+        3. Applies clipping logic to ensure elements stay within usable size bounds.
     """
     def __init__(
         self,
@@ -81,6 +86,11 @@ class UIScaler:
         x_res: float,
         y_res: float,
     ):
+        """
+        PURPOSE: Initializes the UIScaler with display metrics.
+        ACTION: Sets the base physical and pixel coordinates.
+        MECHANISM: Stores the provided size and resolution floats.
+        """
         self.x_size = x_size
         self.y_size = y_size
         self.x_res = x_res
@@ -172,6 +182,11 @@ class UIScaler:
         return int(px)
 
 class DawColors:
+    """
+    PURPOSE: Data model for central DAW sequencer and mixer colors.
+    ACTION: Stores hex color strings for tracks, items, grids, and cursors.
+    MECHANISM: Uses pymarshal-style type assertions to ensure all inputs are valid hex strings (verified by HEX_MATCHER).
+    """
     def __init__(
         self,
         seq_antialiasing=False,
@@ -398,6 +413,11 @@ class DawColors:
         )
 
 class WidgetColors:
+    """
+    PURPOSE: Data model for specialized plugin and widget visual settings.
+    ACTION: Holds configuration for knob assets, peak meter gradients, and routing graph palettes.
+    MECHANISM: Encapsulates Gradient and string attributes, providing defaults for use when theme files are incomplete.
+    """
     def __init__(
         self,
         audio_item_viewer_color="#8212f2",
@@ -504,6 +524,11 @@ class WidgetColors:
 
 
 class SystemColors:
+    """
+    PURPOSE: Root container for the entire DAW visual palette.
+    ACTION: Aggregates DawColors and WidgetColors into a single, marshaled object.
+    MECHANISM: Maps the 'daw' and 'widgets' YAML keys to their respective Python models.
+    """
     def __init__(
         self,
         daw,
@@ -549,6 +574,14 @@ class SystemFile:
         self.overrides = type_assert(overrides, SystemOverrides)
 
 class Theme:
+    """
+    PURPOSE: High-level management of a DAW "Skin" or visual identity.
+    ACTION: Orchestrates the loading, parsing, and rendering of .inttheme files.
+    MECHANISM: 
+        1. Reads a YAML manifest containing paths to templates and variable definitions.
+        2. Renders Jinja2 templates for both QSS (Qt Stylesheet) and YAML (System Colors).
+        3. Supports live overrides for specific parameters via the 'variables' and 'system' mappings.
+    """
     def __init__(
         self,
         template,
@@ -586,6 +619,15 @@ class Theme:
             ),
         )
 
+    @property
+    def vars(self) -> dict:
+        """
+        PURPOSE: Shortcut to the active theme variables.
+        ACTION: Returns the internal dictionary of resolved variables.
+        MECHANISM: simple attribute access.
+        """
+        return self.variables.overrides
+
     def render(
         self,
         path,
@@ -593,6 +635,16 @@ class Theme:
         font_size,
         font_unit,
     ):
+        """
+        PURPOSE: Generates the final QSS stylesheet and system color definitions from Jinja templates and YAML variables.
+        ACTION: Processes multiple layers of styling (Palette -> Variables -> System Colors -> Template) and writes the result to disk.
+        MECHANISM: 
+            1. Loads the base palette and resolves the variables.yaml template.
+            2. Merges overrides into the variables dictionary.
+            3. Renders system.yaml for low-level UI color logic.
+            4. Renders the main .qss template, passing in the ASSETS_DIR, FONT_SIZE, and SYSTEM_COLORS objects.
+            5. Saves the final products to a 'rendered_theme' directory in the user's home.
+        """
         rendered_dir = os.path.join(HOME, 'rendered_theme')
         if not os.path.isdir(rendered_dir):
             os.makedirs(rendered_dir)
@@ -654,6 +706,14 @@ class Theme:
 
 
 def setup_globals():
+    """
+    PURPOSE: Detects and initializes the active theme file and its asset paths.
+    ACTION: Locates the .inttheme (or .sgtheme) file on disk and configures global path variables.
+    MECHANISM: 
+        1. Searches standard installation and development directories for theme files.
+        2. Substitutes symbolic path markers (like {{ SYSTEM_THEME_DIR }}) for real filesystem paths.
+        3. Configures ASSETS_DIR for use in QSS url() calls.
+    """
     global \
         ASSETS_DIR, \
         ICON_PATH, \
@@ -760,6 +820,11 @@ def open_theme(
     font_size: int,
     font_unit: str,
 ):
+    """
+    PURPOSE: Reads and instantiates a Theme object from a YAML definition.
+    ACTION: Unmarshals the YAML into a Python class and triggers the rendering process.
+    MECHANISM: Uses read_file_yaml() to parse the file and unmarshal_json() to map it to the Theme class.
+    """
     y = read_file_yaml(theme_file)
     theme = unmarshal_json(y, Theme)
     return theme.render(
@@ -774,14 +839,16 @@ def load_theme(
     font_size: int,
     font_unit: str,
 ):
-    """ Load the QSS theme and system colors.  Do this before creating any
-        widgets.
+    """
+    PURPOSE: Bootstraps the entire styling engine for the DAW.
+    ACTION: Initializes global theme settings and populates the QSS and SYSTEM_COLORS objects.
+    MECHANISM: Should be called early in the application lifecycle before widget instantiation. Invokes setup_globals() and open_theme().
     """
     global \
         QSS, \
         SYSTEM_COLORS, \
         VARIABLES
-
+    
     setup_globals()
     QSS, SYSTEM_COLORS, VARIABLES = open_theme(
         THEME_FILE,

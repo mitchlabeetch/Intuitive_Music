@@ -1,3 +1,11 @@
+"""
+PURPOSE: The primary package entry point for the Intuitives Component Library.
+ACTION: Aggregates and exports all specialized UI widgets, from low-level controls (Knobs, Buttons) to high-level DSP modules (ADSR, EQ, Generators).
+MECHANISM: 
+    1. Performs star-imports and explicit imports of all submodules to expose a flat API under intui.widgets.
+    2. Categorizes exports into standard DAW widgets and 'Signature' components (Animations, Generative tools, Happy Accidents).
+    3. Serves as the central registry for the DAW's polymorphic UI framework.
+"""
 from . import _shared
 from ._shared import *
 from .abstract_plugin_ui import AbstractPluginUI

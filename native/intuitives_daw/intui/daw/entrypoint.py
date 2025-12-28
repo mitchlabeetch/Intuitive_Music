@@ -72,6 +72,16 @@ class MainWindow(QTabWidget):
         except TransportWidget
     """
     def __init__(self):
+        """
+        PURPOSE: Initializes the primary DAW interface, including the sequencer, plugin rack, item editor, mixer, and hardware settings.
+        ACTION: Sets up the main tabbed interface, registers global shortcuts, instantiates core sub-widgets, and clears painter path caches.
+        MECHANISM: 
+            1. Calls shared.setup() to initialize global state.
+            2. Configures default directories and corner widgets (engine monitor).
+            3. Registers QActions for global shortcuts (Play, Stop, Record, Tools).
+            4. Populates the QTabWidget with specific module views (Sequencer, Mixer, etc.) using shared references.
+            5. Connects tab change signals to synchronization logic.
+        """
         super().__init__()
         shared.setup()
         self.first_offline_render = True
@@ -230,7 +240,11 @@ class MainWindow(QTabWidget):
         shared.DAW = self
 
     def open_project(self):
-        """ Open an existing project in the widgets """
+        """
+        PURPOSE: Triggers the internal UI update sequence when an existing project is opened.
+        ACTION: Refreshes the recent project directory, loads project notes, and updates playlist/item list views.
+        MECHANISM: Updates self.last_offline_dir and calls .load() or .open() on the notes tab and shared list widgets.
+        """
         # TODO: SG DEPRECATED: Use new files/folders
         MAIN_WINDOW.last_offline_dir = constants.PROJECT.user_folder
         MAIN_WINDOW.notes_tab.load()
@@ -238,7 +252,11 @@ class MainWindow(QTabWidget):
         shared.ITEMLIST.open()
 
     def new_project(self):
-        """ Open a new project in the widgets """
+        """
+        PURPOSE: Triggers the internal UI update sequence when a new project is created.
+        ACTION: Resets the recent directory and clears/initializes project-specific widgets.
+        MECHANISM: Resets last_offline_dir and invokes load/open sequences for notes and file browsing widgets.
+        """
         # TODO: SG DEPRECATED: Use new files/folders
         self.last_offline_dir = constants.PROJECT.user_folder
         self.notes_tab.load()
@@ -246,6 +264,11 @@ class MainWindow(QTabWidget):
         shared.ITEMLIST.open()
 
     def vscrollbar_released(self, a_val=None):
+        """
+        PURPOSE: Snap the sequencer's vertical scrollbar to track height increments after user interaction.
+        ACTION: Adjusts the scrollbar position to align perfectly with track boundaries.
+        MECHANISM: Calculates the current value's proximity to multiples of shared.SEQUENCE_EDITOR_TRACK_HEIGHT and calls self.vscrollbar.setValue().
+        """
         # Avoid a bug where the bottom track is truncated
         if self.vscrollbar.value() == self.vscrollbar.maximum():
             return
@@ -256,7 +279,21 @@ class MainWindow(QTabWidget):
         self.vscrollbar.setValue(int(f_val))
 
     def on_offline_render(self):
+        """
+        PURPOSE: Initiates the process of rendering the project (or a specific region) to an audio file.
+        ACTION: Opens a render dialog, allows configuration (sample rate, stems, normalization), and triggers the background rendering command.
+        MECHANISM: 
+            1. Validates region marker positions.
+            2. Saves current plugin state.
+            3. Displays a QDialog for user input.
+            4. Executes a shell command using the configured parameters.
+        """
         def copy_cmd_args():
+            """
+            PURPOSE: Development utility to copy the raw render command line to the clipboard.
+            ACTION: Formats render arguments into a string and sets the system clipboard text.
+            MECHANISM: Joins a list of command arguments and calls QApplication.clipboard().setText().
+            """
             f_run_cmd = [
                 str(x) for x in (
                     "daw",
@@ -276,6 +313,15 @@ class MainWindow(QTabWidget):
             f_clipboard.setText(" ".join(f_run_cmd))
 
         def ok_handler():
+            """
+            PURPOSE: Processes the render dialog confirmation and starts the export.
+            ACTION: Collects settings (path, stems, sample rate), hide/shows UI elements, and invokes the rendering background task.
+            MECHANISM: 
+                1. Validates the output name.
+                2. Gathers device settings (buffer size, threads).
+                3. Constructs the command arguments (util.BIN_PATH, "daw", etc.).
+                4. Triggers global_shared.MAIN_WINDOW.show_offline_rendering_wait_window_v2.
+            """
             if str(f_name.text()) == "":
                 QMessageBox.warning(
                     f_window,
@@ -324,6 +370,11 @@ class MainWindow(QTabWidget):
             ]
             LOG.info(f"Rendering {f_cmd} to '{f_out_file}'")
             def _post_func():
+                """
+                PURPOSE: Performs post-rendering normalization on the resulting file.
+                ACTION: Executes the normalization algorithm on the rendered audio file.
+                MECHANISM: Calls normalize_in_place() with the specified dB value.
+                """
                 LOG.info(f'Normalizing {f_out_file}')
                 normalize_in_place(f_out_file, normalize_db.value())
                 LOG.info(f'Finished normalizing {f_out_file}')
@@ -356,9 +407,15 @@ class MainWindow(QTabWidget):
                     )
 
         def cancel_handler():
+            """Closes the render dialog without any action."""
             f_window.close()
 
         def stem_check_changed(a_val=None):
+            """
+            PURPOSE: Updates the UI state when the Stem Render option is toggled.
+            ACTION: Toggles visibility of normalization controls and resets the output name field.
+            MECHANISM: Uses .hide() and .show() methods on normalization widgets based on the boolean state.
+            """
             f_name.setText("")
             if a_val:
                 normalize_checkbox.hide()
@@ -368,6 +425,14 @@ class MainWindow(QTabWidget):
                 normalize_db.show()
 
         def file_name_select():
+            """
+            PURPOSE: Opens a file selection dialog for the render output.
+            ACTION: Prompts the user to choose a directory (for stems) or a filename (for single render).
+            MECHANISM: 
+                1. Checks stem rendering state.
+                2. Calls QFileDialog.getExistingDirectory or QFileDialog.getSaveFileName accordingly.
+                3. Updates the f_name text field and persistence directory.
+            """
             if not os.path.isdir(self.last_offline_dir):
                 self.last_offline_dir = HOME
             if f_stem_render_checkbox.isChecked():
@@ -554,6 +619,11 @@ class MainWindow(QTabWidget):
         f_window.exec()
 
     def on_undo(self):
+        """
+        PURPOSE: Reverts the last user action in the project.
+        ACTION: Calls the undo library and refreshes the UI.
+        MECHANISM: Invokes undo_lib.undo() and triggers global_ui_refresh_callback() if successful.
+        """
         if glbl_shared.IS_PLAYING or not self.check_tab_for_undo():
             return
         glbl_shared.APP.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
@@ -569,6 +639,11 @@ class MainWindow(QTabWidget):
             )
 
     def on_redo(self):
+        """
+        PURPOSE: Reapplies a previously undone action.
+        ACTION: Calls the redo library and refreshes the UI.
+        MECHANISM: Invokes undo_lib.redo() and triggers global_ui_refresh_callback() if successful.
+        """
         if glbl_shared.IS_PLAYING or not self.check_tab_for_undo():
             return
         glbl_shared.APP.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
@@ -584,6 +659,11 @@ class MainWindow(QTabWidget):
             )
 
     def check_tab_for_undo(self):
+        """
+        PURPOSE: Determines if the current active tab supports undo/redo operations.
+        ACTION: Returns True if the current tab is the Item Editor, Routing, or Sequencer.
+        MECHANISM: Checks self.currentIndex() against predefined tab constants.
+        """
         index = self.currentIndex()
         if index in (
             shared.TAB_ITEM_EDITOR,
@@ -600,6 +680,15 @@ class MainWindow(QTabWidget):
             return False
 
     def tab_changed(self):
+        """
+        PURPOSE: Orchestrates UI synchronization when the user switches between different DAW views.
+        ACTION: Updates global contexts, refreshes specific tab data, and manages solo loop state.
+        MECHANISM: 
+            1. Clears solo loops.
+            2. Notifies the transport of the tab change.
+            3. Updates undo context.
+            4. Triggers tab-specific refresh logic (e.g., drawing the routing graph or opening the mixer).
+        """
         try:
             f_index = self.currentIndex()
 
@@ -633,11 +722,23 @@ class MainWindow(QTabWidget):
 
 
     def midi_scrollContentsBy(self, x, y):
+        """
+        PURPOSE: Synchronizes the vertical scroll position of the sequencer header with the track content.
+        ACTION: Scrolls the main area and then updates the header's Y position.
+        MECHANISM: Calls super().scrollContentsBy() and then shared.SEQUENCER.set_header_y_pos().
+        """
         QScrollArea.scrollContentsBy(self.midi_scroll_area, x, y)
         f_y = self.midi_scroll_area.verticalScrollBar().value()
         shared.SEQUENCER.set_header_y_pos(f_y)
 
     def configure_callback(self, arr):
+        """
+        PURPOSE: Processes real-time status updates from the audio engine to update the GUI.
+        ACTION: Synchronizes playback position, peak meters, and plugin parameter values.
+        MECHANISM: 
+            1. Parses the semicolon-delimited input string into commands (pc, cur, peak, cc, etc.).
+            2. Distributes updates to relevant widgets (Mixer, Item Editor, Plugin Rack).
+        """
         f_pc_dict = {}
         f_ui_dict = {}
         f_cc_dict = {}
@@ -707,6 +808,11 @@ class MainWindow(QTabWidget):
                     plugin.set_cc_val(f_cc, f_val)
 
     def prepare_to_quit(self):
+        """
+        PURPOSE: Cleans up widget states and saves necessary data before the application exits.
+        ACTION: Calls prepare_to_quit() on all major sub-widgets.
+        MECHANISM: Iterates through a tuple of widgets (AUDIO_SEQ, CC_EDITOR, etc.) and invokes their cleanup methods.
+        """
         try:
             for f_widget in (
                 shared.AUDIO_SEQ,
@@ -722,6 +828,14 @@ class MainWindow(QTabWidget):
             LOG.exception(ex)
 
 def init():
+    """
+    PURPOSE: Bootstraps the entire DAW GUI infrastructure.
+    ACTION: Instantiates all core singleton widgets and establishes the main window.
+    MECHANISM: 
+        1. Initializes shared sequencer, editors, panels, and routing widgets.
+        2. Configures default startup states (snap index, scroll positions).
+        3. Creates the MainWindow instance which ties everything together.
+    """
     global MAIN_WINDOW, TRANSPORT
     shared.ATM_SEQUENCE = DawAtmRegion()
     shared.SEQUENCER = ItemSequencer()

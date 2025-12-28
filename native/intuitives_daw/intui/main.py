@@ -108,6 +108,17 @@ def engine_lib_callback(a_path, a_msg):
 
 
 class SgMainWindow(QWidget):
+    """
+    PURPOSE: The primary application container and orchestration engine for the Intuitives DAW.
+    ACTION: Manages the lifecycle of project data, initializes high-level modules (DAW, Wave Editor), and routes global events (hotkeys, transport, IPC).
+    MECHANISM: 
+        1. Setup & Stacking: Uses a QStackedWidget (main_stack) to toggle between the sequencer-based DAW and the sample-based Wave Editor.
+        2. IPC Bridge: Initializes SocketIPCTransport and specific IPC handlers for the DAW and Wave modules to communicate with the C++ backend.
+        3. Module Initialization: Calls daw.init() and wave_edit.init() on startup, injecting hardware settings callbacks into each.
+        4. Global UI: Implements the central menu bar (File, Appearance, Tools, Help) and the HINT_BOX context-sensitive help system.
+        5. Engine Monitoring: Spawns a subprocess_monitor QTimer to track backend CPU/RAM usage and handle engine crash exit codes.
+        6. Host Management: set_host() synchronizes the current transport, IPC target, and visual stack between the two host modes.
+    """
     MIDI_NOTES = {
         "q": 0,
         "w": 1,

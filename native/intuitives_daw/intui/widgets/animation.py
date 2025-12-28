@@ -11,8 +11,9 @@ from intlib.log import LOG
 
 class AnimatedValue:
     """
-    Smooth value interpolation with easing.
-    Used for animating UI properties like opacity, position, size.
+    PURPOSE: Provides smooth interpolation and physics-based movement for numeric UI properties.
+    ACTION: Calculates the 'current' value step-by-step to reach a 'target' using various easing algorithms.
+    MECHANISM: Uses a delta-time based update loop with support for Linear, Smoothstep, Exp-Out, and Spring simulations.
     """
     
     # Easing functions
@@ -30,13 +31,17 @@ class AnimatedValue:
         self.velocity = 0.0  # For spring physics
         
     def set_target(self, value):
-        """Set the target value to animate towards"""
+        """PURPOSE: Updates the destination value for the animation."""
         self.target = value
         
     def update(self) -> bool:
         """
-        Update the current value towards target.
-        Returns True if still animating, False if complete.
+        PURPOSE: Advances the animation state by one frame.
+        ACTION: Updates self.current based on the selected easing function.
+        MECHANISM: 
+            1. Calculates distance to target.
+            2. Applies chosen algorithm (e.g., Spring physics adds force to velocity).
+            3. Returns True if movement occurred, False if settled.
         """
         if abs(self.current - self.target) < 0.001:
             self.current = self.target
@@ -84,8 +89,12 @@ class AnimatedValue:
 
 class AnimatedWidget(QWidget):
     """
-    Base class for widgets with built-in animation support.
-    Provides fade, slide, and scale animations.
+    PURPOSE: A base class for UI components requiring visual transitions (fade/slide/scale).
+    ACTION: Manages a collection of AnimatedValue objects and synchronization with a QTimer.
+    MECHANISM: 
+        1. Encapsulates opacity, scale, and positional AnimatedValue instances.
+        2. Applies a QGraphicsOpacityEffect for optimized transparency changes.
+        3. Runs a shared QTimer at ~60fps to refresh the painter when active.
     """
     
     def __init__(self, parent=None):
@@ -162,8 +171,11 @@ class AnimatedWidget(QWidget):
 
 class GlowButton(QPushButton):
     """
-    Modern button with animated glow effect on hover/press.
-    Used for primary actions.
+    PURPOSE: A primary action button with advanced visual feedback.
+    ACTION: Displays a glowing aura on hover and a physical compression effect on click.
+    MECHANISM: 
+        1. Uses AnimatedValue to track _glow_opacity and _press_scale.
+        2. Re-implements paintEvent to manually render the glow background and transform the button surface.
     """
     
     def __init__(self, text="", parent=None, accent_color="#7c3aed"):
@@ -251,8 +263,9 @@ class GlowButton(QPushButton):
 
 class HoverRevealWidget(QWidget):
     """
-    Widget that reveals additional content/controls on hover.
-    Used for non-essential UI that should be discoverable.
+    PURPOSE: Hides secondary UI elements until the user interacts with the widget.
+    ACTION: Smoothly fades in a 'hover_content' child widget when the mouse enters the bounding box.
+    MECHANISM: Uses a QStackedLayout (StackAll mode) and an AnimatedValue to control visibility via opacity.
     """
     
     def __init__(self, main_content, hover_content, parent=None):
@@ -294,8 +307,9 @@ class HoverRevealWidget(QWidget):
 
 class PulseIndicator(QWidget):
     """
-    Animated pulsing indicator for drawing attention.
-    Used for new features, suggestions, and notifications.
+    PURPOSE: A high-visibility visual cue for notifications or new features.
+    ACTION: Renders a pulsing geometric circle with a fading ring.
+    MECHANISM: Uses a sine-wave based phase tracker (_pulse_phase) to oscillate ring size and alpha in paintEvent.
     """
     
     def __init__(self, color="#7c3aed", size=12, parent=None):
@@ -358,8 +372,9 @@ class PulseIndicator(QWidget):
 
 class TypingLabel(QLabel):
     """
-    Label that types out text character by character.
-    Creates a dynamic, engaging feel for suggestions.
+    PURPOSE: Displays text with a "teletype" character-by-character animation.
+    ACTION: Reveals text strings sequentially, optionally including a cursor character.
+    MECHANISM: Uses a QTimer to increment a substring index and update the label text on each timeout.
     """
     
     finished = Signal()
@@ -398,7 +413,12 @@ class TypingLabel(QLabel):
 
 class SmoothScrollArea(QScrollArea):
     """
-    Scroll area with momentum-based smooth scrolling.
+    PURPOSE: Enhances vertical scrolling with momentum and friction.
+    ACTION: Continues scrolling after the wheel event ends, gradually slowing down.
+    MECHANISM: 
+        1. Captures wheel delta and adds it to a _velocity accumulator.
+        2. A QTimer loop applies a fraction of _velocity to the scrollbar each tick.
+        3. Multiplies _velocity by a friction coefficient (0.92) until it reaches zero.
     """
     
     def __init__(self, parent=None):

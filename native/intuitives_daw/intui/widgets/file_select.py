@@ -4,14 +4,16 @@ import os
 
 
 class file_select_widget:
+    """
+    PURPOSE: A compact file path selector with clipboard integration.
+    ACTION: Displays the current file name and providing buttons for Clearing, Copying, Pasting, and Reloading paths.
+    MECHANISM: 
+        1. Encapsulates a read-only QLineEdit to display the absolute file path.
+        2. paste_from_clipboard_pressed(): Validates clipboard content; if it's a valid local file path, it updates the UI and triggers the load_callback.
+        3. copy_to_clipboard_pressed(): Transfers the current path to the system QClipboard for inter-app workflow.
+        4. Provides standard set_file/get_file accessors for external state management.
+    """
     def __init__(
-        self,
-        a_load_callback,
-    ):
-        """
-            @a_load_callback: function to call when loading that accepts a
-                              single argument of [list of paths,...]
-        """
         self.load_callback = a_load_callback
         self.layout = QHBoxLayout()
         self.layout.setContentsMargins(2, 2, 2, 2)

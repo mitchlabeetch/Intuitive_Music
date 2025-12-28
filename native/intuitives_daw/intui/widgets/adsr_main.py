@@ -11,6 +11,11 @@ in the item editor
 """
 
 class ADSRMainWidget:
+    """
+    PURPOSE: Extends the standard ADSR widget with Per-Note Modulation (PMN) support.
+    ACTION: Provides multiplexed knobs that switch between global and per-note start/end values.
+    MECHANISM: Uses MultiplexedControl to stack multiple knob_control instances for Attack, Decay, Sustain, and Release.
+    """
     def __init__(
         self,
         a_size,
@@ -39,8 +44,16 @@ class ADSRMainWidget:
         a_hold_port=None,
         a_lin_port=None,
         a_lin_default=1,
-        knob_kwargs={},
-    ):
+        knob_kwargs: dict = {},
+    ) -> None:
+        """
+        PURPOSE: Initializes the enhanced ADSR widget with PMN ports.
+        ACTION: Constructs multiplexed knobs for each envelope phase and optional toggles.
+        MECHANISM: 
+            1. Iterates through start/end port assignments for each phase.
+            2. Wraps them in MultiplexedControl.
+            3. Registers everything with the clipboard and preset manager.
+        """
         self.clipboard_dict = {}
         self.groupbox = QGroupBox(a_label)
         self.groupbox.contextMenuEvent = self.context_menu_event
@@ -265,6 +278,7 @@ class ADSRMainWidget:
             self.lin_checkbox.add_to_grid_layout(self.layout, 12)
 
     def context_menu_event(self, a_event):
+        """PURPOSE: Displays the Right-click context menu for ADSR data operations."""
         f_menu = QMenu(self.groupbox)
         f_copy_action = f_menu.addAction(_("Copy"))
         f_copy_action.triggered.connect(self.copy)
@@ -273,10 +287,12 @@ class ADSRMainWidget:
         f_menu.exec(QCursor.pos())
 
     def copy(self):
+        """PURPOSE: Copies ADSR settings to the global clipboard."""
         _shared.ADSR_CLIPBOARD = dict([(k, v.get_value())
             for k, v in self.clipboard_dict.items()])
 
     def paste(self):
+        """PURPOSE: Pastes ADSR settings from the global clipboard, handling DB/Linear conversion."""
         if not _shared.ADSR_CLIPBOARD:
             return
         for k, v in self.clipboard_dict.items():

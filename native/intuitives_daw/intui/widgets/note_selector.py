@@ -4,6 +4,15 @@ from intui.sgqt import *
 NOTE_SELECTOR_CLIPBOARD = None
 
 class NoteSelectorWidget:
+    """
+    PURPOSE: A specialized control for selecting precise musical pitches.
+    ACTION: Combines a note name dropdown (C-B) and an octave spinbox to output a MIDI note number.
+    MECHANISM: 
+        1. Manages a QComboBox for chromatic steps and a QSpinBox for octaves (-2 to 8).
+        2. In control_value_changed, calculates MIDI index: note_index + ((octave + 2) * 12).
+        3. Enforces boundary conditions (e.g., G8 is valid, but G9 is not in standard MIDI).
+        4. Provides local copy/paste support for note values.
+    """
     def __init__(
         self,
         a_port_num,
@@ -78,6 +87,14 @@ class NoteSelectorWidget:
         pass
 
     def control_value_changed(self, a_val=None):
+        """
+        PURPOSE: Reacts to UI changes to recalculate the MIDI pitch.
+        ACTION: Updates internal state and notifies engine via callbacks.
+        MECHANISM: 
+            1. Reads current indices from the combobox and spinbox.
+            2. Adjusts spinbox maximum to prevent exceeding MIDI note 127.
+            3. Invokes val_callback and rel_callback with the computed integer.
+        """
         if self.suppress_changes:
             return
         note = self.note_combobox.currentIndex()

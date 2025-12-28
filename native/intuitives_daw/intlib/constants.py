@@ -1,3 +1,14 @@
+"""
+INTUITIVES DAW - Global Constants
+
+PURPOSE: Provides a centralized registry for paths, platform flags, and application-wide limits.
+ACTION: Defines directory structures, detects the host OS, and initializes global state placeholders.
+MECHANISM: 
+    1. Imports branding constants from .brand.
+    2. Dynamically detects platform (Windows/macOS/Linux).
+    3. Calculates absolute paths for configuration, logs, and projects based on the user's home directory.
+    4. Automatically creates missing directory structures on first launch.
+"""
 import os
 import pathlib
 import platform

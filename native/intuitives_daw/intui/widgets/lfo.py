@@ -5,6 +5,11 @@ from intui.sgqt import *
 
 
 class lfo_widget:
+    """
+    PURPOSE: Provides a UI group for Low-Frequency Oscillator (LFO) parameters.
+    ACTION: Displays frequency, waveform type, and optional phase controls in a QGroupBox.
+    MECHANISM: Uses knob_control for frequency/phase and combobox_control for waveform selection.
+    """
     def __init__(
         self,
         a_size,
@@ -17,8 +22,13 @@ class lfo_widget:
         a_label=_("LFO"),
         a_preset_mgr=None,
         a_phase_port=None,
-        knob_kwargs={},
-    ):
+        knob_kwargs: dict = {},
+    ) -> None:
+        """
+        PURPOSE: Initializes the LFO control group.
+        ACTION: Sets up the layout and initializes sub-controls.
+        MECHANISM: Registers frequency and type controls; adds optional phase knob if a port is provided.
+        """
         self.groupbox = QGroupBox(str(a_label))
         self.groupbox.setObjectName("plugin_groupbox")
         self.layout = QGridLayout(self.groupbox)

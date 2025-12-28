@@ -4,7 +4,15 @@ from intui.sgqt import QGridLayout, QGroupBox
 
 
 class FreqSplitter:
-    """ COntrols for splitting audio by frequency """
+    """
+    PURPOSE: A frequency-based signal crossover (multiband splitter) UI.
+    ACTION: Allows the user to split a signal into up to 4 frequency bands (using 3 split points).
+    MECHANISM: 
+        1. Encapsulates a 'Splits' knob to dynamically show/hide crossover points.
+        2. Manages Pitch-mapped knobs (Freq1-3) for precise cutoff frequency selection.
+        3. Provides comboboxes for each band to assign independent audio outputs/routes.
+        4. Uses a State Variable Filter (SVF2) algorithm logic via the Type combobox and resonance (Res) knob.
+    """
     def __init__(
             self,
             knob_size: int,
